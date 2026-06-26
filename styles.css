@@ -132,6 +132,7 @@ h1,h2,h3{line-height:1.15;margin:0}
 .lab-link{color:var(--cyan)}
 .lab-link:hover{text-decoration:underline}
 .labs-foot{margin-top:1.4rem}
+.subhead{font-family:var(--mono);font-size:1.15rem;font-weight:700;margin:2.6rem 0 .5rem}
 
 /* architecture diagram */
 .diagram{display:flex;align-items:stretch;gap:1rem;flex-wrap:wrap;justify-content:center;

@@ -1,14 +1,15 @@
 {
-  "generated_from": ".labs-src",
+  "generated_from": "/home/pi/aws-devops-labs",
   "repo": "https://github.com/ravikus1457/aws-labs",
-  "count": 5,
+  "count": 10,
   "labs": [
     {
       "id": "01",
+      "category": "cloud",
       "title": "VPC networking",
       "slug": "01-vpc-networking",
       "demonstrates": "VPC, public/private subnets, IGW, NAT, route tables, security groups",
-      "cost": "< $0.01 (NAT GW)",
+      "meta": "< $0.01 (NAT GW)",
       "tags": [
         "VPC",
         "public/private subnets",
@@ -22,10 +23,11 @@
     },
     {
       "id": "02",
+      "category": "cloud",
       "title": "EC2 + ALB + Auto Scaling",
       "slug": "02-ec2-alb-asg",
       "demonstrates": "High-availability web tier, load balancing, launch templates, ASG",
-      "cost": "< $0.01 (ALB + 2\u00d7 t3.micro)",
+      "meta": "< $0.01 (ALB + 2\u00d7 t3.micro)",
       "tags": [
         "High-availability web tier",
         "load balancing",
@@ -37,10 +39,11 @@
     },
     {
       "id": "03",
+      "category": "cloud",
       "title": "IAM least-privilege + S3",
       "slug": "03-iam-s3-least-privilege",
       "demonstrates": "IAM roles, scoped policies, policy simulator, S3 private buckets",
-      "cost": "~$0",
+      "meta": "~$0",
       "tags": [
         "IAM roles",
         "scoped policies",
@@ -52,10 +55,11 @@
     },
     {
       "id": "04",
+      "category": "cloud",
       "title": "ECS Fargate",
       "slug": "04-ecs-fargate",
       "demonstrates": "Serverless containers, task defs vs services, CloudWatch logs",
-      "cost": "< $0.01",
+      "meta": "< $0.01",
       "tags": [
         "Serverless containers",
         "task defs vs services",
@@ -66,10 +70,11 @@
     },
     {
       "id": "05",
+      "category": "cloud",
       "title": "CloudWatch monitoring",
       "slug": "05-cloudwatch-monitoring",
       "demonstrates": "Metrics, alarms, SNS alerts, dashboards",
-      "cost": "~$0",
+      "meta": "~$0",
       "tags": [
         "Metrics",
         "alarms",
@@ -77,6 +82,83 @@
         "dashboards"
       ],
       "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/labs/05-cloudwatch-monitoring",
+      "has_evidence": false
+    }
+  ],
+  "networking": [
+    {
+      "id": "N1",
+      "category": "networking",
+      "title": "Site-to-Site WireGuard VPN",
+      "slug": "net-01-wireguard-s2s-vpn",
+      "demonstrates": "Encrypted Pi\u2194AWS tunnel, routing, crypto keys",
+      "meta": "WireGuard, Linux, AWS VPC",
+      "tags": [
+        "Encrypted Pi\u2194AWS tunnel",
+        "routing",
+        "crypto keys"
+      ],
+      "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/networking/net-01-wireguard-s2s-vpn",
+      "has_evidence": false
+    },
+    {
+      "id": "N2",
+      "category": "networking",
+      "title": "Subnetting & VLAN segmentation",
+      "slug": "net-02-subnetting-vlans",
+      "demonstrates": "VLSM design, broadcast domains, inter-VLAN routing",
+      "meta": "IP, VLAN, 802.1Q",
+      "tags": [
+        "VLSM design",
+        "broadcast domains",
+        "inter-VLAN routing"
+      ],
+      "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/networking/net-02-subnetting-vlans",
+      "has_evidence": false
+    },
+    {
+      "id": "N3",
+      "category": "networking",
+      "title": "DNS & DHCP services",
+      "slug": "net-03-dns-dhcp",
+      "demonstrates": "Authoritative DNS, DHCP scopes, name resolution",
+      "meta": "dnsmasq, BIND, Linux",
+      "tags": [
+        "Authoritative DNS",
+        "DHCP scopes",
+        "name resolution"
+      ],
+      "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/networking/net-03-dns-dhcp",
+      "has_evidence": false
+    },
+    {
+      "id": "N4",
+      "category": "networking",
+      "title": "Stateful firewall & least-privilege ACLs",
+      "slug": "net-04-firewall-acls",
+      "demonstrates": "nftables rules, AWS SG/NACL, default-deny",
+      "meta": "nftables, iptables, AWS SG",
+      "tags": [
+        "nftables rules",
+        "AWS SG/NACL",
+        "default-deny"
+      ],
+      "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/networking/net-04-firewall-acls",
+      "has_evidence": false
+    },
+    {
+      "id": "N5",
+      "category": "networking",
+      "title": "Packet capture & traffic analysis",
+      "slug": "net-05-packet-analysis",
+      "demonstrates": "TCP handshake, DNS/TLS dissection, latency",
+      "meta": "tcpdump, Wireshark",
+      "tags": [
+        "TCP handshake",
+        "DNS/TLS dissection",
+        "latency"
+      ],
+      "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/networking/net-05-packet-analysis",
       "has_evidence": false
     }
   ]

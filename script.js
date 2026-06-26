@@ -51,22 +51,27 @@ const statIO = new IntersectionObserver((es) => es.forEach(e => { if (e.isInters
 document.querySelectorAll('.stats b[data-count]').forEach(b => statIO.observe(b));
 
 // render labs from labs.json (auto-updating source of truth)
+function renderLabs(labs, gridId, metaIcon){
+  const grid = document.getElementById(gridId);
+  if (!grid) return;
+  if (!labs?.length){ grid.innerHTML = '<p class="muted">No labs found.</p>'; return; }
+  grid.innerHTML = labs.map(lab => `
+    <article class="lab">
+      <span class="lab-id">LAB ${esc(lab.id)}${lab.has_evidence ? ' · evidence ✔' : ''}</span>
+      <h3>${esc(lab.title)}</h3>
+      <p>${esc(lab.demonstrates)}</p>
+      <div class="lab-tags">${(lab.tags||[]).map(t=>`<span>${esc(t)}</span>`).join('')}</div>
+      <div class="lab-foot">
+        <span class="lab-cost">${metaIcon} ${esc(lab.meta||'')}</span>
+        <a class="lab-link" href="${lab.repo_url}" target="_blank" rel="noopener">code ↗</a>
+      </div>
+    </article>`).join('');
+}
 fetch('labs.json', {cache:'no-cache'})
   .then(r => r.ok ? r.json() : Promise.reject(r.status))
   .then(data => {
-    const grid = document.getElementById('labs-grid');
-    if (!data.labs?.length){ grid.innerHTML = '<p class="muted">No labs found.</p>'; return; }
-    grid.innerHTML = data.labs.map(lab => `
-      <article class="lab">
-        <span class="lab-id">LAB ${lab.id}${lab.has_evidence ? ' · evidence ✔' : ''}</span>
-        <h3>${esc(lab.title)}</h3>
-        <p>${esc(lab.demonstrates)}</p>
-        <div class="lab-tags">${(lab.tags||[]).map(t=>`<span>${esc(t)}</span>`).join('')}</div>
-        <div class="lab-foot">
-          <span class="lab-cost">▲ ${esc(lab.cost)}</span>
-          <a class="lab-link" href="${lab.repo_url}" target="_blank" rel="noopener">code ↗</a>
-        </div>
-      </article>`).join('');
+    renderLabs(data.labs, 'labs-grid', '▲');
+    renderLabs(data.networking, 'net-labs-grid', '⚙');
     if (data.repo){ const link = document.getElementById('labs-repo-link'); if (link) link.href = data.repo; }
   })
   .catch(() => {
