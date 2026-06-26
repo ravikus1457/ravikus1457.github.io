@@ -1,107 +1,107 @@
 {
-  "sampled_jobs": 274,
+  "sampled_jobs": 347,
   "aws": [
     {
       "skill": "EKS / Kubernetes",
-      "count": 2,
-      "pct": 26
+      "count": 3,
+      "pct": 28
     },
     {
       "skill": "EC2",
-      "count": 2,
-      "pct": 22
+      "count": 3,
+      "pct": 25
     },
     {
       "skill": "CloudOps / Monitoring",
       "count": 2,
-      "pct": 22
+      "pct": 20
+    },
+    {
+      "skill": "IAM",
+      "count": 1,
+      "pct": 17
     },
     {
       "skill": "Terraform",
       "count": 0,
-      "pct": 16
+      "pct": 14
     },
     {
       "skill": "AWS VPC",
       "count": 0,
-      "pct": 14
-    },
-    {
-      "skill": "IAM",
-      "count": 0,
-      "pct": 14
+      "pct": 12
     },
     {
       "skill": "Lambda / Serverless",
       "count": 0,
-      "pct": 14
+      "pct": 12
     },
     {
       "skill": "CI/CD (CodePipeline)",
       "count": 0,
-      "pct": 14
+      "pct": 12
     },
     {
       "skill": "S3",
       "count": 0,
-      "pct": 12
+      "pct": 11
     },
     {
       "skill": "ECS / Fargate",
       "count": 0,
-      "pct": 12
+      "pct": 11
     }
   ],
   "networking": [
     {
-      "skill": "DHCP",
-      "count": 17,
+      "skill": "DNS",
+      "count": 19,
       "pct": 100
     },
     {
-      "skill": "DNS",
-      "count": 15,
-      "pct": 91
+      "skill": "DHCP",
+      "count": 16,
+      "pct": 85
     },
     {
       "skill": "Firewalls / ACLs",
-      "count": 14,
-      "pct": 86
+      "count": 12,
+      "pct": 68
     },
     {
       "skill": "Network Automation",
       "count": 2,
-      "pct": 24
+      "pct": 22
     },
     {
       "skill": "Network Security",
       "count": 1,
-      "pct": 19
+      "pct": 17
     },
     {
       "skill": "TCP/IP",
       "count": 0,
-      "pct": 14
+      "pct": 12
     },
     {
       "skill": "VPN",
       "count": 0,
-      "pct": 14
+      "pct": 12
     },
     {
       "skill": "BGP",
       "count": 0,
-      "pct": 12
+      "pct": 11
     },
     {
       "skill": "VLAN / Switching",
       "count": 0,
-      "pct": 12
+      "pct": 11
     },
     {
       "skill": "Subnetting",
       "count": 0,
-      "pct": 12
+      "pct": 11
     }
   ]
 }
