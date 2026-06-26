@@ -1,0 +1,40 @@
+name: Sync AWS labs into portfolio
+
+# Auto-updates the portfolio's Labs section. Clones the public aws-labs repo,
+# regenerates labs.json from its README, and commits if anything changed.
+# Runs daily, on every push, and on demand.
+on:
+  schedule:
+    - cron: "17 13 * * *"   # daily 13:17 UTC
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout portfolio
+        uses: actions/checkout@v4
+
+      - name: Clone aws-labs (public, read-only)
+        run: git clone --depth 1 https://github.com/ravikus1457/aws-labs.git .labs-src
+
+      - name: Regenerate labs.json
+        run: python3 scripts/generate_labs.py .labs-src
+
+      - name: Commit if changed
+        run: |
+          rm -rf .labs-src
+          if [ -n "$(git status --porcelain labs.json)" ]; then
+            git config user.name "labs-bot"
+            git config user.email "actions@github.com"
+            git add labs.json
+            git commit -m "chore: sync labs.json from aws-labs"
+            git push
+          else
+            echo "labs.json already up to date"
+          fi

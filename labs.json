@@ -1,0 +1,83 @@
+{
+  "generated_from": "/home/pi/aws-devops-labs",
+  "repo": "https://github.com/ravikus1457/aws-labs",
+  "count": 5,
+  "labs": [
+    {
+      "id": "01",
+      "title": "VPC networking",
+      "slug": "01-vpc-networking",
+      "demonstrates": "VPC, public/private subnets, IGW, NAT, route tables, security groups",
+      "cost": "< $0.01 (NAT GW)",
+      "tags": [
+        "VPC",
+        "public/private subnets",
+        "IGW",
+        "NAT",
+        "route tables",
+        "security groups"
+      ],
+      "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/labs/01-vpc-networking",
+      "has_evidence": false
+    },
+    {
+      "id": "02",
+      "title": "EC2 + ALB + Auto Scaling",
+      "slug": "02-ec2-alb-asg",
+      "demonstrates": "High-availability web tier, load balancing, launch templates, ASG",
+      "cost": "< $0.01 (ALB + 2\u00d7 t3.micro)",
+      "tags": [
+        "High-availability web tier",
+        "load balancing",
+        "launch templates",
+        "ASG"
+      ],
+      "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/labs/02-ec2-alb-asg",
+      "has_evidence": false
+    },
+    {
+      "id": "03",
+      "title": "IAM least-privilege + S3",
+      "slug": "03-iam-s3-least-privilege",
+      "demonstrates": "IAM roles, scoped policies, policy simulator, S3 private buckets",
+      "cost": "~$0",
+      "tags": [
+        "IAM roles",
+        "scoped policies",
+        "policy simulator",
+        "S3 private buckets"
+      ],
+      "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/labs/03-iam-s3-least-privilege",
+      "has_evidence": false
+    },
+    {
+      "id": "04",
+      "title": "ECS Fargate",
+      "slug": "04-ecs-fargate",
+      "demonstrates": "Serverless containers, task defs vs services, CloudWatch logs",
+      "cost": "< $0.01",
+      "tags": [
+        "Serverless containers",
+        "task defs vs services",
+        "CloudWatch logs"
+      ],
+      "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/labs/04-ecs-fargate",
+      "has_evidence": false
+    },
+    {
+      "id": "05",
+      "title": "CloudWatch monitoring",
+      "slug": "05-cloudwatch-monitoring",
+      "demonstrates": "Metrics, alarms, SNS alerts, dashboards",
+      "cost": "~$0",
+      "tags": [
+        "Metrics",
+        "alarms",
+        "SNS alerts",
+        "dashboards"
+      ],
+      "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/labs/05-cloudwatch-monitoring",
+      "has_evidence": false
+    }
+  ]
+}

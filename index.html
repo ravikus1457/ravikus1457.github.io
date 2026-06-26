@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ravi Kumar — Cloud &amp; Network Engineer</title>
+  <meta name="description" content="Ravi Kumar — Cloud &amp; Network Engineer. AWS VPC, EC2, VPN architecture, TCP/IP, Linux, PowerShell automation. Live, self-tearing-down AWS Terraform labs." />
+  <meta property="og:title" content="Ravi Kumar — Cloud &amp; Network Engineer" />
+  <meta property="og:description" content="Cloud + network engineering, proven with live AWS labs." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <header class="nav" id="top">
+    <a class="brand" href="#top">
+      <span class="brand-dot"></span>
+      <span class="brand-text"><b>ravi</b><span class="brand-at">@</span>cloud-net<span class="brand-cursor">_</span></span>
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#whoami">whoami</a>
+      <a href="#skills">skills</a>
+      <a href="#labs">labs</a>
+      <a href="#architecture">architecture</a>
+      <a href="#experience">experience</a>
+      <a href="#certs">certs</a>
+      <a href="#contact">contact</a>
+    </nav>
+    <a class="btn btn-ghost nav-resume" href="assets/Ravi_Kumar_Resume.pdf" target="_blank" rel="noopener">resume.pdf ↗</a>
+    <button class="nav-toggle" aria-label="Toggle navigation">≡</button>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-inner">
+        <p class="status"><span class="pulse"></span> CLOUD &amp; NETWORK OPS · OPEN TO WORK</p>
+        <h1>RAVI&nbsp;KUMAR</h1>
+        <p class="role">Cloud &amp; Network Engineer</p>
+        <div class="terminal" id="term">
+          <div class="term-bar"><span></span><span></span><span></span><em>ravi@cloud-net: ~</em></div>
+          <pre class="term-body"><code id="typed"></code><span class="caret">▋</span></pre>
+        </div>
+        <div class="cert-chips">
+          <span class="chip">CompTIA Security+</span>
+          <span class="chip">Network+</span>
+          <span class="chip">Linux Essentials</span>
+          <span class="chip">A+</span>
+          <span class="chip chip-edu">B.S. Cloud &amp; Network Eng · WGU</span>
+        </div>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#labs">View live AWS labs →</a>
+          <a class="btn btn-ghost" href="#contact">Get in touch</a>
+        </div>
+        <ul class="stats">
+          <li><b data-count="5">5</b><span>live AWS labs</span></li>
+          <li><b data-count="4">4</b><span>infra roles</span></li>
+          <li><b>$0</b><span>idle lab cost</span></li>
+          <li><b data-count="5">5</b><span>CompTIA certs</span></li>
+        </ul>
+        <p class="loc">📍 Pittsburg, CA · San Francisco Bay Area · Remote</p>
+      </div>
+    </section>
+
+    <!-- WHOAMI -->
+    <section id="whoami" class="section reveal">
+      <h2><span class="prompt">$</span> whoami</h2>
+      <p class="lede">Cloud and Network Engineering professional who designs, configures, and supports
+        enterprise network infrastructure and cloud-connected environments. Hands-on with core
+        networking (TCP/IP, DNS, DHCP), Site-to-Site VPN, AWS infrastructure, Linux administration,
+        and PowerShell automation — and I prove it with real labs that run on live AWS, not slideware.</p>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" class="section reveal">
+      <h2><span class="prompt">$</span> skills <span class="muted">--list</span></h2>
+      <div class="cards">
+        <article class="card">
+          <h3><span class="ico">☁</span> Cloud &amp; Infrastructure</h3>
+          <ul class="tags">
+            <li>AWS VPC</li><li>EC2</li><li>Security Groups</li><li>IAM</li><li>ALB / ASG</li>
+            <li>ECS Fargate</li><li>VPN Architecture</li><li>Active Directory</li><li>Azure AD</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3><span class="ico">⇄</span> Networking &amp; Security</h3>
+          <ul class="tags">
+            <li>TCP/IP</li><li>DNS</li><li>DHCP</li><li>LAN/WAN</li><li>Firewalls / ACLs</li>
+            <li>WireGuard</li><li>Site-to-Site VPN</li><li>Network Security &amp; Compliance</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3><span class="ico">⌘</span> Systems &amp; Automation</h3>
+          <ul class="tags">
+            <li>Linux (Ubuntu/CLI)</li><li>PowerShell</li><li>Terraform</li><li>Bash</li>
+            <li>Systems Validation</li><li>MDM Tools</li><li>macOS / Windows</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3><span class="ico">◎</span> Operations &amp; Diagnostics</h3>
+          <ul class="tags">
+            <li>Log Analysis</li><li>Root Cause Analysis</li><li>Remote Diagnostics</li>
+            <li>Technical Documentation</li><li>Incident Triage</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- LABS (auto-generated from labs.json) -->
+    <section id="labs" class="section reveal">
+      <h2><span class="prompt">$</span> terraform apply <span class="muted"># live AWS labs</span></h2>
+      <p class="lede">Real AWS infrastructure defined in Terraform. A runner provisions each lab,
+        exercises it against the live AWS API to prove it works, captures evidence, and
+        <b>tears it down automatically</b> — so idle cost stays at ~$0. Code + evidence on GitHub.</p>
+      <div class="labs-grid" id="labs-grid"><p class="muted">Loading labs…</p></div>
+      <p class="labs-foot">
+        <a class="btn btn-ghost" id="labs-repo-link" href="https://github.com/ravikus1457/aws-labs" target="_blank" rel="noopener">★ Full labs repo on GitHub ↗</a>
+      </p>
+    </section>
+
+    <!-- ARCHITECTURE -->
+    <section id="architecture" class="section reveal">
+      <h2><span class="prompt">$</span> cat architecture/hybrid-vpn.md</h2>
+      <p class="lede">Signature project — a hybrid network connecting a Raspberry&nbsp;Pi&nbsp;5 home lab
+        to an AWS VPC over an encrypted Site-to-Site WireGuard tunnel, with least-privilege security
+        groups and firewall ACLs.</p>
+      <div class="diagram">
+        <div class="node node-pi">
+          <span class="node-ico">🍓</span>
+          <b>Raspberry Pi 5</b>
+          <small>Home lab · Linux · WireGuard peer</small>
+        </div>
+        <div class="link">
+          <span class="link-label">WireGuard S2S VPN</span>
+          <div class="wire"><span class="packet"></span></div>
+          <small>encrypted tunnel · routing tables · crypto keys</small>
+        </div>
+        <div class="node node-aws">
+          <span class="node-ico">☁</span>
+          <b>AWS VPC</b>
+          <small>Security Groups · subnets · least-privilege ACLs</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience" class="section reveal">
+      <h2><span class="prompt">$</span> history <span class="muted"># experience</span></h2>
+      <ol class="timeline">
+        <li>
+          <div class="tl-head"><b>Information Systems Technician</b><span class="when">Nov 2025 – Present</span></div>
+          <div class="tl-org">Contra Costa County — Dept. of Public Works · Martinez, CA</div>
+          <ul>
+            <li>Troubleshoot complex connectivity issues — DNS, DHCP, Active Directory auth, and VPN routing across distributed county environments.</li>
+            <li>PowerShell automation to manage, audit, and update Active Directory; led an iPhone deployment for 125 employees.</li>
+            <li>Root-cause analysis from system logs; configuration updates, patches, and optimizations to keep environments stable.</li>
+          </ul>
+          <div class="tl-tags"><span>DNS</span><span>DHCP</span><span>Active Directory</span><span>PowerShell</span><span>VPN</span></div>
+        </li>
+        <li>
+          <div class="tl-head"><b>IT Support Technician II</b><span class="when">Oct 2025 – Nov 2025</span></div>
+          <div class="tl-org">Meta · Menlo Park, CA</div>
+          <ul>
+            <li>Diagnosed networking, authentication, VPN, and performance issues in a high-availability production environment.</li>
+            <li>Partnered with engineering teams to resolve escalated, high-impact infrastructure and cloud-connected problems.</li>
+            <li>Managed enterprise Linux, macOS, and Windows endpoints with MDM tooling.</li>
+          </ul>
+          <div class="tl-tags"><span>Linux</span><span>MDM</span><span>VPN</span><span>Cloud</span></div>
+        </li>
+        <li>
+          <div class="tl-head"><b>Cloud Operator</b><span class="when">Apr 2024 – Jun 2025</span></div>
+          <div class="tl-org">Bay Alarm · Concord, CA</div>
+          <ul>
+            <li>Monitored and managed cloud-connected enterprise devices for connectivity health and uptime.</li>
+            <li>Configured network devices and resolved remote connectivity issues via cloud management consoles.</li>
+          </ul>
+          <div class="tl-tags"><span>Cloud Monitoring</span><span>Networking</span></div>
+        </li>
+        <li>
+          <div class="tl-head"><b>IS&amp;T Helpline Analyst</b><span class="when">Feb 2023 – Jan 2024</span></div>
+          <div class="tl-org">Apple Inc. · Elk Grove, CA</div>
+          <ul>
+            <li>Troubleshot authentication, networking, MDM profiles, and OS issues across large-scale networked environments.</li>
+          </ul>
+          <div class="tl-tags"><span>Networking</span><span>MDM</span><span>Authentication</span></div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- CERTS -->
+    <section id="certs" class="section reveal">
+      <h2><span class="prompt">$</span> ls certifications/ education/</h2>
+      <div class="cards">
+        <article class="card">
+          <h3>🎓 Education</h3>
+          <ul class="plain">
+            <li><b>B.S. Cloud &amp; Network Engineering</b> — Western Governors University <span class="muted">(in progress)</span></li>
+            <li>IT Support Certificate — YearUp / Diablo Valley College <span class="muted">(2024)</span></li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>📜 Certifications</h3>
+          <ul class="plain">
+            <li>CompTIA Security+</li>
+            <li>CompTIA Network+</li>
+            <li>CompTIA Linux Essentials</li>
+            <li>CompTIA A+</li>
+            <li>CompTIA ITF+</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section reveal">
+      <h2><span class="prompt">$</span> ./contact.sh</h2>
+      <div class="contact">
+        <a href="mailto:ravikus1457@gmail.com" class="contact-item"><span>✉</span> ravikus1457@gmail.com</a>
+        <a href="tel:+19255978128" class="contact-item"><span>☎</span> (925) 597-8128</a>
+        <a href="https://www.linkedin.com/in/ravik1457" target="_blank" rel="noopener" class="contact-item"><span>in</span> linkedin.com/in/ravik1457</a>
+        <a href="https://github.com/ravikus1457" target="_blank" rel="noopener" class="contact-item"><span>⌥</span> github.com/ravikus1457</a>
+        <a href="assets/Ravi_Kumar_Resume.pdf" target="_blank" rel="noopener" class="contact-item"><span>⬇</span> Download résumé</a>
+      </div>
+      <p class="cta-line">Open to <b>Cloud Network Engineer</b>, <b>AWS Cloud Engineer</b>, and <b>Network/Infrastructure Engineer</b> roles.</p>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>© <span id="year"></span> Ravi Kumar</span>
+    <span class="muted">Built with HTML/CSS/JS · hosted on GitHub Pages · labs auto-synced from <a href="https://github.com/ravikus1457/aws-labs" target="_blank" rel="noopener">aws-labs</a></span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
