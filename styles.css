@@ -133,6 +133,12 @@ h1,h2,h3{line-height:1.15;margin:0}
 .lab-link:hover{text-decoration:underline}
 .labs-foot{margin-top:1.4rem}
 .subhead{font-family:var(--mono);font-size:1.15rem;font-weight:700;margin:2.6rem 0 .5rem}
+.bars{display:grid;gap:.7rem;margin-top:.3rem}
+.bar-row{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.78rem;margin-bottom:.25rem}
+.bar-row b{color:var(--text);font-weight:500}
+.bar-row span{color:var(--dim)}
+.bar-track{height:7px;background:var(--panel2);border-radius:5px;overflow:hidden}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--cyan));border-radius:5px;transition:width .8s ease}
 
 /* architecture diagram */
 .diagram{display:flex;align-items:stretch;gap:1rem;flex-wrap:wrap;justify-content:center;
