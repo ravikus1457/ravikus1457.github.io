@@ -1,6 +1,11 @@
 {
-  "sampled_jobs": 347,
+  "sampled_jobs": 375,
   "aws": [
+    {
+      "skill": "RDS",
+      "count": 10,
+      "pct": 55
+    },
     {
       "skill": "EKS / Kubernetes",
       "count": 3,
@@ -43,11 +48,6 @@
     },
     {
       "skill": "S3",
-      "count": 0,
-      "pct": 11
-    },
-    {
-      "skill": "ECS / Fargate",
       "count": 0,
       "pct": 11
     }
