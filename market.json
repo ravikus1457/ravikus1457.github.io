@@ -1,20 +1,20 @@
 {
-  "sampled_jobs": 1520,
+  "sampled_jobs": 1562,
   "aws": [
     {
       "skill": "RDS",
       "count": 62,
-      "pct": 87
-    },
-    {
-      "skill": "EC2",
-      "count": 8,
-      "pct": 14
+      "pct": 85
     },
     {
       "skill": "CloudOps / Monitoring",
-      "count": 8,
-      "pct": 14
+      "count": 14,
+      "pct": 22
+    },
+    {
+      "skill": "EC2",
+      "count": 9,
+      "pct": 15
     },
     {
       "skill": "EKS / Kubernetes",
@@ -32,12 +32,12 @@
       "pct": 6
     },
     {
-      "skill": "AWS VPC",
-      "count": 0,
-      "pct": 4
+      "skill": "Lambda / Serverless",
+      "count": 1,
+      "pct": 5
     },
     {
-      "skill": "Lambda / Serverless",
+      "skill": "AWS VPC",
       "count": 0,
       "pct": 4
     },
@@ -55,22 +55,22 @@
   "networking": [
     {
       "skill": "DNS",
-      "count": 71,
+      "count": 73,
       "pct": 100
     },
     {
       "skill": "Firewalls / ACLs",
-      "count": 58,
-      "pct": 82
+      "count": 64,
+      "pct": 88
     },
     {
       "skill": "DHCP",
       "count": 48,
-      "pct": 68
+      "pct": 67
     },
     {
       "skill": "Network Automation",
-      "count": 11,
+      "count": 12,
       "pct": 19
     },
     {
