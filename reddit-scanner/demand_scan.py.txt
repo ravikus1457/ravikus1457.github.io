@@ -1,0 +1,237 @@
+# demand_scan.py — read-only Reddit demand scanner (sanitized copy for API review)
+# Runs on the developer's personal device. Read-only; no posting/DMs. See index.html.
+#!/usr/bin/env python3
+"""
+demand_scan.py — DEMAND CAPTURE for Symbio AI: find people who are ALREADY
+looking for a website/web developer and hand the founders ready-to-send replies.
+
+Pipeline (runs 3x/day via symbio-demand.timer):
+  1. Poll Reddit RSS feeds (r/forhire etc. — [Hiring] posts + keyword searches).
+  2. Regex prefilter: seeking a website/web-design/web-app (drop [For Hire]
+     freelancer self-ads and non-web gigs).
+  3. Gemini qualifies each hit: real request? budget signal? score 1-10, and
+     drafts a short, human, sub-rules-friendly reply.
+  4. Dedupe (seen ids), store in demand_leads.json, Telegram digest with links
+     + suggested replies. FOUNDERS send replies from their own accounts —
+     no automated posting (keeps accounts + subreddit rules safe).
+
+Usage: python3 demand_scan.py [--dry]   (--dry = no telegram, print only)
+"""
+import json, re, sys, time, pathlib, urllib.request, urllib.parse
+import xml.etree.ElementTree as ET
+
+HERE = pathlib.Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parent / "ig"))
+from ig_common import gemini_json, tg_send, load, save  # noqa: E402
+
+LEADS = HERE / "demand_leads.json"
+SEEN = HERE / ".seen_ids.json"
+NOTIFY_QUEUE = pathlib.Path("/home/rk1457/symbio/.notify_queue.jsonl")
+
+
+def _queue_fyi(text, tag="demand"):
+    """Append to the 19:30 evening-digest queue (notify_batch.py) instead of pinging
+    immediately — was up to 8 telegrams per run (refinement audit 2026-07-09 §1).
+    Falls back to a direct send if the queue is unwritable, so leads never vanish."""
+    try:
+        with NOTIFY_QUEUE.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps({"ts": time.strftime("%Y-%m-%d %H:%M"), "tag": tag,
+                                 "text": text}) + "\n")
+    except Exception as e:
+        print("  ! queue_fyi failed, sending directly:", e)
+        tg_send(text)
+PLAYBOOK = HERE / "demand_playbook.json"
+UA = "Mozilla/5.0 (X11; Linux aarch64) AppleWebKit/537.36 Chrome/120 Safari/537.36"
+NS = {"a": "http://www.w3.org/2005/Atom"}
+
+FEEDS = [
+    ("r/forhire", "https://www.reddit.com/r/forhire/new/.rss"),
+    ("r/B2BForHire", "https://www.reddit.com/r/B2BForHire/new/.rss"),
+    ("r/freelance_forhire", "https://www.reddit.com/r/freelance_forhire/new/.rss"),
+    ("r/jobbit", "https://www.reddit.com/r/jobbit/new/.rss"),
+    ("r/cofounder", "https://www.reddit.com/r/cofounder/new/.rss"),
+    ("r/smallbusiness+website", "https://www.reddit.com/r/smallbusiness/search.rss?q=need+a+website&restrict_sr=1&sort=new&t=week"),
+    ("r/Entrepreneur+website", "https://www.reddit.com/r/Entrepreneur/search.rss?q=%22website%22+%22recommend%22&restrict_sr=1&sort=new&t=week"),
+    ("r/startups+developer", "https://www.reddit.com/r/startups/search.rss?q=need+a+developer&restrict_sr=1&sort=new&t=week"),
+    ("r/smallbusiness+app", "https://www.reddit.com/r/smallbusiness/search.rss?q=need+an+app&restrict_sr=1&sort=new&t=week"),
+]
+
+HIRING = re.compile(r"\[hiring\]|looking for|need (a|an|someone|help)|seeking|"
+                    r"recommend|want to (build|hire)|hire (a|an|someone)|"
+                    r"trying to build|help building", re.I)
+# WEBBY = wants a website / web presence
+WEBBY = re.compile(r"web ?site|web ?dev|web ?design|landing page|online store|"
+                   r"e-?commerce|squarespace|wix|wordpress|shopify|redesign|"
+                   r"web presence", re.I)
+# APPY = wants a mobile/web app or custom software built
+APPY = re.compile(r"\bapp\b|web app|mobile app|ios app|android app|iphone app|"
+                  r"application|software|saas|platform|mvp|prototype|"
+                  r"internal tool|dashboard|automation|chatbot|ai agent|"
+                  r"custom (tool|software|build)|developer to build", re.I)
+SELF_AD = re.compile(r"\[for hire\]|for hire\]", re.I)
+
+
+def project_type(post) -> str:
+    """website vs app — decides how the reply/email is tailored. App wins ties
+    only when app language is present without plain website language."""
+    blob = post["title"] + " " + post["body"]
+    web, app = bool(WEBBY.search(blob)), bool(APPY.search(blob))
+    if app and not web:
+        return "app"
+    if web and not app:
+        return "website"
+    # both or ambiguous: bias by the title (what they lead with)
+    t = post["title"].lower()
+    if APPY.search(t) and not WEBBY.search(t):
+        return "app"
+    return "website"
+
+
+def fetch_feed(url, retries=2):
+    req = urllib.request.Request(url, headers={"User-Agent": UA})
+    for attempt in range(retries + 1):
+        try:
+            raw = urllib.request.urlopen(req, timeout=30).read()
+            break
+        except urllib.error.HTTPError as e:
+            if e.code == 429 and attempt < retries:
+                time.sleep(35)  # reddit rate limit — back off and retry
+                continue
+            raise
+    root = ET.fromstring(raw)
+    out = []
+    for e in root.findall("a:entry", NS):
+        title = (e.findtext("a:title", "", NS) or "").strip()
+        link = ""
+        ln = e.find("a:link", NS)
+        if ln is not None:
+            link = ln.get("href", "")
+        content = re.sub(r"<[^>]+>", " ", e.findtext("a:content", "", NS) or "")[:800]
+        author = (e.findtext("a:author/a:name", "", NS) or "").strip()
+        eid = e.findtext("a:id", link, NS)
+        out.append({"id": eid, "title": title, "link": link,
+                    "body": content.strip(), "author": author})
+    return out
+
+
+def fetch_posts(url):
+    """Authed API when creds exist (full bodies, real search, no 429 dance),
+    anonymous RSS otherwise. Both return the same post shape."""
+    import reddit_api
+    if reddit_api.available():
+        try:
+            m = re.match(r"https://www\.reddit\.com/r/([^/]+)/new/\.rss", url)
+            if m:
+                return reddit_api.listing(m.group(1))
+            m = re.match(r"https://www\.reddit\.com/r/([^/]+)/search\.rss\?(.*)", url)
+            if m:
+                qs = urllib.parse.parse_qs(m.group(2))
+                return reddit_api.search(m.group(1), qs.get("q", [""])[0],
+                                         t=qs.get("t", ["week"])[0])
+        except Exception as e:
+            print(f"  api failed ({e}) — falling back to RSS")
+    return fetch_feed(url)
+
+
+def prefilter(post):
+    blob = post["title"] + " " + post["body"]
+    return (not SELF_AD.search(post["title"])
+            and HIRING.search(blob)
+            and (WEBBY.search(blob) or APPY.search(blob)))
+
+
+def qualify(post):
+    learned = load(PLAYBOOK, {}).get("reply_rules", [])
+    ptype = post.get("project_type", "website")
+    focus = ("a mobile/web APP or custom software (MVP, dashboard, automation, AI tool)"
+             if ptype == "app" else "a WEBSITE or online store")
+    return gemini_json(
+        "You qualify inbound sales leads for Symbio AI (symbioai.dev), an agency that "
+        "builds websites ($1.5k+), online stores, mobile/web apps and MVPs ($2.5k+), "
+        "chatbots and AI agents. You also draft reddit replies: HUMAN, casual, helpful "
+        "first, 2-4 sentences, no corporate speak, no link spam (one mention of "
+        "symbioai.dev max, or offer to DM). Never overclaim. Respect that subreddits ban "
+        "blatant ads. This lead appears to want " + focus + ". "
+        + (f"LEARNED REPLY RULES (follow): {json.dumps(learned)} " if learned else ""),
+        "Post title: " + post["title"] + "\nPost body: " + post["body"][:700] +
+        "\nReturn JSON: {\"is_real_demand\": true/false (someone genuinely wants a "
+        "website or app/software BUILT — not a freelancer advertising themselves), "
+        "\"project_type\": \"website\"|\"app\", "
+        "\"score\": 1-10 (fit x budget signal x freshness), "
+        "\"budget_hint\": \"...\", "
+        "\"reply\": \"suggested reddit reply, tailored to whether they want a website or an app\", "
+        "\"dm\": \"suggested first DM if they prefer DMs\", "
+        "\"email\": \"any email address found in the post, else empty\"}")
+
+
+def main():
+    dry = "--dry" in sys.argv
+    seen = load(SEEN, {})
+    leads = load(LEADS, [])
+    fresh = []
+    # feeds = seeds + any the weekly learner validated and adopted
+    feeds = list(FEEDS) + [(u.split("/r/")[1].split("/")[0], u)
+                           for u in load(PLAYBOOK, {}).get("candidate_feeds", [])]
+    import reddit_api
+    for name, url in feeds:
+        try:
+            posts = fetch_posts(url)
+        except Exception as e:
+            print(f"  ! {name}: {e}")
+            continue
+        # API ids are "t3_xxx"; RSS-era seen ids are tag URIs that CONTAIN the t3 id —
+        # match both so switching auth on doesn't resurface every old post
+        hits = [p for p in posts if p["id"] not in seen
+                and not any(p["id"] in s for s in seen) and prefilter(p)]
+        print(f"{name}: {len(posts)} posts, {len(hits)} candidate(s)")
+        time.sleep(2 if reddit_api.available() else 10)  # authed API is 100/min; RSS 429s fast
+        for p in hits:
+            seen[p["id"]] = int(time.time())
+            p["project_type"] = project_type(p)   # classify BEFORE qualify tailors the prompt
+            try:
+                q = qualify(p)
+            except Exception as e:
+                print("  qualify failed:", e); continue
+            if q.get("is_real_demand") and int(q.get("score", 0)) >= 5:
+                p.update({"source": name, "score": q["score"],
+                          "project_type": q.get("project_type") or p["project_type"],
+                          "budget_hint": q.get("budget_hint", ""),
+                          "reply": q.get("reply", ""), "dm": q.get("dm", ""),
+                          "email": q.get("email", ""),
+                          "found_ts": int(time.time()), "status": "new"})
+                fresh.append(p)
+        time.sleep(2)
+    # trim seen cache to ~30 days
+    cutoff = time.time() - 30 * 86400
+    seen = {k: v for k, v in seen.items() if v > cutoff}
+    save(SEEN, seen)
+    emailed = 0
+    if fresh:
+        leads.extend(fresh)
+        # Auto-email any lead that came with a real address, tailored website vs app.
+        # Reddit posts have none → they fall through to the manual-reply digest below.
+        try:
+            import demand_outreach
+            if not dry:
+                emailed = demand_outreach.run(fresh)
+        except Exception as e:
+            print("  ! auto-email step failed:", e)
+        save(LEADS, leads[-500:])
+        if not dry:
+            # queued for the 19:30 evening digest — one batch instead of 8 pings
+            for p in sorted(fresh, key=lambda x: -int(x["score"]))[:8]:
+                icon = "📱" if p.get("project_type") == "app" else "🌐"
+                kind = "APP" if p.get("project_type") == "app" else "WEBSITE"
+                status = ("✅ auto-emailed" if p.get("emailed")
+                          else "📝 reply yourself (no email on post)")
+                _queue_fyi(
+                    f"🎯 <b>DEMAND LEAD {p['score']}/10</b> {icon} {kind} ({p['source']})\n"
+                    f"<b>{p['title'][:120]}</b>\n{p['link']}\n"
+                    + (f"💰 {p['budget_hint']}\n" if p.get("budget_hint") else "")
+                    + f"{status}\n"
+                    + f"📝 reply: {(p.get('reply') or '')[:400]}")
+    print(f"qualified {len(fresh)} new demand lead(s); auto-emailed {emailed}")
+
+
+if __name__ == "__main__":
+    main()
