@@ -1,11 +1,10 @@
 # Lab roadmap (auto-generated)
 
-From 1562 live job postings. In-demand skills not yet covered by a lab:
+From 2107 live job postings. In-demand skills not yet covered by a lab:
 
-- [ ] **Network Automation** — seen in 44 postings
+- [ ] **Network Automation** — seen in 56 postings
 - [ ] **EKS / Kubernetes** — seen in 24 postings
-- [ ] **Terraform** — seen in 15 postings
+- [ ] **Terraform** — seen in 21 postings
 - [ ] **Network Security** — seen in 11 postings
-- [ ] **CI/CD (CodePipeline)** — seen in 8 postings
 - [ ] **TCP/IP** — seen in 8 postings
 - [ ] **BGP** — seen in 7 postings
