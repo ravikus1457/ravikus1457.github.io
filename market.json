@@ -1,9 +1,9 @@
 {
-  "sampled_jobs": 2623,
+  "sampled_jobs": 2692,
   "aws": [
     {
       "skill": "RDS",
-      "count": 206,
+      "count": 213,
       "pct": 100
     },
     {
@@ -19,7 +19,7 @@
     {
       "skill": "IAM",
       "count": 11,
-      "pct": 7
+      "pct": 6
     },
     {
       "skill": "ECS / Fargate",
@@ -34,7 +34,7 @@
     {
       "skill": "CloudWatch",
       "count": 5,
-      "pct": 4
+      "pct": 3
     },
     {
       "skill": "Terraform",
@@ -56,17 +56,17 @@
     {
       "skill": "DNS",
       "count": 92,
-      "pct": 46
+      "pct": 44
     },
     {
       "skill": "Firewalls / ACLs",
       "count": 76,
-      "pct": 38
+      "pct": 37
     },
     {
       "skill": "DHCP",
       "count": 53,
-      "pct": 27
+      "pct": 26
     },
     {
       "skill": "Network Automation",
