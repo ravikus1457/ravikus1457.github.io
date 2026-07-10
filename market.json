@@ -1,9 +1,9 @@
 {
-  "sampled_jobs": 2547,
+  "sampled_jobs": 2596,
   "aws": [
     {
       "skill": "RDS",
-      "count": 195,
+      "count": 204,
       "pct": 100
     },
     {
@@ -18,8 +18,8 @@
     },
     {
       "skill": "IAM",
-      "count": 10,
-      "pct": 6
+      "count": 11,
+      "pct": 7
     },
     {
       "skill": "ECS / Fargate",
@@ -39,7 +39,7 @@
     {
       "skill": "Terraform",
       "count": 4,
-      "pct": 4
+      "pct": 3
     },
     {
       "skill": "Load Balancing (ALB/ELB)",
@@ -56,22 +56,22 @@
     {
       "skill": "DNS",
       "count": 92,
-      "pct": 48
+      "pct": 46
     },
     {
       "skill": "Firewalls / ACLs",
       "count": 76,
-      "pct": 40
+      "pct": 38
     },
     {
       "skill": "DHCP",
       "count": 53,
-      "pct": 28
+      "pct": 27
     },
     {
       "skill": "Network Automation",
-      "count": 17,
-      "pct": 10
+      "count": 20,
+      "pct": 11
     },
     {
       "skill": "NAT / Routing",
