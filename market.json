@@ -1,107 +1,107 @@
 {
-  "sampled_jobs": 2107,
+  "sampled_jobs": 2547,
   "aws": [
     {
       "skill": "RDS",
-      "count": 138,
+      "count": 195,
       "pct": 100
     },
     {
       "skill": "CloudOps / Monitoring",
-      "count": 14,
-      "pct": 12
+      "count": 16,
+      "pct": 9
     },
     {
       "skill": "EC2",
-      "count": 11,
-      "pct": 10
+      "count": 12,
+      "pct": 7
     },
     {
       "skill": "IAM",
       "count": 10,
-      "pct": 9
+      "pct": 6
     },
     {
       "skill": "ECS / Fargate",
-      "count": 6,
-      "pct": 6
+      "count": 8,
+      "pct": 5
     },
     {
       "skill": "EKS / Kubernetes",
       "count": 5,
-      "pct": 6
+      "pct": 4
+    },
+    {
+      "skill": "CloudWatch",
+      "count": 5,
+      "pct": 4
     },
     {
       "skill": "Terraform",
       "count": 4,
-      "pct": 5
-    },
-    {
-      "skill": "CloudWatch",
-      "count": 4,
-      "pct": 5
+      "pct": 4
     },
     {
       "skill": "Load Balancing (ALB/ELB)",
       "count": 4,
-      "pct": 4
+      "pct": 3
     },
     {
       "skill": "Lambda / Serverless",
       "count": 1,
-      "pct": 3
+      "pct": 2
     }
   ],
   "networking": [
     {
       "skill": "DNS",
       "count": 92,
-      "pct": 68
+      "pct": 48
     },
     {
       "skill": "Firewalls / ACLs",
-      "count": 71,
-      "pct": 53
+      "count": 76,
+      "pct": 40
     },
     {
       "skill": "DHCP",
       "count": 53,
-      "pct": 40
+      "pct": 28
     },
     {
       "skill": "Network Automation",
-      "count": 16,
-      "pct": 13
+      "count": 17,
+      "pct": 10
     },
     {
       "skill": "NAT / Routing",
-      "count": 7,
-      "pct": 6
+      "count": 8,
+      "pct": 5
     },
     {
       "skill": "Network Security",
       "count": 1,
-      "pct": 3
+      "pct": 2
     },
     {
       "skill": "TCP/IP",
       "count": 0,
-      "pct": 2
+      "pct": 1
     },
     {
       "skill": "VPN",
       "count": 0,
-      "pct": 2
+      "pct": 1
     },
     {
       "skill": "BGP",
       "count": 0,
-      "pct": 2
+      "pct": 1
     },
     {
       "skill": "VLAN / Switching",
       "count": 0,
-      "pct": 2
+      "pct": 1
     }
   ]
 }
