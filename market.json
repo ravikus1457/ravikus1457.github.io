@@ -1,9 +1,9 @@
 {
-  "sampled_jobs": 2596,
+  "sampled_jobs": 2623,
   "aws": [
     {
       "skill": "RDS",
-      "count": 204,
+      "count": 206,
       "pct": 100
     },
     {
@@ -38,7 +38,7 @@
     },
     {
       "skill": "Terraform",
-      "count": 4,
+      "count": 3,
       "pct": 3
     },
     {
