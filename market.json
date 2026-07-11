@@ -1,25 +1,25 @@
 {
-  "sampled_jobs": 2692,
+  "sampled_jobs": 2896,
   "aws": [
     {
       "skill": "RDS",
-      "count": 213,
+      "count": 227,
       "pct": 100
     },
     {
       "skill": "CloudOps / Monitoring",
       "count": 16,
-      "pct": 9
+      "pct": 8
     },
     {
       "skill": "EC2",
       "count": 12,
-      "pct": 7
+      "pct": 6
     },
     {
       "skill": "IAM",
-      "count": 11,
-      "pct": 6
+      "count": 8,
+      "pct": 5
     },
     {
       "skill": "ECS / Fargate",
@@ -29,7 +29,7 @@
     {
       "skill": "EKS / Kubernetes",
       "count": 5,
-      "pct": 4
+      "pct": 3
     },
     {
       "skill": "CloudWatch",
@@ -56,27 +56,27 @@
     {
       "skill": "DNS",
       "count": 92,
-      "pct": 44
+      "pct": 41
     },
     {
       "skill": "Firewalls / ACLs",
       "count": 76,
-      "pct": 37
+      "pct": 34
     },
     {
       "skill": "DHCP",
       "count": 53,
-      "pct": 26
+      "pct": 24
     },
     {
       "skill": "Network Automation",
-      "count": 20,
+      "count": 23,
       "pct": 11
     },
     {
       "skill": "NAT / Routing",
       "count": 8,
-      "pct": 5
+      "pct": 4
     },
     {
       "skill": "Network Security",
