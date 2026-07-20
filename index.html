@@ -27,6 +27,7 @@
       <a href="#skills">skills</a>
       <a href="#labs">labs</a>
       <a href="#architecture">architecture</a>
+      <a href="#shipped">shipped</a>
       <a href="#experience">experience</a>
       <a href="#certs">certs</a>
       <a href="#contact">contact</a>
@@ -163,6 +164,40 @@
           <b>AWS VPC</b>
           <small>Security Groups · subnets · least-privilege ACLs</small>
         </div>
+      </div>
+    </section>
+
+
+    <!-- SHIPPED: WEDDING PLATFORM -->
+    <section id="shipped" class="section reveal">
+      <h2><span class="prompt">$</span> cat projects/wedding-platform.md <span class="muted"># shipped &amp; in production</span></h2>
+      <p class="lede">A full-stack event platform I designed, built, and operate for a real
+        four-day wedding — <a href="https://raviandaachal.com" target="_blank" rel="noopener"><b>raviandaachal.com</b></a>,
+        serving hundreds of guests from a Raspberry&nbsp;Pi&nbsp;5 through an outbound-only
+        Cloudflare Tunnel (zero open ports, origin IP never exposed). Now productized as a
+        service at <a href="https://symbioai.dev/weddings" target="_blank" rel="noopener">symbioai.dev/weddings</a>.</p>
+      <div class="cards">
+        <article class="card">
+          <h3><span class="ico">⚙</span> Backend &amp; Infra</h3>
+          <ul class="tags">
+            <li>Python stdlib HTTP server</li><li>Cloudflare Tunnel</li><li>systemd hardening</li>
+            <li>Reboot-survivable units</li><li>Failure alerting</li><li>HTTP byte-range streaming</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3><span class="ico">🔒</span> Security &amp; Privacy</h3>
+          <ul class="tags">
+            <li>Loopback-only origin</li><li>Key-gated private endpoints</li><li>Per-IP rate limiting</li>
+            <li>Path-traversal defense</li><li>Address reveal only after RSVP</li><li>EXIF/GPS scrubbing</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3><span class="ico">📸</span> Product Features</h3>
+          <ul class="tags">
+            <li>Native RSVP + email fan-out</li><li>QR guest-camera uploads</li><li>Private media album</li>
+            <li>On-demand image renditions</li><li>HEIC→JPEG conversion</li><li>Multi-event scheduling</li>
+          </ul>
+        </article>
       </div>
     </section>
 
