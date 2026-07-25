@@ -1,30 +1,35 @@
 {
-  "sampled_jobs": 5120,
+  "sampled_jobs": 7408,
   "aws": [
     {
       "skill": "RDS",
-      "count": 431,
+      "count": 542,
       "pct": 100
     },
     {
+      "skill": "IAM",
+      "count": 20,
+      "pct": 4
+    },
+    {
       "skill": "CloudOps / Monitoring",
-      "count": 18,
-      "pct": 5
+      "count": 20,
+      "pct": 4
     },
     {
       "skill": "EC2",
       "count": 14,
-      "pct": 4
-    },
-    {
-      "skill": "IAM",
-      "count": 13,
-      "pct": 4
+      "pct": 3
     },
     {
       "skill": "ECS / Fargate",
+      "count": 10,
+      "pct": 2
+    },
+    {
+      "skill": "EKS / Kubernetes",
       "count": 9,
-      "pct": 3
+      "pct": 2
     },
     {
       "skill": "CloudWatch",
@@ -32,14 +37,9 @@
       "pct": 2
     },
     {
-      "skill": "EKS / Kubernetes",
-      "count": 7,
-      "pct": 2
-    },
-    {
       "skill": "Terraform",
-      "count": 6,
-      "pct": 2
+      "count": 5,
+      "pct": 1
     },
     {
       "skill": "Load Balancing (ALB/ELB)",
@@ -47,30 +47,30 @@
       "pct": 1
     },
     {
-      "skill": "Lambda / Serverless",
-      "count": 2,
+      "skill": "CI/CD (CodePipeline)",
+      "count": 3,
       "pct": 1
     }
   ],
   "networking": [
     {
       "skill": "DNS",
-      "count": 98,
-      "pct": 23
-    },
-    {
-      "skill": "Firewalls / ACLs",
-      "count": 80,
+      "count": 100,
       "pct": 19
     },
     {
+      "skill": "Firewalls / ACLs",
+      "count": 89,
+      "pct": 17
+    },
+    {
       "skill": "DHCP",
-      "count": 57,
-      "pct": 14
+      "count": 58,
+      "pct": 11
     },
     {
       "skill": "Network Automation",
-      "count": 30,
+      "count": 40,
       "pct": 8
     },
     {
@@ -80,7 +80,7 @@
     },
     {
       "skill": "Network Security",
-      "count": 4,
+      "count": 6,
       "pct": 2
     },
     {
@@ -91,17 +91,17 @@
     {
       "skill": "TCP/IP",
       "count": 0,
-      "pct": 1
+      "pct": 0
     },
     {
       "skill": "VPN",
       "count": 0,
-      "pct": 1
+      "pct": 0
     },
     {
       "skill": "BGP",
       "count": 0,
-      "pct": 1
+      "pct": 0
     }
   ]
 }
