@@ -1,86 +1,86 @@
 {
-  "sampled_jobs": 9036,
+  "sampled_jobs": 10703,
   "aws": [
     {
       "skill": "RDS",
-      "count": 611,
+      "count": 909,
       "pct": 100
     },
     {
       "skill": "IAM",
-      "count": 23,
-      "pct": 4
+      "count": 73,
+      "pct": 8
     },
     {
       "skill": "CloudOps / Monitoring",
-      "count": 21,
+      "count": 56,
+      "pct": 6
+    },
+    {
+      "skill": "CI/CD (CodePipeline)",
+      "count": 52,
+      "pct": 6
+    },
+    {
+      "skill": "ECS / Fargate",
+      "count": 40,
+      "pct": 5
+    },
+    {
+      "skill": "Load Balancing (ALB/ELB)",
+      "count": 32,
       "pct": 4
     },
     {
       "skill": "EC2",
-      "count": 14,
+      "count": 29,
       "pct": 3
     },
     {
-      "skill": "ECS / Fargate",
-      "count": 13,
+      "skill": "CloudWatch",
+      "count": 27,
       "pct": 3
     },
     {
       "skill": "EKS / Kubernetes",
-      "count": 10,
-      "pct": 2
-    },
-    {
-      "skill": "CloudWatch",
-      "count": 9,
+      "count": 16,
       "pct": 2
     },
     {
       "skill": "Terraform",
-      "count": 6,
-      "pct": 1
-    },
-    {
-      "skill": "Load Balancing (ALB/ELB)",
-      "count": 4,
-      "pct": 1
-    },
-    {
-      "skill": "CI/CD (CodePipeline)",
-      "count": 3,
+      "count": 9,
       "pct": 1
     }
   ],
   "networking": [
     {
       "skill": "DNS",
-      "count": 102,
-      "pct": 17
+      "count": 179,
+      "pct": 20
     },
     {
       "skill": "Firewalls / ACLs",
-      "count": 92,
-      "pct": 15
+      "count": 146,
+      "pct": 16
     },
     {
       "skill": "DHCP",
-      "count": 58,
-      "pct": 10
+      "count": 102,
+      "pct": 11
     },
     {
       "skill": "Network Automation",
-      "count": 44,
-      "pct": 8
-    },
-    {
-      "skill": "Network Security",
-      "count": 11,
-      "pct": 2
+      "count": 48,
+      "pct": 6
     },
     {
       "skill": "NAT / Routing",
-      "count": 8,
+      "count": 14,
+      "pct": 2
+    },
+    {
+      "skill": "Network Security",
+      "count": 12,
       "pct": 2
     },
     {
