@@ -1,92 +1,92 @@
 {
-  "sampled_jobs": 14661,
+  "sampled_jobs": 16090,
   "aws": [
     {
       "skill": "RDS",
-      "count": 1291,
+      "count": 1609,
       "pct": 100
     },
     {
+      "skill": "Load Balancing (ALB/ELB)",
+      "count": 236,
+      "pct": 15
+    },
+    {
       "skill": "IAM",
-      "count": 159,
+      "count": 203,
       "pct": 13
     },
     {
       "skill": "CloudWatch",
-      "count": 122,
-      "pct": 10
-    },
-    {
-      "skill": "Load Balancing (ALB/ELB)",
-      "count": 110,
-      "pct": 9
-    },
-    {
-      "skill": "CI/CD (CodePipeline)",
-      "count": 95,
-      "pct": 8
+      "count": 170,
+      "pct": 11
     },
     {
       "skill": "ECS / Fargate",
-      "count": 92,
-      "pct": 7
-    },
-    {
-      "skill": "CloudOps / Monitoring",
-      "count": 80,
-      "pct": 6
+      "count": 135,
+      "pct": 9
     },
     {
       "skill": "EC2",
-      "count": 69,
+      "count": 120,
+      "pct": 8
+    },
+    {
+      "skill": "CloudOps / Monitoring",
+      "count": 101,
+      "pct": 6
+    },
+    {
+      "skill": "CI/CD (CodePipeline)",
+      "count": 96,
       "pct": 6
     },
     {
       "skill": "EKS / Kubernetes",
       "count": 19,
-      "pct": 2
+      "pct": 1
     },
     {
       "skill": "Terraform",
-      "count": 9,
+      "count": 12,
       "pct": 1
     }
   ],
   "networking": [
     {
       "skill": "DNS",
-      "count": 433,
-      "pct": 34
+      "count": 689,
+      "pct": 43
     },
     {
       "skill": "DHCP",
-      "count": 275,
-      "pct": 21
+      "count": 443,
+      "pct": 28
     },
     {
       "skill": "Firewalls / ACLs",
-      "count": 264,
+      "count": 329,
       "pct": 21
     },
     {
       "skill": "Network Automation",
-      "count": 52,
+      "count": 56,
       "pct": 4
     },
     {
       "skill": "Network Security",
-      "count": 21,
+      "count": 25,
       "pct": 2
     },
     {
       "skill": "NAT / Routing",
-      "count": 16,
+      "count": 19,
       "pct": 1
     },
     {
       "skill": "SD-WAN",
       "count": 5,
-      "pct": 1
+      "pct": 0
     },
     {
       "skill": "VPN",
