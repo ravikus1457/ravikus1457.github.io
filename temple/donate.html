@@ -1,0 +1,415 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Donate & Sponsor | East Bay Hindu Temple</title>
+<meta name="description" content="Support East Bay Hindu Temple, Pittsburg CA - monthly giving, sponsor a pooja or festival, PayPal, Venmo and Cash App. Tax Exemption ID 46-2375980.">
+<link rel="icon" href="img/logo.png">
+
+
+<style>
+:root{--maroon:#7a0f12;--red:#a01a1a;--gold:#c79a3a;--gold-2:#e8c766;--saffron:#ef7f1a;
+ --cream:#fff8ee;--ink:#2a1a14;--line:#e7d4ad}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Mukta',system-ui,sans-serif;color:var(--ink);background:var(--cream);line-height:1.65}
+h1,h2,h3,.serif{font-family:'Marcellus','Cinzel',serif;letter-spacing:.3px;font-weight:400}
+a{color:var(--red);text-decoration:none}
+img{max-width:100%}
+.wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+.om{color:var(--gold);font-weight:700}
+/* top strip */
+.topbar{background:var(--maroon);color:#fae9c8;font-size:13.5px}
+.topbar .wrap{display:flex;justify-content:space-between;gap:8px 18px;padding:7px 22px;flex-wrap:wrap;align-items:center}
+.topbar a{color:#fae9c8}
+.topbar .np{color:var(--gold-2);font-weight:600;letter-spacing:.4px}
+.social{display:inline-flex;gap:8px;align-items:center}
+.social a{display:inline-flex;align-items:center;gap:5px;background:#ffffff1a;border:1px solid #ffffff33;
+ border-radius:16px;padding:2px 10px;font-size:12.5px;white-space:nowrap}
+.social a:hover{background:#ffffff33}
+/* nav */
+header.nav{position:sticky;top:0;z-index:50;background:linear-gradient(#fffdf8,#fff5e4);
+ border-bottom:3px solid var(--gold);box-shadow:0 2px 14px #0001}
+.nav .wrap{display:flex;align-items:center;gap:12px;padding:10px 22px;max-width:1240px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{height:54px;width:54px;border-radius:50%;box-shadow:0 2px 8px #0002}
+.brand .txt{display:block}
+.brand b{font-family:'Marcellus',serif;font-size:19px;color:var(--maroon);line-height:1.1;white-space:nowrap}
+.brand span{display:block;font-size:11px;letter-spacing:2px;color:var(--saffron);text-transform:uppercase}
+nav.tabs{margin-left:auto;display:flex;gap:2px;flex-wrap:wrap}
+nav.tabs a{padding:9px 9px;border-radius:8px;color:var(--ink);font-weight:600;font-size:14px;white-space:nowrap}
+nav.tabs a:hover{background:#fbe9c8}
+nav.tabs a.active{background:var(--maroon);color:#ffe9bf}
+.donate-btn{background:linear-gradient(var(--saffron),#d96b12);color:#fff !important;font-weight:700;
+ padding:9px 16px;margin-left:4px;border-radius:22px;box-shadow:0 4px 14px #d96b1240;white-space:nowrap;font-size:14.5px}
+.donate-btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px #d96b1259}
+.menu-btn{display:none}
+/* hero */
+.hero{position:relative;color:#fff;text-align:center;padding:92px 0 84px;
+ background:linear-gradient(rgba(80,8,10,.72),rgba(60,6,8,.82));background-size:cover;background-position:center}
+.hero h1{font-size:clamp(30px,5vw,52px);color:#fff;text-shadow:0 2px 18px #0007}
+.hero .sub{max-width:680px;margin:14px auto 0;font-size:18px;color:#ffe9c9}
+.hero .om-big{font-size:42px;color:var(--gold-2);margin-bottom:6px}
+.btn{display:inline-block;background:linear-gradient(var(--saffron),#d96b12);color:#fff;font-weight:700;
+ padding:13px 26px;border-radius:30px;box-shadow:0 8px 22px #0003;margin:6px 6px 0;transition:.2s}
+.btn:hover{transform:translateY(-2px)}
+.btn.gold{background:linear-gradient(var(--gold-2),var(--gold));color:#3a2a08}
+.btn.ghost{background:transparent;border:2px solid var(--gold-2);color:#fff}
+.btn.sm{padding:9px 18px;font-size:14px}
+/* sections */
+section{padding:62px 0}
+.sec-label{text-align:center;color:var(--saffron);text-transform:uppercase;letter-spacing:3px;
+ font-size:13px;font-weight:700;margin-bottom:6px}
+.sec-title{text-align:center;font-size:clamp(26px,3.4vw,38px);color:var(--maroon);margin-bottom:8px}
+.rule{width:90px;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:10px auto 30px}
+.lead{max-width:760px;margin:0 auto 8px;text-align:center;font-size:17px;color:#5a4636}
+.alt{background:linear-gradient(#fff3dd,#fdeccb)}
+.dark{background:linear-gradient(150deg,#5d0a0d,#8a1418);color:#ffeeda}
+.dark .sec-title,.dark h2,.dark h3{color:#ffe9bf}
+.dark .lead{color:#f6d9b4}
+.grid{display:grid;gap:22px}
+.g3{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px;
+ box-shadow:0 6px 20px #0000000d}
+.card h3{color:var(--red);margin-bottom:8px;font-size:21px}
+.card.deity{padding:0;overflow:hidden;text-align:center}
+.card.deity img{width:100%;height:230px;object-fit:cover;object-position:top}
+.card.deity .cap{padding:12px;font-weight:600;color:var(--maroon)}
+.pill{display:inline-block;background:#fbe9c8;color:var(--maroon);border-radius:20px;
+ padding:4px 12px;font-size:13px;font-weight:600;margin:3px}
+.note{background:#fff5e0;border-left:4px solid var(--gold);padding:12px 16px;border-radius:8px;
+ font-size:14.5px;color:#6a5436;margin-top:18px}
+.dark .note{background:#ffffff14;border-left-color:var(--gold-2);color:#f6d9b4}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center}
+.split img{width:100%;border-radius:14px;box-shadow:0 10px 30px #0002;border:4px solid #fff}
+.hours{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;
+ box-shadow:0 6px 20px #0000000d;border:1px solid var(--line)}
+.hours td{padding:11px 16px;border-bottom:1px solid #f0e4c8}
+.hours td:last-child{text-align:right;color:#6a5436}
+.hours tr:last-child td{border-bottom:0}
+.cta-band{background:linear-gradient(120deg,var(--maroon),var(--red));color:#fff;text-align:center}
+.cta-band h2{color:#fff}.cta-band p{color:#ffe2bd;max-width:640px;margin:8px auto 0}
+footer{background:#3a0a0b;color:#f0d8b4;padding:46px 0 26px;font-size:14.5px}
+footer .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:26px}
+footer h4{color:var(--gold-2);font-family:'Marcellus',serif;margin-bottom:10px;font-weight:400}
+footer a{color:#f0d8b4}
+footer .social a{border-color:#ffffff2e}
+.credit{text-align:center;border-top:1px solid #5a2122;margin-top:30px;padding-top:16px;color:#caa}
+.flyer{max-width:430px;width:100%;border-radius:14px;box-shadow:0 12px 34px #0003;border:5px solid #fff}
+/* flyer slideshow */
+.showcase{display:grid;grid-template-columns:minmax(280px,420px) 1fr;gap:38px;align-items:center}
+.slideshow{position:relative;border-radius:16px;overflow:hidden;box-shadow:0 18px 44px #00000047;
+ border:5px solid #fff;background:#fff}
+.slideshow .slide{display:none}
+.slideshow .slide.on{display:block}
+.slideshow .slide img{display:block;width:100%}
+.slideshow .cap{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(transparent,#000000cc);
+ color:#fff;font-size:13.5px;padding:26px 14px 10px;text-align:center;font-weight:600}
+.sl-nav{position:absolute;top:50%;transform:translateY(-50%);background:#00000055;color:#fff;border:0;
+ width:38px;height:52px;font-size:22px;cursor:pointer}
+.sl-nav:hover{background:#000000aa}
+.sl-prev{left:0;border-radius:0 8px 8px 0}.sl-next{right:0;border-radius:8px 0 0 8px}
+.dots{display:flex;gap:8px;justify-content:center;margin-top:14px}
+.dots button{width:11px;height:11px;border-radius:50%;border:0;background:#ffffff5c;cursor:pointer;padding:0}
+.dots button.on{background:var(--gold-2);transform:scale(1.25)}
+.now-badge{display:inline-block;background:var(--gold-2);color:#4a3208;font-weight:700;letter-spacing:2px;
+ text-transform:uppercase;font-size:12px;border-radius:20px;padding:4px 14px}
+.datelist{list-style:none;margin:14px 0 0;display:grid;gap:7px}
+.datelist li{display:flex;gap:10px;align-items:center;font-size:16px}
+.datelist li::before{content:"✦";font-size:13px;color:var(--gold-2)}
+.incl{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.incl span{background:#ffffff1f;border:1px solid #ffffff38;border-radius:18px;padding:5px 13px;font-size:14px}
+/* sponsorship tiers */
+.tier{background:#fff;border:2px solid var(--gold);border-radius:16px;padding:26px;position:relative;
+ box-shadow:0 10px 28px #00000012}
+.tier .amt{font-family:'Marcellus',serif;font-size:44px;color:var(--red);line-height:1}
+.tier h3{font-size:19px;letter-spacing:1px;text-transform:uppercase;color:var(--maroon)}
+.tier ul{list-style:none;margin:14px 0 0;display:grid;gap:6px}
+.tier ul li::before{content:"✦ ";color:var(--gold)}
+.tier p{margin-top:12px;color:#6a5436;font-size:15px}
+/* calendar */
+.chiprow{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin:22px 0 6px}
+.chiprow button{border:1px solid var(--line);background:#fff;color:var(--maroon);border-radius:20px;
+ padding:6px 15px;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.chiprow button:hover{background:#fbe9c8}
+.chiprow button.on{background:var(--maroon);color:#ffe9bf;border-color:var(--maroon)}
+.months{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));margin-top:24px}
+.month{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;
+ box-shadow:0 6px 20px #0000000d}
+.month h3{background:linear-gradient(#fff3dd,#fbe9c8);color:var(--maroon);font-size:19px;
+ padding:11px 18px;border-bottom:1px solid var(--line);text-align:center;letter-spacing:2px}
+.month table{width:100%;border-collapse:collapse}
+.month td{padding:8px 14px;border-bottom:1px solid #f4ead3;vertical-align:top;font-size:14.5px}
+.month tr:last-child td{border-bottom:0}
+.month td.dt{white-space:nowrap;text-align:right;color:#6a5436;font-variant-numeric:tabular-nums;width:1%}
+.month tr.big td{background:#fffaf0}
+.month tr.big td.nm{font-weight:700;color:var(--red)}
+.month .sub{display:block;font-size:12.5px;color:#8a7355;font-style:italic}
+.month tr.past{opacity:.45}
+/* upcoming strip */
+.upnext{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin-top:26px}
+.upnext .u{background:#fff;border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:12px;
+ padding:16px 18px;box-shadow:0 6px 18px #0000000d}
+.upnext .u .dd{font-family:'Marcellus',serif;color:var(--saffron);font-size:15px;letter-spacing:1px}
+.upnext .u .nn{font-weight:700;color:var(--maroon);margin-top:3px;font-size:17px}
+.upnext .u .ss{font-size:13px;color:#8a7355;font-style:italic;margin-top:4px}
+/* QR cards */
+.qr3{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));margin-top:26px}
+.qrc{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;text-align:center;
+ box-shadow:0 8px 24px #0000000f}
+.qrc img{width:100%;max-width:230px;border-radius:10px}
+.qrc .who{font-family:'Marcellus',serif;color:var(--maroon);font-size:20px;margin-bottom:2px}
+.qrc .hand{font-size:13.5px;color:#8a7355}
+/* forms */
+.formcard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px;
+ box-shadow:0 10px 28px #00000012}
+.formcard label{display:block;font-weight:600;color:var(--maroon);font-size:14px;margin:14px 0 5px}
+.formcard input,.formcard select,.formcard textarea{width:100%;padding:11px 13px;border:1px solid var(--line);
+ border-radius:9px;font:inherit;background:#fffdf8}
+.formcard input:focus,.formcard select:focus,.formcard textarea:focus{outline:2px solid var(--gold-2);border-color:var(--gold)}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:0 18px}
+.formcard button{margin-top:20px;width:100%;border:0;cursor:pointer;font:inherit}
+.subscribe{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:20px}
+.subscribe input{flex:1 1 210px;min-width:180px;padding:13px 16px;border:1px solid var(--line);border-radius:26px;
+ font:inherit;background:#fff}
+.subscribe button{border:0;cursor:pointer;font:inherit}
+.live{display:inline-flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--line);
+ border-radius:26px;padding:8px 18px;font-weight:600;color:var(--maroon);box-shadow:0 6px 18px #0000000d}
+.live .dot{width:10px;height:10px;border-radius:50%;background:#e0242b;box-shadow:0 0 0 0 #e0242b99;
+ animation:pulse 1.8s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 9px #e0242b00}100%{box-shadow:0 0 0 0 #e0242b00}}
+@media(max-width:900px){.showcase{grid-template-columns:1fr}}
+@media(max-width:760px){
+ .split{grid-template-columns:1fr}
+ .f2{grid-template-columns:1fr}
+ .nav .wrap{gap:9px}
+ nav.tabs{display:none;position:absolute;top:100%;left:0;right:0;background:#fffdf8;flex-direction:column;
+  padding:8px;border-bottom:3px solid var(--gold)}
+ nav.tabs.open{display:flex}
+ .menu-btn{display:block;background:var(--maroon);color:#ffe9bf;border:0;
+  font-size:22px;border-radius:8px;padding:6px 12px;cursor:pointer}
+ .brand{min-width:0}
+ .brand b{font-size:15px}
+ .brand img{height:42px;width:42px}
+ .brand .txt span{font-size:9.5px;letter-spacing:1.2px}
+ .donate-btn{margin-left:auto;padding:8px 13px;font-size:13.5px}
+}
+@media(max-width:540px){
+ .brand .txt{display:none}
+ .topbar .wrap{gap:4px 12px;font-size:12.5px}
+}
+
+/* ===== placeholder discipline blocks (Symbio build 2026-08-20) ===== */
+.need{background:repeating-linear-gradient(45deg,#fff4f4,#fff4f4 12px,#ffeaea 12px,#ffeaea 24px);
+ border:2px dashed #c0392b;border-radius:12px;padding:14px 18px;margin:16px 0;color:#8c2018;font-size:14.5px}
+.need b{display:block;font-family:'Marcellus',serif;font-size:13px;letter-spacing:2px;
+ text-transform:uppercase;color:#c0392b;margin-bottom:4px}
+.dark .need{background:#ffffff14;border-color:#ffb3ab;color:#ffd9d4}
+.dark .need b{color:#ffb3ab}
+.need.confirm{background:repeating-linear-gradient(45deg,#fffdf0,#fffdf0 12px,#fff6d6 12px,#fff6d6 24px);
+ border-color:#b8860b;color:#7a5c00}
+.need.confirm b{color:#b8860b}
+.unconf{display:inline-block;background:#c0392b;color:#fff;border-radius:12px;padding:1px 9px;
+ font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;vertical-align:middle}
+.conf{display:inline-block;background:#1e7a4c;color:#fff;border-radius:12px;padding:1px 9px;
+ font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;vertical-align:middle}
+.srcnote{font-size:13px;color:#8a7355;font-style:italic;margin-top:8px}
+.dark .srcnote{color:#e6c9a4}
+/* ===== pricing table ===== */
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:26px;
+ border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:0 8px 24px #0000000f}
+table.price{width:100%;border-collapse:collapse;min-width:720px}
+table.price th{background:linear-gradient(#7a0f12,#a01a1a);color:#ffe9bf;font-family:'Marcellus',serif;
+ font-weight:400;font-size:14px;letter-spacing:1px;padding:13px 14px;text-align:right;white-space:nowrap}
+table.price th:first-child{text-align:left}
+table.price td{padding:13px 14px;border-bottom:1px solid #f4ead3;text-align:right;
+ font-variant-numeric:tabular-nums;white-space:nowrap}
+table.price td:first-child{text-align:left;white-space:normal;font-weight:600;color:var(--maroon)}
+table.price tr:last-child td{border-bottom:0}
+table.price tr:nth-child(even) td{background:#fffaf0}
+table.price td.tot{font-weight:700;color:var(--red);font-size:16.5px}
+table.price .sub{display:block;font-size:12.5px;color:#8a7355;font-style:italic;font-weight:400}
+/* ===== service detail cards ===== */
+.svc{background:#fff;border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:14px;
+ padding:24px 26px;box-shadow:0 6px 20px #0000000d;margin-top:20px}
+.svc h3{color:var(--red);font-size:22px;margin-bottom:2px}
+.svc .sk{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--saffron);font-weight:700}
+.svc .why{margin-top:10px;font-size:16px}
+.svc .money{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+.svc .money span{background:#fbe9c8;color:var(--maroon);border-radius:18px;padding:4px 13px;
+ font-size:13.5px;font-weight:700}
+.svc .money span.t{background:var(--maroon);color:#ffe9bf}
+.samagri{background:#fffaf0;border:1px solid var(--line);border-radius:10px;padding:13px 16px;margin-top:14px}
+.samagri h4{font-family:'Marcellus',serif;color:var(--maroon);font-size:14px;letter-spacing:1.5px;
+ text-transform:uppercase;font-weight:400;margin-bottom:6px}
+.samagri ul{margin:0;padding-left:20px;font-size:14.5px;color:#5a4636;columns:2;column-gap:26px}
+@media(max-width:620px){.samagri ul{columns:1}}
+/* ===== shop ===== */
+.shopgrid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));margin-top:26px}
+.item{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;
+ box-shadow:0 6px 20px #0000000d;display:flex;flex-direction:column}
+.item .ph{height:150px;background:repeating-linear-gradient(45deg,#f7ecd6,#f7ecd6 14px,#f1e2c4 14px,#f1e2c4 28px);
+ display:flex;align-items:center;justify-content:center;color:#a68a5b;font-size:13px;text-align:center;
+ padding:12px;font-style:italic}
+.item .bd{padding:16px 18px;flex:1;display:flex;flex-direction:column}
+.item h3{color:var(--maroon);font-size:18px;margin-bottom:4px}
+.item p{font-size:14px;color:#6a5436;flex:1}
+.item .pr{margin-top:10px;font-family:'Marcellus',serif;font-size:22px;color:var(--red)}
+/* ===== subscription tiers ===== */
+.subs{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-top:26px}
+.sub-t{background:#fff;border:2px solid var(--line);border-radius:16px;padding:24px;text-align:center;
+ box-shadow:0 8px 24px #0000000f}
+.sub-t.feat{border-color:var(--gold);box-shadow:0 12px 32px #c79a3a33}
+.sub-t .amt{font-family:'Marcellus',serif;font-size:40px;color:var(--red);line-height:1}
+.sub-t .per{font-size:14px;color:#8a7355}
+.sub-t h3{font-size:17px;letter-spacing:1px;text-transform:uppercase;color:var(--maroon);margin:10px 0 6px}
+.sub-t p{font-size:14.5px;color:#6a5436}
+/* ===== sponsor-an-event rows ===== */
+.sprow{display:flex;flex-wrap:wrap;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);
+ border-left:5px solid var(--saffron);border-radius:12px;padding:15px 18px;margin-top:12px;
+ box-shadow:0 5px 16px #0000000d}
+.sprow .ev{flex:1 1 210px;font-weight:700;color:var(--maroon);font-size:16.5px}
+.sprow .ev small{display:block;font-weight:400;color:#8a7355;font-style:italic;font-size:13px}
+.sprow .amt{font-family:'Marcellus',serif;font-size:24px;color:var(--red);min-width:96px;text-align:right}
+/* ===== pay methods ===== */
+.pays{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));margin-top:24px}
+.pay{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;text-align:center;
+ box-shadow:0 6px 20px #0000000d}
+.pay .nm{font-family:'Marcellus',serif;color:var(--maroon);font-size:21px;margin-bottom:3px}
+.pay .hd{font-size:14px;color:#6a5436;word-break:break-word}
+</style></head><body>
+<div class="topbar"><div class="wrap">
+  <span>&#10070; 595 School Street, Pittsburg, CA 94565 &nbsp;&middot;&nbsp; <span class="np">A Nonprofit Religious Organization &middot; Est. 2004</span></span>
+  <span><a href="mailto:punditrakesh@yahoo.com">&#9993; punditrakesh@yahoo.com</a></span>
+  <span>Pandit R K Bhargav <a href="tel:+19258120581">(925) 812-0581</a> &nbsp;&middot;&nbsp;
+        Temple <a href="tel:+19252520551">(925) 252-0551</a></span>
+  <span class="social"><a href="https://www.facebook.com/pittsburgeastbayhindutemple" target="_blank" rel="noopener">f&nbsp; Temple Facebook</a><a href="https://maps.google.com/?cid=16124181771458457327" target="_blank" rel="noopener">&#10070; Google Listing</a><span style="background:#ffffff1a;border:1px dashed #ffb3ab;border-radius:16px;padding:2px 10px;font-size:12.5px;color:#ffd9d4" title="Instagram and Pandit Ji's own pages are not yet published on the live site">&#9888; IG + Pandit Ji socials &mdash; links needed</span></span>
+</div></div>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="index.html"><img src="img/logo.png" alt="East Bay Hindu Temple logo">
+    <span class="txt"><b>East Bay Hindu Temple</b><span>Pittsburg, CA &middot; Est. 2004</span></span></a>
+  <nav class="tabs" id="tabs"><a href="index.html">Home</a><a href="about.html">About Us</a><a href="puja-services.html">Puja Services</a><a href="events.html">Events</a><a href="shop.html">Gift Shop</a><a href="gallery.html">Gallery</a><a href="book.html">Book Online</a><a href="join.html">Join Us</a><a href="visit.html">Visit Us</a></nav>
+  <a class="donate-btn" href="donate.html">&hearts; Donate</a>
+  <button class="menu-btn" onclick="document.getElementById('tabs').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+</div></header>
+<div class="hero" style="background-image:linear-gradient(rgba(80,8,10,.72),rgba(60,6,8,.82)),url('img/temple-altar.jpg')">
+  <div class="wrap"><div class="om-big">&#128303;</div><h1>Support Your Temple</h1><p class="sub">Make your donations to East Bay Hindu Temple in Pittsburg, CA. Every contribution is a blessing.</p><a class="btn" href="#monthly">Give monthly</a><a class="btn gold" href="#sponsor">Sponsor an event</a></div></div>
+
+<section><div class="wrap">
+  <div class="sec-label">Ways to Give</div>
+  <h2 class="sec-title">Support Your Temple</h2><div class="rule"></div>
+  <p class="lead">Make your donations to East Bay Hindu Temple in Pittsburg, CA. You can now donate
+  online using secured PayPal &mdash; the safer, easier way to pay online. A detailed receipt will be
+  immediately emailed to you.</p>
+  <div class="pays">
+    <div class="pay"><div class="nm">PayPal</div><div class="hd">The safer, easier way to give online</div>
+      <p style="margin-top:12px"><a class="btn sm" href="https://www.eastbayhindutemple.com/donate" target="_blank" rel="noopener">Donate via PayPal</a></p>
+      <span class="conf">on live site</span></div>
+    <div class="pay"><div class="nm">Venmo</div><div class="hd">Accepted by the temple</div>
+      <p style="margin-top:12px"><span class="unconf">handle needed</span></p></div>
+    <div class="pay"><div class="nm">Cash App</div><div class="hd">Accepted by the temple</div>
+      <p style="margin-top:12px"><span class="unconf">cashtag needed</span></p></div>
+    <div class="pay"><div class="nm">Zelle</div><div class="hd">Not yet published by the temple</div>
+      <p style="margin-top:12px"><span class="unconf">confirm &amp; provide</span></p></div>
+  </div>
+  <div class="need"><b>Needed from Pandit Ji &mdash; payment details</b>
+  The live site says donations are accepted &ldquo;via PayPal, Venmo, or Cash App&rdquo; but publishes
+  <i>no handles</i>. To finish this page we need: the temple's Venmo handle, the Cash App cashtag, the
+  direct PayPal donate link, and confirmation of <b>whether the temple accepts Zelle at all</b> &mdash;
+  and if so, the Zelle email or phone number. Nothing will be shown until Pandit Ji confirms it.</div>
+  <div class="note">East Bay Hindu Temple is a nonprofit religious organization. Our Tax Exemption ID
+  (EIN) is <b>46-2375980</b>. For other donation inquiries, please call Rakesh Pandit Ji at Cell
+  <a href="tel:+19258120581">(925) 812-0581</a>, or the temple at
+  <a href="tel:+19252520551">(925) 252-0551</a>. &nbsp;&#128303; Jai Mata Di</div>
+</div></section>
+
+<section class="alt" id="monthly"><div class="wrap">
+  <div class="sec-label">Monthly Giving</div>
+  <h2 class="sec-title">Become a monthly contributor</h2><div class="rule"></div>
+  <p class="lead">A small amount every month does more for the temple than a large gift once a year
+  &mdash; it keeps the lights on, the deities dressed and the prasad served, all year round. Cancel
+  any time.</p>
+  <div class="subs">
+    <div class="sub-t feat"><div class="amt">$10</div><div class="per">per month</div>
+      <h3>Darshan</h3><p>The everyday supporter's contribution &mdash; keeps daily darshan and aarti
+      going.</p><span class="conf">from Pandit Ji</span>
+      <p style="margin-top:12px"><a class="btn sm" href="tel:+19258120581">Start</a></p></div>
+    <div class="sub-t"><div class="amt" style="color:#c0392b">$&mdash;</div><div class="per">per month</div>
+      <h3>Seva</h3><p>A mid-level monthly tier.</p><span class="unconf">amount needed</span>
+      <p style="margin-top:12px"><a class="btn sm ghost" style="border-color:#c0392b;color:#c0392b" href="tel:+19258120581">Ask Pandit Ji</a></p></div>
+    <div class="sub-t"><div class="amt" style="color:#c0392b">$&mdash;</div><div class="per">per month</div>
+      <h3>Patron</h3><p>A higher monthly tier for families who want to give more.</p>
+      <span class="unconf">amount needed</span>
+      <p style="margin-top:12px"><a class="btn sm ghost" style="border-color:#c0392b;color:#c0392b" href="tel:+19258120581">Ask Pandit Ji</a></p></div>
+  </div>
+  <div class="need"><b>Needed from Pandit Ji &mdash; monthly tiers</b>
+  Only the <b>$10/month darshan</b> tier came from the 30 June meeting. If the temple wants a two- or
+  three-tier monthly programme, we need the other amounts and what each one should be called. We also
+  need to know <b>which processor</b> should handle the recurring charge, since PayPal, Venmo and Cash
+  App behave differently for subscriptions.</div>
+</div></section>
+
+<section id="sponsor"><div class="wrap">
+  <div class="sec-label">Seva</div>
+  <h2 class="sec-title">Sponsor an event</h2><div class="rule"></div>
+  <p class="lead">Sponsorship covers the pooja, the prasad and the temple's costs for the evening
+  &mdash; and is offered with a sankalp in your family's name.</p>
+  <div class="sprow"><div class="ev">Shravan Shiv Pooja &mdash; Grand Sponsorship<small>Maha Prasad, pooja supplies, temple donation, Pandit Ji dakshina</small></div><div class="amt">$1,100</div><a class="btn sm" href="tel:+19258120581">Sponsor this</a><span class="conf">flyer</span></div>
+<div class="sprow"><div class="ev">Shravan Shiv Pooja &mdash; Family Archana<small>Archana in your family's name, sankalp with gotra, prasad</small></div><div class="amt">$151</div><a class="btn sm" href="tel:+19258120581">Sponsor this</a><span class="conf">flyer</span></div>
+<div class="sprow"><div class="ev">Ganesh Chaturthi &mdash; 14 September 2026<small>Sponsor the sthapna, the aarti or the visarjan</small></div><div class="amt" style="color:#c0392b">$&mdash;</div><span class="unconf">price needed</span><a class="btn sm ghost" style="border-color:#c0392b;color:#c0392b" href="tel:+19258120581">Ask Pandit Ji</a></div>
+<div class="sprow"><div class="ev">Navratri &mdash; 11&ndash;20 October 2026<small>Sponsor one of the nine nights, or the Ghata Sthapna</small></div><div class="amt" style="color:#c0392b">$&mdash;</div><span class="unconf">price needed</span><a class="btn sm ghost" style="border-color:#c0392b;color:#c0392b" href="tel:+19258120581">Ask Pandit Ji</a></div>
+<div class="sprow"><div class="ev">Diwali Laxmi Pooja &mdash; 8 November 2026<small>Sponsor the evening Laxmi Pooja and Maha Prasad</small></div><div class="amt" style="color:#c0392b">$&mdash;</div><span class="unconf">price needed</span><a class="btn sm ghost" style="border-color:#c0392b;color:#c0392b" href="tel:+19258120581">Ask Pandit Ji</a></div>
+<div class="sprow"><div class="ev">Krishna Janamastami &mdash; 28 August 2026<small>Sponsor the midnight abhishek and jhanki</small></div><div class="amt" style="color:#c0392b">$&mdash;</div><span class="unconf">price needed</span><a class="btn sm ghost" style="border-color:#c0392b;color:#c0392b" href="tel:+19258120581">Ask Pandit Ji</a></div>
+<div class="sprow"><div class="ev">Maha Shivratri<small>Sponsor one of the four prahar poojas</small></div><div class="amt" style="color:#c0392b">$&mdash;</div><span class="unconf">price needed</span><a class="btn sm ghost" style="border-color:#c0392b;color:#c0392b" href="tel:+19258120581">Ask Pandit Ji</a></div>
+<div class="sprow"><div class="ev">Holi &amp; Holika Dahan<small>Sponsor the Holika Dahan and the prasad</small></div><div class="amt" style="color:#c0392b">$&mdash;</div><span class="unconf">price needed</span><a class="btn sm ghost" style="border-color:#c0392b;color:#c0392b" href="tel:+19258120581">Ask Pandit Ji</a></div>
+<div class="sprow"><div class="ev">Annadaan &mdash; feed the sangat<small>Sponsor a Sunday langar / prasad for all who visit</small></div><div class="amt" style="color:#c0392b">$&mdash;</div><span class="unconf">price needed</span><a class="btn sm ghost" style="border-color:#c0392b;color:#c0392b" href="tel:+19258120581">Ask Pandit Ji</a></div>
+  <div class="need"><b>Needed from Pandit Ji &mdash; sponsorship prices &amp; links</b>
+  Only the two Shravan Shiv Pooja amounts ($1,100 grand / $151 family archana) exist in writing, from
+  the temple's own flyer. For every other festival above we need <b>(a)</b> the sponsorship amount and
+  <b>(b)</b> the direct payment link the sponsor should be sent to. Until then those rows stay marked
+  &ldquo;price needed&rdquo; rather than showing a guess.</div>
+</div></section>
+
+<section class="alt"><div class="wrap">
+  <div class="sec-label">This month</div>
+  <h2 class="sec-title">Shravan Shiv Pooja</h2><div class="rule"></div>
+  <p class="lead">Every Monday at 6:30 PM &mdash; Shiv Poojan &amp; Abhishek, Bhajan Kirtan, Aarti and
+  Maha Prasad.</p>
+  <div class="grid g2" style="margin-top:26px">
+    <div class="tier"><h3>Grand Sponsorship</h3><div class="amt">$1,100</div>
+      <ul><li>Maha Prasad</li><li>Pooja Supplies</li><li>Temple Donation</li><li>Pandit Ji Dakshina</li></ul>
+      <p>The full sponsorship of an evening's pooja, offered in your family's name.</p>
+      <p style="margin-top:12px"><a class="btn sm" href="tel:+19258120581">Sponsor this</a></p></div>
+    <div class="tier"><h3>Family Archana Sponsorship</h3><div class="amt">$151</div>
+      <ul><li>Archana in your family's name</li><li>Sankalp with your gotra &amp; names</li><li>Prasad for your family</li></ul>
+      <p>Offer your prayers and receive the divine blessings of Lord Shiva for peace, prosperity,
+      health &amp; happiness.</p>
+      <p style="margin-top:12px"><a class="btn sm" href="tel:+19258120581">Sponsor this</a></p></div>
+  </div>
+  <p class="srcnote">Both amounts are taken from the temple's own printed Shravan Shiv Pooja flyer.</p>
+</div></section>
+
+<section class="cta-band"><div class="wrap"><h2 class="sec-title" style="color:#fff">Every contribution is a blessing</h2>
+  <div class="rule"></div><p>For sponsorship and information, call Pandit Rakesh Bhargav directly.</p>
+  <div style="margin-top:18px"><a class="btn gold" href="tel:+19258120581">(925) 812-0581</a>
+  <a class="btn ghost" href="events.html">See what's coming up</a></div></div></section>
+
+<footer><div class="wrap"><div class="cols">
+  <div><h4>East Bay Hindu Temple</h4>595 School Street, Pittsburg, CA 94565<br>A Nonprofit Religious Organization &middot; Est. 2004<br>Tax Exemption ID (EIN): 46-2375980<br>
+     <div style="margin-top:10px"><span class="social"><a href="https://www.facebook.com/pittsburgeastbayhindutemple" target="_blank" rel="noopener">f&nbsp; Temple Facebook</a><a href="https://maps.google.com/?cid=16124181771458457327" target="_blank" rel="noopener">&#10070; Google Listing</a></span></div>
+     <div class="need" style="margin-top:12px;font-size:13px"><b>Needed from Pandit Ji</b>Temple Instagram, plus Rakesh Bhargav's own Facebook &amp; Instagram links. Only the temple Facebook page is published today.</div></div>
+  <div><h4>Contact</h4>Temple: <a href="tel:+19252520551">(925) 252-0551</a><br>
+     Pandit Bhargav Ji: <a href="tel:+19258120581">(925) 812-0581</a><br>
+     <a href="mailto:punditrakesh@yahoo.com">punditrakesh@yahoo.com</a><br>
+     <a href="https://www.eastbayhindutemple.com">www.eastbayhindutemple.com</a></div>
+  <div><h4>Hours of Service</h4>Monday 10:00 AM &ndash; 4:00 PM<br>Tuesday 10:00 AM &ndash; 8:00 PM<br>
+     Wednesday &mdash; Closed<br>Thursday &mdash; Closed<br>Friday 10:00 AM &ndash; 4:00 PM<br>
+     Saturday 10:00 AM &ndash; 4:00 PM<br>Sunday 10:00 AM &ndash; 4:00 PM<br>
+     <span style="color:#caa">Hours change during celebrations and festivals.</span><br>
+     <a href="https://maps.google.com/?cid=16124181771458457327">Get directions &#8599;</a></div>
+  <div><h4>Explore</h4><a href="index.html">Home</a><br><a href="about.html">About Us</a><br><a href="puja-services.html">Puja Services</a><br><a href="events.html">Events</a><br><a href="shop.html">Gift Shop</a><br><a href="gallery.html">Gallery</a><br><a href="book.html">Book Online</a><br><a href="join.html">Join Us</a><br><a href="visit.html">Visit Us</a><br><a href="donate.html">Donate</a></div>
+</div>
+<div class="credit">&#128303; &nbsp;Jai Mata Di &nbsp;&middot;&nbsp; Modernized website concept designed by
+  <b>Symbio AI</b> &middot; symbioai.dev &nbsp;&mdash;&nbsp; a redesign preview for East Bay Hindu Temple</div>
+</div></footer>
+</body></html>
