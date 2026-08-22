@@ -1,0 +1,87 @@
+<title>Build the draft page — step by step</title>
+<style>
+body{font:16px/1.6 system-ui,sans-serif;max-width:780px;margin:0 auto;padding:22px 16px;
+background:#faf6ee;color:#2b1d14}
+h1{color:#6b1f1f;font:700 26px/1.25 Georgia,serif;margin:0 0 4px}
+.sub{color:#6b5a4a;margin:0 0 18px}
+.safe{background:#f0f7f0;border:1px solid #b8d4b8;border-radius:10px;padding:12px 14px;margin:0 0 20px}
+.step{background:#fff;border:1px solid #e4d9c3;border-radius:10px;padding:14px 16px;margin:0 0 12px}
+.step.done{opacity:.5}
+label{display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:600}
+.n{background:#6b1f1f;color:#fff;border-radius:999px;width:26px;height:26px;display:grid;
+place-items:center;font:600 13px system-ui;flex:0 0 26px}
+.t{font:600 17px/1.3 system-ui}
+.body{margin:8px 0 0 36px}
+pre{white-space:pre-wrap;font:15px/1.5 system-ui;background:#fffdf5;border:2px dashed #c9a227;
+border-radius:8px;padding:10px 12px;margin:8px 0}
+button{background:#6b1f1f;color:#fff;border:0;border-radius:7px;padding:8px 18px;
+font:600 14px system-ui;cursor:pointer}
+button.ok{background:#2e7d32}
+.warn{background:#fff4f4;border:1px solid #e0b4b4;border-radius:8px;padding:10px 12px;margin:10px 0 0;font-size:15px}
+a{color:#6b1f1f}
+@media(prefers-color-scheme:dark){body{background:#171310;color:#efe6d8}
+.step{background:#211b16;border-color:#3a2f26}pre{background:#2a231d;color:#efe6d8}
+h1{color:#e8c86a}.safe{background:#16241a;border-color:#2f4a33}
+.warn{background:#2a1a1a;border-color:#5a3a3a}a{color:#e8c86a}}
+</style>
+<h1>Build the draft page</h1>
+<p class="sub">Work top to bottom. Tick each step as you go — your progress is remembered.</p>
+<div class="safe"><b>You cannot break his website doing this.</b> You're making a new page and
+saving it privately. His live pages aren't touched, and every action in the Wix editor undoes
+with <b>Ctrl+Z</b>. The only button to avoid is <b>Publish</b>.</div>
+<div class="step"><label><input type="checkbox" onchange="mark(this)">
+<span class="n">1</span><span class="t">Open the editor</span></label>
+<div class="body"><p>Log into Wix. On the <b>eastbayhindutemple</b> site card, click <b>Edit Site</b>. Wait for the editor to fully load — you'll see the site with a left toolbar.</p></div></div>
+<div class="step"><label><input type="checkbox" onchange="mark(this)">
+<span class="n">2</span><span class="t">Duplicate the Home page — do NOT start blank</span></label>
+<div class="body"><p>Left toolbar → <b>Pages &amp; Menu</b> (the pages icon) → hover <b>Home</b> → click the <b>⋯</b> next to it → <b>Duplicate</b>. This copies his fonts, colours, header and footer so your page matches the rest of the site automatically.</p><div class="warn">⚠️ If you start from a blank page instead, nothing will match and it will look wrong. Always duplicate.</div></div></div>
+<div class="step"><label><input type="checkbox" onchange="mark(this)">
+<span class="n">3</span><span class="t">Rename the copy</span></label>
+<div class="body"><p>The new page is called <b>Home (copy)</b>. Click <b>⋯</b> → <b>Rename</b> and set it to exactly:</p><pre id="c2">NEW DESIGN — Puja Services</pre><button onclick="cp(2,this)">Copy this</button></div></div>
+<div class="step"><label><input type="checkbox" onchange="mark(this)">
+<span class="n">4</span><span class="t">Hide it from the menu</span></label>
+<div class="body"><p>Still in <b>⋯</b> → <b>Settings</b> → find <b>Show in menu</b> and turn it <b>OFF</b>. Now it can't appear in his navigation even by accident.</p></div></div>
+<div class="step"><label><input type="checkbox" onchange="mark(this)">
+<span class="n">5</span><span class="t">Check you're on the copy, not the original</span></label>
+<div class="body"><p>Look at the top of the editor — it names the page you're editing. It must say <b>NEW DESIGN — Puja Services</b>. If it says <b>Home</b>, stop and click your new page in the Pages list first.</p><div class="warn">⚠️ This is the ONE mistake that matters. Everything else is undoable in seconds.</div></div></div>
+<div class="step"><label><input type="checkbox" onchange="mark(this)">
+<span class="n">6</span><span class="t">Clear the middle of the page</span></label>
+<div class="body"><p>Click the big sections in the middle of the page and press <b>Delete</b>. Leave the <b>header at the top</b> and the <b>footer at the bottom</b> alone — those are shared with the whole site.</p><div class="warn">⚠️ If you accidentally delete the header or footer, press <b>Ctrl+Z</b> (Cmd+Z on Mac) immediately.</div></div></div>
+<div class="step"><label><input type="checkbox" onchange="mark(this)">
+<span class="n">7</span><span class="t">Add the page title</span></label>
+<div class="body"><p>Add a heading at the top of the empty area. Copy this in:</p><pre id="c6">Puja Services</pre><button onclick="cp(6,this)">Copy this</button></div></div>
+<div class="step"><label><input type="checkbox" onchange="mark(this)">
+<span class="n">8</span><span class="t">Add the intro line</span></label>
+<div class="body"><p>Add a paragraph under the title:</p><pre id="c7">Every ceremony is performed by Pandit R K Bhargav, who explains each ritual so families of every generation can take part. All are welcome.</pre><button onclick="cp(7,this)">Copy this</button></div></div>
+<div class="step"><label><input type="checkbox" onchange="mark(this)">
+<span class="n">9</span><span class="t">Build the FIRST service only, then stop and look</span></label>
+<div class="body"><p>Add a heading and a paragraph for the first puja. Get the spacing and colours how you want them before doing the rest — you'll copy this block eleven times.</p><pre id="c8">Wedding Ceremony (Vivah) — At Your Venue — $1,100  (puja supplies +$150)</pre><button onclick="cp(8,this)">Copy this</button></div></div>
+<div class="step"><label><input type="checkbox" onchange="mark(this)">
+<span class="n">10</span><span class="t">…and its description</span></label>
+<div class="body"><p>Paste this under that heading:</p><pre id="c9">A complete traditional Hindu wedding performed at your chosen venue. The vivah samskar joins two families through sacred vows around the fire, with each ritual explained so guests of every generation can follow along.</pre><button onclick="cp(9,this)">Copy this</button></div></div>
+<div class="step"><label><input type="checkbox" onchange="mark(this)">
+<span class="n">11</span><span class="t">Now duplicate that block for the other 11</span></label>
+<div class="body"><p>Select the heading + paragraph together, <b>Ctrl+C</b> then <b>Ctrl+V</b>, drag the copy below, and swap the text. Repeat. All the remaining text is on the <a href='paste-sheet.html'>paste sheet</a> — open it in a second tab.</p><div class="warn">⚠️ Do four, then look at the page. If the spacing has drifted, fix it before doing the other eight.</div></div></div>
+<div class="step"><label><input type="checkbox" onchange="mark(this)">
+<span class="n">12</span><span class="t">Add the footer line at the bottom</span></label>
+<div class="body"><p>One last paragraph under the twelve services:</p><pre id="c11">To confirm a date and pandit availability, call (925) 812-0581 or (925) 252-0551.</pre><button onclick="cp(11,this)">Copy this</button></div></div>
+<div class="step"><label><input type="checkbox" onchange="mark(this)">
+<span class="n">13</span><span class="t">SAVE — and never Publish</span></label>
+<div class="body"><p>Press <b>Ctrl+S</b> (or the <b>Save</b> button). That's it. <b>Do not touch the Publish button.</b> Saving keeps it as a private draft only he and you can see; publishing would put it on the live website.</p><div class="warn">⚠️ Save = private. Publish = live to the public. You only ever want Save.</div></div></div>
+<div class="step"><label><input type="checkbox" onchange="mark(this)">
+<span class="n">14</span><span class="t">Tell the pandit</span></label>
+<div class="body"><p>Message him this:</p><pre id="c13">Pandit ji — open your Wix editor and look at the page called NEW DESIGN — Puja Services. That's the new layout with all the prices from our meeting. Nothing on your live site has changed. Tell me anything you want different.</pre><button onclick="cp(13,this)">Copy this</button></div></div>
+<script>
+var K='ebht_build_steps';var done=JSON.parse(localStorage.getItem(K)||'[]');
+document.querySelectorAll('.step').forEach(function(s,i){
+  if(done.indexOf(i)>=0){s.classList.add('done');s.querySelector('input').checked=true;}});
+function mark(cb){var s=cb.closest('.step');
+  var i=[].indexOf.call(document.querySelectorAll('.step'),s);
+  s.classList.toggle('done',cb.checked);
+  var d=JSON.parse(localStorage.getItem(K)||'[]');
+  if(cb.checked){if(d.indexOf(i)<0)d.push(i);}else{d=d.filter(function(x){return x!==i;});}
+  localStorage.setItem(K,JSON.stringify(d));}
+function cp(i,b){navigator.clipboard.writeText(document.getElementById('c'+i).innerText)
+  .then(function(){b.textContent='Copied';b.className='ok';
+  setTimeout(function(){b.textContent='Copy this';b.className='';},1400);});}
+</script>
