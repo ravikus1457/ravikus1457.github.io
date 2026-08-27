@@ -1,81 +1,81 @@
 {
-  "sampled_jobs": 16090,
+  "sampled_jobs": 17136,
   "aws": [
     {
       "skill": "RDS",
-      "count": 1609,
+      "count": 1944,
       "pct": 100
     },
     {
       "skill": "Load Balancing (ALB/ELB)",
-      "count": 236,
-      "pct": 15
+      "count": 265,
+      "pct": 14
     },
     {
       "skill": "IAM",
-      "count": 203,
-      "pct": 13
+      "count": 240,
+      "pct": 12
     },
     {
       "skill": "CloudWatch",
-      "count": 170,
-      "pct": 11
+      "count": 195,
+      "pct": 10
     },
     {
       "skill": "ECS / Fargate",
-      "count": 135,
-      "pct": 9
+      "count": 158,
+      "pct": 8
     },
     {
       "skill": "EC2",
-      "count": 120,
+      "count": 146,
       "pct": 8
     },
     {
       "skill": "CloudOps / Monitoring",
-      "count": 101,
+      "count": 117,
       "pct": 6
     },
     {
       "skill": "CI/CD (CodePipeline)",
-      "count": 96,
-      "pct": 6
+      "count": 97,
+      "pct": 5
     },
     {
       "skill": "EKS / Kubernetes",
-      "count": 19,
+      "count": 24,
       "pct": 1
     },
     {
       "skill": "Terraform",
-      "count": 12,
+      "count": 13,
       "pct": 1
     }
   ],
   "networking": [
     {
       "skill": "DNS",
-      "count": 689,
+      "count": 843,
       "pct": 43
     },
     {
       "skill": "DHCP",
-      "count": 443,
-      "pct": 28
+      "count": 559,
+      "pct": 29
     },
     {
       "skill": "Firewalls / ACLs",
-      "count": 329,
-      "pct": 21
+      "count": 395,
+      "pct": 20
     },
     {
       "skill": "Network Automation",
-      "count": 56,
-      "pct": 4
+      "count": 61,
+      "pct": 3
     },
     {
       "skill": "Network Security",
-      "count": 25,
+      "count": 32,
       "pct": 2
     },
     {
