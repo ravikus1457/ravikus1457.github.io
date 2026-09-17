@@ -1,40 +1,40 @@
 {
-  "sampled_jobs": 18609,
+  "sampled_jobs": 19205,
   "aws": [
     {
       "skill": "RDS",
-      "count": 2543,
+      "count": 2792,
       "pct": 100
     },
     {
       "skill": "Load Balancing (ALB/ELB)",
-      "count": 302,
-      "pct": 12
+      "count": 305,
+      "pct": 11
     },
     {
       "skill": "IAM",
-      "count": 286,
+      "count": 293,
       "pct": 11
     },
     {
       "skill": "CloudWatch",
-      "count": 225,
-      "pct": 9
+      "count": 226,
+      "pct": 8
     },
     {
       "skill": "ECS / Fargate",
-      "count": 184,
+      "count": 186,
       "pct": 7
     },
     {
       "skill": "EC2",
-      "count": 167,
-      "pct": 7
+      "count": 172,
+      "pct": 6
     },
     {
       "skill": "CloudOps / Monitoring",
-      "count": 139,
-      "pct": 6
+      "count": 145,
+      "pct": 5
     },
     {
       "skill": "CI/CD (CodePipeline)",
@@ -43,7 +43,7 @@
     },
     {
       "skill": "EKS / Kubernetes",
-      "count": 24,
+      "count": 25,
       "pct": 1
     },
     {
@@ -55,22 +55,22 @@
   "networking": [
     {
       "skill": "DNS",
-      "count": 942,
-      "pct": 37
+      "count": 955,
+      "pct": 34
     },
     {
       "skill": "DHCP",
-      "count": 631,
-      "pct": 25
+      "count": 636,
+      "pct": 23
     },
     {
       "skill": "Firewalls / ACLs",
-      "count": 433,
-      "pct": 17
+      "count": 441,
+      "pct": 16
     },
     {
       "skill": "Network Automation",
-      "count": 71,
+      "count": 73,
       "pct": 3
     },
     {
@@ -85,7 +85,7 @@
     },
     {
       "skill": "SD-WAN",
-      "count": 5,
+      "count": 6,
       "pct": 0
     },
     {
