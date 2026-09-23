@@ -212,6 +212,10 @@ body.pit-off .rack-call.coach,.rack-call.coach{display:block}
   .act{font-size:8px;letter-spacing:.04em;padding:6px 2px} .act svg{width:14px;height:14px}
 }
 @media (max-width: 420px){ .chip{width:38px;height:38px;font-size:10.5px} }
+@media (max-width: 1099px) and (max-height: 560px){ /* landscape phones: a sticky rack would cover most of the screen */
+  .rack{position:static;margin:0;border-radius:20px}
+  .toasts{bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+}
 @media (max-width: 360px){ .act{font-size:7.5px;letter-spacing:.02em;gap:3px} .tools{gap:5px} .chips{gap:2px;padding:6px 4px} .work{min-width:0} .work b{font-size:11px} .roll{min-width:104px} }
 
 /* ---------- felt SVG ---------- */
