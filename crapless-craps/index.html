@@ -85,6 +85,7 @@ svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-l
 /* ---------- history ---------- */
 .history{position:absolute;left:0;right:0;bottom:0;margin:0;padding:8px 12px;list-style:none;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;background:linear-gradient(transparent, rgba(4,10,16,.8) 40%)}
 .history::-webkit-scrollbar{display:none}
+.history{touch-action:pan-x}
 .history li{flex:0 0 auto;display:flex;align-items:center;gap:3px;padding:4px 9px 4px 5px;border-radius:8px;background:rgba(12,28,37,.85);color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums;border:1px solid var(--edge-2)}
 .history li b{min-width:1.3em;text-align:center;margin-left:3px}
 .history li.win{border-color:rgba(242,190,69,.7);color:var(--gold)}
@@ -1795,7 +1796,7 @@ const App = {
   tap(key) { if (this.eraseMode) this.remove(key); else this.place(key, this.chip); },
   place(key, amount, { quiet = false } = {}) {
     const say = m => { if (!quiet) toast(m); return false; };
-    if (!this.fsm.bettingOpen) return say('Bets are locked while the dice are live.');
+    if (!this.fsm.bettingOpen) return say(this.lockedMsg());
     const { type, n } = Rules.parseKey(key);
     let amt = amount;
     // Odds taps fill up to the cap instead of refusing
@@ -1827,8 +1828,10 @@ const App = {
     if (u && u[0] > 1 && this.bets[key] % (u[0] * 100) !== 0) tip(key + u[0], `Bet ${u[1]} in $${u[0]} units so the payout isn’t rounded down.`);
     if (type === 'buy' && this.bets[key] < 2000) tip('buy', 'Buy bets pay true odds minus a 5% commission with a $1 minimum, so they pay best at $20 or more.');
   },
+  /** Why bets can't change right now */
+  lockedMsg() { return this.fsm.rolling ? 'Bets are locked while the dice are live.' : 'Hang on, the table is being paid.'; },
   remove(key) {
-    if (!this.fsm.bettingOpen) return toast('Bets are locked while the dice are live.');
+    if (!this.fsm.bettingOpen) return toast(this.lockedMsg());
     const t = Rules.parseKey(key);
     // Taking down the 6 box takes down its come odds (the come bet itself stays)
     if (!this.bets[key]) { if (t.type === 'codds' && this.bets['come' + t.n]) toast(Rules.removalError('come' + t.n, this.table())); return; }
@@ -1840,14 +1843,18 @@ const App = {
   undoLast() {
     if (!this.fsm.bettingOpen) return;
     const u = this.undo.pop(); if (!u) return toast('Nothing to undo since the last roll.');
+    let back = 0;
     for (const b of u.batch || [u]) { // Across and Repeat undo as one action
-      if (Rules.removalError(b.key, this.table()) || this.bets[b.key] < b.amt) continue;
-      this.bets[b.key] -= b.amt; this.bankroll += b.amt;
+      const amt = Math.min(b.amt, this.bets[b.key]);
+      if (Rules.removalError(b.key, this.table()) || !amt) continue;
+      this.bets[b.key] -= amt; this.bankroll += amt; back += amt;
     }
+    if (!back) return toast('That chip can’t come back now.');
     Sound.tick(); this.refresh(); this.save();
   },
   clearAll() {
     if (!this.fsm.bettingOpen) return;
+    if (!this.onTable()) return toast('There are no bets on the table.');
     let n = 0, kept = 0;
     for (const k of Rules.BET_KEYS) {
       if (!this.bets[k]) continue;
@@ -1862,6 +1869,7 @@ const App = {
   repeat() {
     if (!this.fsm.bettingOpen) return;
     if (!this.lastBets) return toast('Nothing to repeat yet. Roll once first.');
+    if (!Rules.BET_KEYS.some(k => this.lastBets[k])) return toast('There were no bets on the last roll.');
     let added = 0; const skipped = [], mark = this.undo.length;
     for (const k of Rules.BET_KEYS) {
       const need = this.lastBets[k] - this.bets[k];
@@ -1969,7 +1977,9 @@ const App = {
   },
 
   /* ---------- the roll ---------- */
-  async roll(power = 1 + (Math.random() - .5) * .16, aim = (Math.random() - .5) * .3) {
+  async roll(power, aim) {
+    if (power == null) power = 1 + (Math.random() - .5) * .16;
+    if (aim == null) aim = (Math.random() - .5) * .3;
     if (!this.arena) return toast('Setting the table…');
     if (!this.fsm.bettingOpen || this.arena.busy) return;
     Sound.unlock();
@@ -1982,7 +1992,9 @@ const App = {
     if (this.arena.speed !== undefined) this.arena.speed = this.pace();
     this.refresh();
     const table = { ...this.table(), settings: { ...this.settings } }; // a setting changed while the dice are in the air can't apply to this roll
+    this.pendingRoll = true; this.save(true); // if the page closes mid-throw, the roll is settled on the next visit instead of undone
     const { d1, d2 } = await this.arena.throw(power, aim);
+    this.pendingRoll = false;
 
     this.fsm.to('RESOLVING_BETS');
     const res = Rules.resolveRoll(table, d1, d2);
@@ -1990,7 +2002,7 @@ const App = {
     const won = res.ledger.reduce((s, l) => s + l.win, 0);
     const lost = res.ledger.reduce((s, l) => s + (l.outcome === 'lose' ? l.stake : 0), 0);
     this._record(res, won);
-    this.lastWin = won; this.lastWinTotal = res.total;
+    this.lastWin = won; this.lastWinTotal = res.total; this.lastNet = won - lost;
     this.addLog({
       t: 'roll', n: this.stats.rolls, d1, d2, total: res.total, call: callFor(res),
       tone: res.event === 'SEVEN_OUT' ? 'out' : (res.event === 'NATURAL' || res.event === 'POINT_MADE') ? 'win' : '',
@@ -2098,7 +2110,7 @@ const App = {
     $('#rollSub').textContent = this.fsm.rolling ? '' : busted ? `${fmt(START_BANK)} more` : this.point != null ? `Point ${this.point}` : 'Come-out';
     const mw = $('#mWin');
     mw.textContent = this.lastWin > 0 ? '+' + fmt2(this.lastWin) : '—';
-    $('#mWinSub').textContent = this.lastWin > 0 ? `on the ${this.lastWinTotal}` : this.history.length ? 'No win last roll' : 'No rolls yet';
+    $('#mWinSub').textContent = this.lastWin > 0 ? `on the ${this.lastWinTotal}` + (this.lastNet != null && this.lastNet !== this.lastWin ? ` · net ${fmt(this.lastNet, true)}` : '') : this.history.length ? 'No win last roll' : 'No rolls yet';
     $('#mLast').textContent = this.history[0] ? this.history[0].total : '—';
     renderHistory(this.history);
   },
@@ -2136,8 +2148,8 @@ const App = {
     if (!force && !this.fsm.bettingOpen) return; // mid-roll saves happen only right after a result is applied
     try {
       localStorage.setItem(STORE_KEY, JSON.stringify({ bankroll: this.bankroll, bets: this.bets, point: this.point, hits: this.hits, settings: this.settings,
-        history: this.history, stats: this.stats, chip: this.chip, lastBets: this.lastBets, log: this.log.slice(0, 60), lastWin: this.lastWin, lastWinTotal: this.lastWinTotal,
-        coach: this.coach, bests: this.bests }));
+        history: this.history, stats: this.stats, chip: this.chip, lastBets: this.lastBets, log: this.log.slice(0, 60), lastWin: this.lastWin, lastWinTotal: this.lastWinTotal, lastNet: this.lastNet,
+        coach: this.coach, bests: this.bests, rolling: !!this.pendingRoll }));
     } catch (e) { /* storage unavailable: session stays in memory */ }
   },
   load() {
@@ -2152,17 +2164,34 @@ const App = {
       if (this.point == null) { this.bankroll += this.bets.odds + this.bets.come; this.bets.odds = 0; this.bets.come = 0; }
       for (const n of Rules.POINT_NUMBERS) if (!this.bets['come' + n] && this.bets['codds' + n]) { this.bankroll += this.bets['codds' + n]; this.bets['codds' + n] = 0; }
       this.hits = Array.isArray(d.hits) ? d.hits.filter(n => Rules.POINT_NUMBERS.includes(n)) : [];
-      this.settings = { ...this.settings, ...d.settings };
-      this.history = Array.isArray(d.history) ? d.history.slice(0, 15) : [];
-      this.stats = { ...this.freshStats(), ...d.stats };
+      const S = d.settings && typeof d.settings === 'object' ? d.settings : {};
+      if ([3, 5, 10, 20, 100].includes(S.maxOdds)) this.settings.maxOdds = S.maxOdds;
+      if (['dollar', 'cent'].includes(S.breakage)) this.settings.breakage = S.breakage;
+      if ([2, 3].includes(S.field12)) this.settings.field12 = S.field12;
+      if (['normal', 'fast'].includes(S.speed)) this.settings.speed = S.speed;
+      for (const k of ['comeOutWorking', 'comeOddsWorking', 'betsOff', 'voice']) if (k in S) this.settings[k] = !!S[k];
+      if ('sound' in S) this.settings.sound = S.sound !== false;
+      const die = v => Number.isInteger(v) && v >= 1 && v <= 6;
+      this.history = (Array.isArray(d.history) ? d.history : []).filter(h => h && die(h.d1) && die(h.d2)).slice(0, 15).map(h => ({ ...h, total: h.d1 + h.d2 }));
+      const st = { ...this.freshStats(), ...(d.stats && typeof d.stats === 'object' ? d.stats : {}) };
+      if (!st.dist || typeof st.dist !== 'object') st.dist = this.freshStats().dist;
+      for (let t = 2; t <= 12; t++) st.dist[t] = Math.max(0, Math.round(+st.dist[t] || 0));
+      for (const k of ['rolls', 'pointsSet', 'pointsMade', 'sevenOuts', 'naturals', 'handRolls', 'longestHand', 'biggestWin', 'rebuys', 'bought', 'handPoints', 'hands']) st[k] = Math.max(0, Math.round(+st[k] || 0));
+      if (!Number.isFinite(st.startBank)) st.startBank = START_BANK;
+      if (!Number.isFinite(st.handStart)) st.handStart = st.startBank;
+      if (!Array.isArray(st.trend) || !st.trend.length) st.trend = [st.startBank]; else st.trend = st.trend.filter(Number.isFinite).slice(-600);
+      if (!st.byBet || typeof st.byBet !== 'object') st.byBet = {};
+      if (st.lastHand && typeof st.lastHand !== 'object') st.lastHand = null;
+      this.stats = st;
       this.lastBets = d.lastBets ? clean(d.lastBets) : null;
-      this.log = Array.isArray(d.log) ? d.log.filter(e => e && (e.t === 'info' || e.t === 'roll')).slice(0, 60) : [];
-      this.lastWin = Math.max(0, Math.round(+d.lastWin || 0)); this.lastWinTotal = d.lastWinTotal || null;
+      this.log = (Array.isArray(d.log) ? d.log : []).filter(e => e && (e.t === 'info' ? typeof e.text === 'string' : e.t === 'roll' && die(e.d1) && die(e.d2) && Array.isArray(e.lines))).slice(0, 60);
+      this.pendingRoll = !!d.rolling;
+      this.lastWin = Math.max(0, Math.round(+d.lastWin || 0)); this.lastWinTotal = d.lastWinTotal || null; this.lastNet = Number.isFinite(d.lastNet) ? d.lastNet : null;
       if (DENOMS.includes(d.chip)) this.chip = d.chip;
       if (d.coach && typeof d.coach === 'object') this.coach = { done: !!d.coach.done, stage: +d.coach.stage || 0 };
       else if (this.stats.rolls > 6) this.coach.done = true; // an existing player from before the coach existed
       if (d.bests && typeof d.bests === 'object') for (const k of Object.keys(this.bests)) this.bests[k] = Math.max(0, Math.round(+d.bests[k] || 0));
-      if (!this.stats.byBet || typeof this.stats.byBet !== 'object') this.stats.byBet = {};
+
     } catch (e) { /* ignore corrupt save */ }
   },
   resetSession() {
@@ -2182,8 +2211,18 @@ const App = {
     Sound.chip(); toast(`${fmt(START_BANK)} more on the rail. Good luck.`);
     this.refresh(); this.save();
   },
+  /** A throw was in the air when the page was last closed: settle it now with random dice */
+  async settleInterrupted() {
+    if (!this.pendingRoll || !this.arena || !this.fsm.bettingOpen) { this.pendingRoll = false; return; }
+    this.pendingRoll = false;
+    const die = () => { const a = new Uint32Array(1); let v; do { crypto.getRandomValues(a); v = a[0] & 7; } while (v > 5); return v + 1; };
+    const d1 = die(), d2 = die(), arena = this.arena, real = arena.throw.bind(arena);
+    arena.throw = async () => { arena.throw = real; return { d1, d2 }; };
+    toast(`Your last throw was still in the air. It landed ${d1 + d2}.`, { ms: 5000 });
+    await this.roll();
+  },
   /** The big button and the Space bar: roll, or rebuy when the player is out of chips */
-  primary() { if (this.busted() && this.fsm.bettingOpen) this.rebuy(); else this.roll(); },
+  primary(power, aim) { if (this.busted() && this.fsm.bettingOpen) this.rebuy(); else this.roll(power, aim); },
 };
 
 function makeMachine(initial) {
@@ -2300,14 +2339,21 @@ function renderHistory(h) {
 
 function buildChips() {
   const box = $('#chips');
-  box.innerHTML = DENOMS.slice().reverse().map((d, i) => `<button class="chip" role="radio" data-v="${d}" aria-checked="${d === App.chip}" aria-label="$${(d / 100).toLocaleString('en-US')} chip" title="$${(d / 100).toLocaleString('en-US')} (key ${i + 1})">${chipLabel(d)}</button>`).join('');
+  box.innerHTML = DENOMS.slice().reverse().map((d, i) => `<button class="chip" role="radio" data-v="${d}" tabindex="${d === App.chip ? 0 : -1}" aria-checked="${d === App.chip}" aria-label="$${(d / 100).toLocaleString('en-US')} chip" title="$${(d / 100).toLocaleString('en-US')} (key ${i + 1})">${chipLabel(d)}</button>`).join('');
   box.addEventListener('click', e => { const b = e.target.closest('.chip'); if (b) selectChip(+b.dataset.v); });
+  box.addEventListener('keydown', e => { // a radiogroup: arrows move the selection
+    const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key]; if (!step) return;
+    e.preventDefault();
+    const list = DENOMS.slice().reverse(), v = list[(list.indexOf(App.chip) + step + list.length) % list.length];
+    selectChip(v); const el = box.querySelector(`[data-v="${v}"]`); if (el) el.focus();
+  });
 }
 function selectChip(v) {
   if (!v) return;
   App.chip = v; Sound.unlock(); Sound.tick();
-  document.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-checked', +c.dataset.v === v));
+  document.querySelectorAll('.chip').forEach(c => { const on = +c.dataset.v === v; c.setAttribute('aria-checked', on); c.tabIndex = on ? 0 : -1; });
   if (App.eraseMode) setErase(false);
+  if (App.fsm) App.save();
 }
 function setErase(on) {
   App.eraseMode = on; $('#btnErase').setAttribute('aria-pressed', on);
@@ -2361,7 +2407,7 @@ function openStats() {
     <p class="chart-title" style="margin-top:14px">Personal bests <span style="font-weight:500;letter-spacing:0;text-transform:none">(kept across sessions)</span></p>
     <dl class="tiles">${bestTiles.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
     <p class="bests"><button class="btn" id="btnShare">Copy session summary</button><button class="btn" id="btnResetStats">Reset statistics</button></p>`;
-  $('#btnResetStats').onclick = () => { App.stats = App.freshStats(App.bankroll + App.onTable()); App.save(); App.refresh(); openStats(); };
+  armed($('#btnResetStats'), 'Reset statistics', () => { App.stats = App.freshStats(App.bankroll + App.onTable()); App.addLog({ t: 'info', text: 'Statistics reset. The roll count starts again.' }); App.save(); App.refresh(); openStats(); });
   $('#btnShare').onclick = async () => {
     const text = `Crapless Craps by Mezware: ${n} rolls, session ${fmt(net, true)}, longest hand ${s.longestHand} rolls, biggest win ${fmt(s.biggestWin)}. Personal best hand ${b.longestHand} rolls.`;
     try { await navigator.clipboard.writeText(text); toast('Summary copied.'); }
@@ -2398,28 +2444,36 @@ function bindSettings() {
   $('#sVoice').onchange = upd(t => { App.settings.voice = t.checked; Stickman.on = t.checked; if (t.checked) { Sound.unlock(); Stickman.say('Stickman’s on. Shooter, the dice are yours.'); } });
   $('#sSpeed').onchange = upd(t => { App.settings.speed = t.value; if (App.arena) App.arena.speed = App.pace(); });
   $('#btnCoach').onclick = () => { App.coach = { done: false, stage: 0 }; App.save(); App.refresh(); $('#dlgSettings').close(); toast('Tips are back on. Start with the Pass Line.'); };
-  $('#btnReset').onclick = () => { App.resetSession(); $('#dlgSettings').close(); };
+  armed($('#btnReset'), 'Start over', () => { App.resetSession(); $('#dlgSettings').close(); });
   document.querySelectorAll('dialog').forEach(d => {
     d.addEventListener('click', e => { if (e.target === d || e.target.closest('[data-close]')) d.close(); });
   });
+}
+/** A destructive button asks for a second tap within three seconds */
+function armed(btn, label, fn) {
+  btn.onclick = () => {
+    if (btn.dataset.armed) { delete btn.dataset.armed; btn.textContent = label; fn(); return; }
+    btn.dataset.armed = '1'; btn.textContent = 'Tap again to confirm';
+    setTimeout(() => { delete btn.dataset.armed; btn.textContent = label; }, 3000);
+  };
 }
 function setSound(on) {
   Sound.setMuted(!on); App.settings.sound = on;
   const b = $('#btnSound'); b.innerHTML = on ? ICON_VOL : ICON_MUTE; b.setAttribute('aria-label', on ? 'Mute sound' : 'Turn sound on'); b.title = on ? 'Mute sound' : 'Turn sound on';
 }
 
-function bindThrowGesture(canvas) {
+function bindThrowGesture(el) {
   let start = null;
-  canvas.addEventListener('pointerdown', e => { start = { x: e.clientX, y: e.clientY, t: performance.now() }; canvas.setPointerCapture(e.pointerId); });
-  canvas.addEventListener('pointerup', e => {
+  el.addEventListener('pointerdown', e => { if (e.button && e.button !== 0) return; start = { x: e.clientX, y: e.clientY, t: performance.now() }; try { el.setPointerCapture(e.pointerId); } catch (err) {} });
+  el.addEventListener('pointerup', e => {
     if (!start) return;
     const dy = start.y - e.clientY, dx = e.clientX - start.x, dt = Math.max(16, performance.now() - start.t);
     start = null;
     if (dy < 36) return;
     const speed = dy / dt; // px per ms
-    App.roll(clamp(0.72 + speed * 0.28, 0.7, 1.32), clamp(dx / canvas.clientWidth * 2, -1, 1) * .8);
+    App.primary(clamp(0.72 + speed * 0.28, 0.7, 1.32), clamp(dx / el.clientWidth * 2, -1, 1) * .8);
   });
-  canvas.addEventListener('pointercancel', () => start = null);
+  el.addEventListener('pointercancel', () => start = null);
 }
 
 /* ==========================================================================
@@ -2439,7 +2493,12 @@ async function loadLibs() {
 
 (async function boot() {
   App.stats = App.freshStats();
-  App.load();
+  try { App.load(); renderLog(App.log); }
+  catch (e) { // a save this build can't read: start fresh rather than never finishing the boot
+    console.warn('Unreadable save, starting fresh', e);
+    try { localStorage.removeItem(STORE_KEY); } catch (e2) {}
+    Object.assign(App, { bankroll: START_BANK, bets: Rules.emptyBets(), point: null, hits: [], history: [], log: [], stats: App.freshStats(), lastBets: null, lastWin: 0, lastWinTotal: null, pendingRoll: false });
+  }
   if (!App.log.length) App.log.push({ t: 'info', text: 'New session with a $5,000 bankroll.', at: Date.now() });
   renderLog(App.log);
   App.fsm = makeMachine(App.point != null ? 'POINT_ESTABLISHED' : 'IDLE_COME_OUT');
@@ -2498,7 +2557,7 @@ async function loadLibs() {
     App.arena = new DiceArena(pit, Sound);
     App.arena.speed = App.pace();
     pit.insertBefore($('#fxCanvas'), App.arena.renderer.domElement.nextSibling); // chips rain above the 3D view, below the text
-    bindThrowGesture(App.arena.renderer.domElement);
+    bindThrowGesture(pit);
   } catch (e) {
     console.warn(e);
     App.arena = new FallbackArena(pit);
@@ -2506,6 +2565,7 @@ async function loadLibs() {
   }
   $('#boot').remove();
   App.refresh(); // the Roll button wakes up now that there is an arena
+  App.settleInterrupted();
 
   window.App = App; // exposed for debugging from the console
 })();
