@@ -211,7 +211,7 @@ svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-l
 .t-sub{font-weight:700;letter-spacing:.14em;text-transform:uppercase}
 .t-cap{font-weight:700;fill:var(--ink-soft)!important;opacity:.7;letter-spacing:.08em;text-transform:uppercase}
 .t-gold{fill:var(--gold-muted)!important}
-.zone.has-come .t-cap{opacity:0}
+.zone.has-come .t-cap,.zone.is-point .t-cap{opacity:0}
 .ats-c{fill:transparent;stroke:rgba(142,167,165,.5);stroke-width:1}
 .ats-c.hit{fill:var(--gold-muted);stroke:var(--gold)}
 .ats-d{font-weight:700;fill:var(--ink-soft)!important;text-anchor:middle}
@@ -1346,7 +1346,7 @@ class Felt {
       case 'num': {
         const word = NUM_WORD[z.n];
         return txt(z.x + 7, z.y + 14, 'Come odds', 7.5 * fs, 't-cap', 'start') +
-          (word ? `<text class="t-word" x="${cx}" y="${z.y + 80}" font-size="27" transform="rotate(-9 ${cx} ${z.y + 72})">${word}</text>` : txt(cx, z.y + 84, z.n, 44, 't-num'));
+          (word ? `<text class="t-word" x="${cx}" y="${z.y + 72}" font-size="27" transform="rotate(-9 ${cx} ${z.y + 64})">${word}</text>` : txt(cx, z.y + 76, z.n, 44, 't-num'));
       }
       case 'come':
         return txt(z.x + z.w * .44, z.y + z.h / 2 + 12, 'COME', P ? 30 : 34, 't-line t-come') + txt(z.x + z.w * .76, z.y + z.h / 2 + 4, '7 wins · all other totals travel', 9 * fs, 't-pay');
@@ -1565,7 +1565,18 @@ const App = {
   busted() { return this.bankroll < 100 && this.onTable() === 0; },
   table() { return { bets: this.bets, point: this.point, hits: this.hits, settings: this.settings }; },
 
+  /** "House edge 1.52%." for a bet key, or "No house edge." for free odds */
+  edgeText(key) {
+    const e = Rules.houseEdge(key, this.settings);
+    if (e == null) return '';
+    if (e === 0) return ' No house edge.';
+    const pct = (e * 100).toFixed(2).replace(/0$/, '');
+    return Rules.parseKey(key).type === 'buy' ? ` House edge ${pct}% at $20 or more.` : ` House edge ${pct}%.`;
+  },
   describe(key, withAmount) {
+    return this._describe(key, withAmount) + this.edgeText(key);
+  },
+  _describe(key, withAmount) {
     const s = this.settings, { type, n } = Rules.parseKey(key);
     const amt = k => this.bets[k] ? ` Your bet: ${fmt(this.bets[k])}.` : '';
     const brk = s.breakage === 'dollar';
