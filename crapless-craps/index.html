@@ -206,7 +206,7 @@ body.pit-off .rack-call.coach,.rack-call.coach{display:block}
   .hint{display:none}
   .rack{grid-template-areas:"call call" "chips chips" "actions roll" "quick roll"}
   .rack-call{display:flex;font-size:12px}
-  .work{padding:5px 8px;letter-spacing:.06em} .work b{font-size:12px}
+  .work{padding:5px 8px;font-size:8.5px;letter-spacing:.04em} .work b{font-size:12px}
   .act span{display:none}
 }
 @media (max-width: 420px){ .chip{width:38px;height:38px;font-size:10.5px} }
@@ -1306,7 +1306,7 @@ function buildLayout(portrait) {
     row(['prop2', 'prop3', 'prop11', 'prop12'], 'dice', 634, 426, 350, 64, 7);
     row(['any7', 'anycraps', 'horn', 'ce'], 'title', 634, 498, 350, 96, 7);
   } else {
-    W = 600; H = 1212;
+    W = 600; H = 1244;
     logo = { x: 300 - LOGO.w * (78 / LOGO.h) / 2, y: 12, h: 78, rot: 0 };
     park = { x: 12, y: 102, w: 576, h: 46 }; puckOff = { x: 38, y: 125 };
     Rules.POINT_NUMBERS.forEach((n, i) => col(n, 12 + (i % 5) * 115.2, 156 + Math.floor(i / 5) * 242, 115.2));
@@ -1315,9 +1315,9 @@ function buildLayout(portrait) {
     Z.pass = { x: 12, y: 828, w: 370, h: 80, kind: 'pass' };
     Z.odds = { x: 390, y: 828, w: 198, h: 80, kind: 'odds' };
     row(['low', 'all', 'high'], 'ats', 12, 916, 576, 70, 6);
-    row(['hard4', 'hard6', 'hard8', 'hard10'], 'dice', 12, 994, 576, 56, 6);
-    row(['prop2', 'prop3', 'prop11', 'prop12'], 'dice', 12, 1056, 576, 56, 6);
-    row(['any7', 'anycraps', 'horn', 'ce'], 'title', 12, 1118, 576, 82, 6);
+    row(['hard4', 'hard6', 'hard8', 'hard10'], 'dice', 12, 994, 576, 72, 6);
+    row(['prop2', 'prop3', 'prop11', 'prop12'], 'dice', 12, 1072, 576, 72, 6);
+    row(['any7', 'anycraps', 'horn', 'ce'], 'title', 12, 1150, 576, 82, 6);
   }
   for (const [key, z] of Object.entries(Z)) {
     const cx = z.x + z.w / 2;
@@ -1332,7 +1332,7 @@ function buildLayout(portrait) {
       case 'pass': A[key] = { x: z.x + 50, y: z.y + z.h / 2 - 5 }; break;
       case 'odds': A[key] = { x: z.x + z.w * .82, y: z.y + z.h / 2 - 5 }; break;
       case 'ats': A[key] = { x: z.x + z.w - 22, y: z.y + 26, c: true }; break;
-      case 'dice': A[key] = { x: z.x + z.w - 20, y: z.y + z.h * .42, c: true }; break;
+      case 'dice': A[key] = portrait ? { x: z.x + z.w - 22, y: z.y + 17, c: true } : { x: z.x + z.w - 20, y: z.y + z.h * .42, c: true }; break;
       case 'title': A[key] = { x: cx, y: z.y + z.h * .64, c: true }; break;
     }
   }
@@ -1420,12 +1420,13 @@ class Felt {
         return s;
       }
       case 'dice': {
-        const [a, b] = DICE_OF[key], ds = 16 * fs, dy = z.y + (z.h - ds) / 2 - 7;
-        const wide = z.w > 120;
-        let s = dieShape(a, z.x + 8, dy, ds) + dieShape(b, z.x + 11 + ds, dy, ds);
-        if (wide) s += txt(z.x + 18 + ds * 2, z.y + z.h / 2 - 3, NAME_OF[key], 11 * fs, 't-title', 'start') + txt(z.x + 18 + ds * 2, z.y + z.h / 2 + 12, FOR_TXT(PAY_OF[key]), 8.5 * fs, 't-pay', 'start');
-        else s += txt(z.x + 10 + ds, z.y + z.h - 9, FOR_TXT(PAY_OF[key]), 8.5 * fs, 't-pay');
-        return s;
+        const [a, b] = DICE_OF[key], ds = 16 * fs;
+        if (P) { // portrait: dice and chip on the top row, then the name, then the payout
+          return dieShape(a, z.x + 8, z.y + 8, ds) + dieShape(b, z.x + 11 + ds, z.y + 8, ds) +
+            txt(z.x + 8, z.y + 52, NAME_OF[key], 10 * fs, 't-title', 'start') + txt(z.x + 8, z.y + 65, FOR_TXT(PAY_OF[key]), 8.5 * fs, 't-pay', 'start');
+        }
+        const dy = z.y + (z.h - ds) / 2 - 7; // landscape tiles are narrow: dice plus the payout, the name lives in the hover hint
+        return dieShape(a, z.x + 8, dy, ds) + dieShape(b, z.x + 11 + ds, dy, ds) + txt(z.x + 10 + ds, z.y + z.h - 9, FOR_TXT(PAY_OF[key]), 8.5 * fs, 't-pay');
       }
       case 'title': {
         const [t, sub] = TITLE_OF[key];
