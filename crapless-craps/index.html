@@ -68,6 +68,7 @@ svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-l
 .pit-hint[hidden]{display:block;opacity:0}
 .banner{position:absolute;left:clamp(16px,3vw,32px);bottom:58px;transform:translateY(8px);text-align:left;pointer-events:none;opacity:0;transition:opacity .25s, transform .35s cubic-bezier(.2,.8,.2,1);color:var(--ink);text-shadow:0 2px 14px rgba(0,0,0,.8)}
 .banner.show{opacity:1;transform:translateY(0)}
+.banner.right{left:auto;right:clamp(16px,3vw,32px);text-align:right}
 .banner .total{font-weight:800;font-size:clamp(46px,7vw,72px);line-height:.9;display:block;color:#fff}
 .banner .call{font-weight:600;font-size:clamp(14px,1.8vw,17px);display:block;margin-top:6px;color:var(--ink)}
 .banner .delta{display:inline-block;margin-top:8px;font-weight:700;font-size:15px;padding:2px 11px;border-radius:99px;background:rgba(0,0,0,.45)}
@@ -78,7 +79,8 @@ svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-l
 .banner .delta.pos{color:var(--gold)} .banner .delta.neg{color:#ff9c8c}
 .fallback-note{position:absolute;inset:auto 12px 60px 12px;color:var(--ink-soft);font-size:13px;text-align:center}
 .fallback-dice{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:24px}
-.fallback-dice span{width:64px;height:64px;border-radius:8px;background:#b30d24;display:grid;place-items:center;color:#fff;font:800 30px var(--ui);box-shadow:0 8px 20px rgba(0,0,0,.5)}
+.fallback-dice span{width:64px;height:64px;border-radius:8px;background:#b30d24;display:grid;place-items:center;box-shadow:0 8px 20px rgba(0,0,0,.5)}
+.fallback-dice span svg{display:block}
 .fallback-dice.rolling span{animation:tumble .18s linear infinite}
 @keyframes tumble{to{transform:rotate(360deg)}}
 
@@ -212,6 +214,9 @@ body.pit-off .rack-call.coach,.rack-call.coach{display:block}
   .act{font-size:8px;letter-spacing:.04em;padding:6px 2px} .act svg{width:14px;height:14px}
 }
 @media (max-width: 420px){ .chip{width:38px;height:38px;font-size:10.5px} }
+@media (min-width: 1100px) and (max-height: 820px){ /* laptop screens: keep Roll dice and the toggles above the fold */
+  .pit{height:max(200px,30vh)} .rack{gap:8px;padding:12px 14px} .hint{min-height:3.2em;font-size:12px} .chips{padding:6px 4px;gap:6px 8px} .roll{padding:11px 12px 9px}
+}
 @media (max-width: 1099px) and (max-height: 560px){ /* landscape phones: a sticky rack would cover most of the screen */
   .rack{position:static;margin:0;border-radius:20px}
   .toasts{bottom:calc(20px + env(safe-area-inset-bottom,0px))}
@@ -375,7 +380,7 @@ kbd{font:700 11px var(--ui);border:1px solid var(--edge-2);border-bottom-width:2
   <section class="pit" id="pit" aria-label="Dice pit">
     <canvas id="fxCanvas" aria-hidden="true"></canvas>
     <div class="boot" id="boot">Setting the table…</div>
-    <div class="pit-hint" id="pitHint">Swipe up on the felt to throw, or press Space</div>
+    <div class="pit-hint" id="pitHint">Swipe up in the dice pit to throw, or press Space</div>
     <div class="banner" id="banner" aria-live="polite"></div>
     <ol class="history" id="history" aria-label="Last 15 rolls"></ol>
   </section>
@@ -423,7 +428,7 @@ kbd{font:700 11px var(--ui);border:1px solid var(--edge-2);border-bottom-width:2
       <div><dt>Max odds <kbd>O</kbd></dt><dd>Fills your pass line odds and every come bet’s odds to the table maximum. Odds are the only bet with no house edge.</dd></div>
       <div><dt>Come-out bets</dt><dd>Off by default. When working, place, buy, hardway and come odds win or lose on the come-out roll too. Table settings can keep just the come odds working, the way a player calls “odds working”.</dd></div>
       <div><dt>Bets off</dt><dd>Calls your place, buy, hardway and come odds off on every roll until you turn them back on. They stay on the table.</dd></div>
-      <div><dt>Roll dice <kbd>Space</kbd></dt><dd>Or swipe or drag up in the dice pit. A faster swipe throws harder.</dd></div>
+      <div><dt>Roll dice <kbd>Space</kbd></dt><dd>Or flick up in the dice pit. A faster flick throws harder; angle it left or right to aim. A slow drag just scrolls the page.</dd></div>
       <div><dt>Chips <kbd>1</kbd>–<kbd>7</kbd></dt><dd>Select $1 through $1,000.</dd></div>
     </dl>
     <h3>Payouts</h3>
@@ -668,7 +673,7 @@ const Rules = (() => {
     if (type === 'pass' && point != null) return 'Pass line bets go down before the come-out roll. With a point set, bet the come box instead.';
     if (type === 'odds') {
       if (point == null) return 'Pass odds open once a point is set.';
-      if (!bets.pass) return 'Pass odds need a pass line bet behind them.';
+      if (!bets.pass) return 'Pass odds need a pass line bet, which goes down before the come-out. For now, bet the come box and add odds there.';
       if (bets.odds + amount > bets.pass * s.maxOdds) return `Odds are capped at ${s.maxOdds}× your pass line.`;
     }
     if (type === 'come' && point == null) return 'The come box opens once a point is set. On the come-out, bet the pass line.';
@@ -780,7 +785,7 @@ if (typeof module !== 'undefined') module.exports = Rules;
    World units: one die = 1.0 (a 19mm casino die). Pit: 16 wide × 10 deep.
    ========================================================================== */
 const DiceWorld = (CANNON) => {
-  const PIT = { halfW: 8, back: -5, front: 5.6, ceiling: 9, wallH: 2.1 };
+  const PIT = { halfW: 8, back: -5, front: 4.4, ceiling: 9, wallH: 2.1 };
   const DIE = 1.0;
   const EPS = 0.05;              // rest threshold for |v| and |ω|
   const REST_STEPS = 18;         // consecutive physics steps under EPS
@@ -1014,7 +1019,7 @@ class DiceArena {
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color('#07121a');
     this.camera = new THREE.PerspectiveCamera(34, 1, 0.5, 120);
-    this.camTarget = new THREE.Vector3(0, 0, -0.4);
+    this.camTarget = new THREE.Vector3(0, 0, -0.2);
     this.camX = 0;
     this._environment();
     this._lights();
@@ -1110,7 +1115,7 @@ class DiceArena {
       t.rotation.x = Math.PI / 2; t.position.set(side * (PIT.halfW + .08), PIT.wallH + .3, PIT.back + depth / 2 - .25); this.scene.add(t);
     });
     const bolster = new THREE.Mesh(new THREE.BoxGeometry(PIT.halfW * 2 + 2, .6, .9), leather);
-    bolster.position.set(0, .3, PIT.front + 1.3); bolster.receiveShadow = true; this.scene.add(bolster);
+    bolster.position.set(0, .3, PIT.front + .45); bolster.receiveShadow = true; this.scene.add(bolster);
 
     // Settle markers: brass rings that bloom under each die when it comes to rest
     this.rings = [0, 1].map(() => {
@@ -1167,17 +1172,20 @@ class DiceArena {
 
   _resize() {
     const w = this.host.clientWidth || 1, h = this.host.clientHeight || 1;
+    // The history strip sits over the bottom of the canvas: frame the pit in the part above it so settled dice never hide under the chips.
+    const strip = Math.min(h * .3, this.host.querySelector('.history')?.offsetHeight || 0), hf = Math.max(1, h - strip);
     this.renderer.setSize(w, h, false);
-    const cam = this.camera; cam.aspect = w / h;
+    const cam = this.camera; cam.aspect = w / hf;
     const vHalf = Math.tan(THREE.MathUtils.degToRad(cam.fov / 2)), hHalf = vHalf * cam.aspect;
     // Fit the whole back wall when the view is wide; on narrow screens fit a 12-unit window and pan with the dice.
     const fitHalfW = cam.aspect >= 1.9 ? 8.9 : clamp(8.9 * cam.aspect / 1.9, 5.6, 8.9);
     this.maxPan = Math.max(0, 8.4 - fitHalfW);
-    const dist = Math.max(fitHalfW / hHalf, 4.9 / vHalf, 11);
+    const dist = Math.max(fitHalfW / hHalf, 4.4 / vHalf, 11);
     const tilt = THREE.MathUtils.degToRad(54);
     this.camOffset = new THREE.Vector3(0, Math.sin(tilt) * dist, Math.cos(tilt) * dist);
     this.camX = clamp(this.camX, -this.maxPan, this.maxPan);
     this._placeCamera();
+    cam.setViewOffset(w, hf, 0, 0, w, h);
     cam.updateProjectionMatrix();
     this.dirty = true;
   }
@@ -1186,6 +1194,26 @@ class DiceArena {
     const t = this.camTarget.clone(); t.x = this.camX;
     this.camera.position.copy(t).add(this.camOffset);
     this.camera.lookAt(t);
+  }
+
+  /** Pose the resting dice to show given faces (used to restore the last roll after a reload) */
+  showFaces(a, b) {
+    if (this.busy) return;
+    const up = new CANNON.Vec3(0, 1, 0);
+    [a, b].forEach((v, i) => {
+      const f = this.phys.FACES.find(f => f.v === v); if (!f) return;
+      const body = this.phys.dice[i];
+      body.quaternion.setFromVectors(new CANNON.Vec3(...f.n), up);
+      body.position.set(i ? 1.4 : -1.4, this.phys.DIE / 2, -1.6);
+      body.velocity.set(0, 0, 0); body.angularVelocity.set(0, 0, 0);
+    });
+    this._sync(); this.dirty = true;
+  }
+
+  /** Where each die sits on the page, in CSS pixels */
+  screenPoints() {
+    const r = this.renderer.domElement.getBoundingClientRect();
+    return this.dieMeshes.map(m => { const p = m.position.clone().project(this.camera); return { x: r.left + (p.x + 1) / 2 * r.width, y: r.top + (1 - p.y) / 2 * r.height }; });
   }
 
   _sync() {
@@ -1228,7 +1256,9 @@ class DiceArena {
         this.acc -= this.phys.FIXED;
         if (this.phys.stepFixed()) this._settled();
       }
-      if (this.busy && this.elapsed > 10) { this.phys.dice.forEach(this.phys.nudge); this.elapsed = 6; }
+      if (this.busy && this.elapsed > 10) { // a die still creeping after 10 s gets re-tossed; one that has settled flat is left where the player can read it
+        this.phys.dice.forEach(b => { if (!this.phys.atRest(b) || this.phys.readFace(b).dot < 0.97) this.phys.nudge(b); }); this.elapsed = 6;
+      }
       this._sync();
       // Pan toward the dice on narrow viewports
       if (this.maxPan > 0) {
@@ -1253,16 +1283,16 @@ class FallbackArena {
   constructor(host) {
     this.busy = false;
     this.el = document.createElement('div'); this.el.className = 'fallback-dice';
-    this.el.innerHTML = '<span>6</span><span>1</span>';
+    this.el.innerHTML = `<span>${miniDie(6, 44, '#b30d24', '#fff')}</span><span>${miniDie(1, 44, '#b30d24', '#fff')}</span>`;
     host.prepend(this.el);
   }
   async throw() {
     this.busy = true; this.el.classList.add('rolling');
     const spans = this.el.children;
     const roll = () => { const a = new Uint32Array(1); let v; do { crypto.getRandomValues(a); v = a[0] & 7; } while (v > 5); return v + 1; };
-    for (let i = 0; i < 12; i++) { spans[0].textContent = roll(); spans[1].textContent = roll(); await sleep(70); }
+    for (let i = 0; i < 12; i++) { spans[0].innerHTML = miniDie(roll(), 44, '#b30d24', '#fff'); spans[1].innerHTML = miniDie(roll(), 44, '#b30d24', '#fff'); await sleep(70); }
     const res = { d1: roll(), d2: roll() };
-    spans[0].textContent = res.d1; spans[1].textContent = res.d2;
+    spans[0].innerHTML = miniDie(res.d1, 44, '#b30d24', '#fff'); spans[1].innerHTML = miniDie(res.d2, 44, '#b30d24', '#fff');
     this.el.classList.remove('rolling'); this.busy = false; return res;
   }
 }
@@ -1866,7 +1896,7 @@ const App = {
       this.bankroll += this.bets[k]; this.bets[k] = 0; n++;
     }
     this.undo = [];
-    toast(n ? (kept ? 'Bets taken down. Contract bets stay up until they’re decided.' : 'All bets taken down.') : 'No bets can come down right now.');
+    toast(n ? (kept ? 'Bets taken down. Pass and come bets on a number stay up until they’re decided.' : 'All bets taken down.') : 'None of your bets can come down right now.');
     if (n) Sound.tick();
     this.refresh(); this.save();
   },
@@ -2085,14 +2115,15 @@ const App = {
     const net = this.net(), mn = $('#mNet');
     mn.textContent = (net > 0 ? '+' : '') + fmt2(net); mn.className = net < 0 ? 'down' : '';
     const ph = this.fsm.phase;
-    $('#status').innerHTML = {
+    const statusText = {
       IDLE_COME_OUT: 'Come-out roll. Place your bets.',
       ROLLING_COME_OUT: 'Dice are live…', ROLLING_POINT: 'Dice are live…',
       POINT_ESTABLISHED: `Point is <b>${this.point}</b>` + (this.stats.handRolls > 1 ? ` · ${this.stats.handRolls} rolls this hand` : '') + (this.stats.handRolls >= 10 ? ' · <b>hot hand</b>' : ''),
       RESOLVING_BETS: 'Paying the table…', SEVEN_OUT: 'Seven out.', POINT_MADE: this.bets.pass ? 'Point made. Pass line wins!' : 'Point made.',
     }[ph];
     const busted = bettingOpen && this.busted();
-    if (busted) $('#status').textContent = 'Out of chips';
+    const se = $('#status'), html = busted ? 'Out of chips' : statusText;
+    if (se.innerHTML !== html) se.innerHTML = html; // a live region rewritten on every chip would be re-read by screen readers
     const rb = $('#btnRoll'); rb.disabled = !bettingOpen || !this.arena; rb.classList.toggle('rebuy', busted);
     rb.title = busted ? `Buy back in for ${fmt(START_BANK)} (Space)` : 'Roll dice (Space)';
     rb.querySelector('.l').textContent = this.fsm.rolling ? 'Dice live' : busted ? 'Rebuy' : bettingOpen ? 'Roll dice' : 'Paying…';
@@ -2148,6 +2179,7 @@ const App = {
 
   /* ---------- persistence ---------- */
   save(force = false) {
+    if (this.staleTab) return; // another tab owns this save now
     if (!force && !this.fsm.bettingOpen) return; // mid-roll saves happen only right after a result is applied
     try {
       localStorage.setItem(STORE_KEY, JSON.stringify({ bankroll: this.bankroll, bets: this.bets, point: this.point, hits: this.hits, settings: this.settings,
@@ -2304,6 +2336,10 @@ function showBanner(res, delta, { call = callFor(res), level = 0, hand = null, h
   const handPill = hand && hand.rolls > 1 ? `<span class="delta hand ${hand.net < 0 ? 'neg' : ''}">Hand: ${hand.rolls} rolls · <b>${fmt(hand.net, true)}</b></span>` : '';
   const hotPill = hot >= 10 ? `<span class="hot">Hot hand · ${hot} rolls</span>` : '';
   b.innerHTML = `<span class="total">${t}</span><span class="call">${call}</span>${delta ? `<span class="delta ${delta > 0 ? 'pos' : 'neg'}">${fmt(delta, true)}</span>` : ''}${handPill}${hotPill}`;
+  // On a phone the banner can land on top of the dice; mirror it to the other side when it would
+  b.classList.remove('right');
+  const br = b.getBoundingClientRect(), pts = App.arena?.screenPoints?.() || [];
+  if (pts.some(p => p.x > br.left - 30 && p.x < br.right + 30 && p.y > br.top - 30 && p.y < br.bottom + 30)) b.classList.add('right');
   requestAnimationFrame(() => b.classList.add('show'));
   clearTimeout(bannerTimer); bannerTimer = setTimeout(hideBanner, hand ? 4600 : 3200);
 }
@@ -2449,7 +2485,9 @@ function bindSettings() {
   $('#btnCoach').onclick = () => { App.coach = { done: false, stage: 0 }; App.save(); App.refresh(); $('#dlgSettings').close(); toast('Tips are back on. Start with the Pass Line.'); };
   armed($('#btnReset'), 'Start over', () => { App.resetSession(); $('#dlgSettings').close(); });
   document.querySelectorAll('dialog').forEach(d => {
-    d.addEventListener('click', e => { if (e.target === d || e.target.closest('[data-close]')) d.close(); });
+    let onBackdrop = false; // a drag that starts on the text and ends on the backdrop is a selection, not a dismissal
+    d.addEventListener('pointerdown', e => onBackdrop = e.target === d);
+    d.addEventListener('click', e => { if ((e.target === d && onBackdrop) || e.target.closest('[data-close]')) d.close(); });
   });
 }
 /** A destructive button asks for a second tap within three seconds */
@@ -2465,15 +2503,25 @@ function setSound(on) {
   const b = $('#btnSound'); b.innerHTML = on ? ICON_VOL : ICON_MUTE; b.setAttribute('aria-label', on ? 'Mute sound' : 'Turn sound on'); b.title = on ? 'Mute sound' : 'Turn sound on';
 }
 
+const FLICK = 0.35; // px per ms: slower than this is a scroll, not a throw
 function bindThrowGesture(el) {
-  let start = null;
-  el.addEventListener('pointerdown', e => { if (e.button && e.button !== 0) return; start = { x: e.clientX, y: e.clientY, t: performance.now() }; try { el.setPointerCapture(e.pointerId); } catch (err) {} });
+  let start = null, last = 0;
+  el.addEventListener('pointerdown', e => { if (e.button && e.button !== 0) return; start = { x: e.clientX, y: e.clientY, t: performance.now() }; last = e.clientY; try { el.setPointerCapture(e.pointerId); } catch (err) {} });
+  el.addEventListener('pointermove', e => { // a slow drag on the pit is a thumb scrolling the page; keep it scrolling
+    if (!start || e.pointerType === 'mouse') return;
+    const dy = start.y - e.clientY, dt = Math.max(16, performance.now() - start.t);
+    if (dy / dt < FLICK) window.scrollBy(0, last - e.clientY);
+    last = e.clientY;
+  });
   el.addEventListener('pointerup', e => {
     if (!start) return;
     const dy = start.y - e.clientY, dx = e.clientX - start.x, dt = Math.max(16, performance.now() - start.t);
     start = null;
-    if (dy < 36) return;
     const speed = dy / dt; // px per ms
+    if (dy < 36 || speed < FLICK || Math.abs(dx) > dy * 1.5) {
+      if (Math.hypot(dx, dy) < 12 && App.fsm.bettingOpen && App.arena && !App.arena.busy) toast(matchMedia('(hover: none)').matches ? 'Flick up in the dice pit to throw, or press Roll dice.' : 'Drag up quickly in the dice pit to throw, or press Roll dice.');
+      return;
+    }
     App.primary(clamp(0.72 + speed * 0.28, 0.7, 1.32), clamp(dx / el.clientWidth * 2, -1, 1) * .8);
   });
   el.addEventListener('pointercancel', () => start = null);
@@ -2509,7 +2557,7 @@ async function loadLibs() {
   setSound(App.settings.sound !== false);
   Stickman.on = !!App.settings.voice;
   buildChips(); bindSettings();
-  $('#pitHint').textContent = window.matchMedia && matchMedia('(hover: none)').matches ? 'Swipe up in the dice pit to throw' : 'Drag up in the dice pit to throw, or press Space';
+  $('#pitHint').textContent = window.matchMedia && matchMedia('(hover: none)').matches ? 'Flick up in the dice pit to throw' : 'Drag up in the dice pit to throw, or press Space';
   if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => document.body.classList.toggle('pit-off', !e.isIntersecting), { threshold: .2 }).observe($('#pit'));
   else document.body.classList.add('pit-off');
   App.felt = new Felt($('#felt'), {
@@ -2541,7 +2589,7 @@ async function loadLibs() {
     if (document.querySelector('dialog[open]')) return;
     if (e.ctrlKey || e.metaKey || e.altKey) return; // select-all, undo, reload and friends belong to the browser
     if (e.target.closest && e.target.closest('input,select,textarea')) return;
-    if (e.code === 'Space' && !(e.target.closest && e.target.closest('button,.zone'))) { e.preventDefault(); App.primary(); }
+    if (e.code === 'Space' && !(e.target.closest && e.target.closest('button,.zone'))) { e.preventDefault(); if (!e.repeat) App.primary(); }
     else if (/^Digit[1-7]$/.test(e.code)) selectChip(DENOMS.slice().reverse()[+e.code.slice(5) - 1]);
     else if (e.key === 'z' || e.key === 'Z') App.undoLast();
     else if (e.key === 'r' || e.key === 'R') App.repeat();
@@ -2550,6 +2598,11 @@ async function loadLibs() {
     else if (e.key === 'Escape' && App.eraseMode) setErase(false);
   });
   new ResizeObserver(([e]) => document.documentElement.style.setProperty('--rack-h', e.target.offsetHeight + 'px')).observe($('.rack'));
+  window.addEventListener('storage', e => { // the table was opened in another tab: that tab owns the save now
+    if (e.key !== STORE_KEY || App.staleTab) return;
+    App.staleTab = true;
+    toast('This table is open in another tab. Reload to keep playing here.', { ms: 12000, actions: [{ label: 'Reload', fn: () => location.reload() }] });
+  });
 
   await loadLibs();
   const pit = $('#pit');
@@ -2561,6 +2614,7 @@ async function loadLibs() {
     App.arena.speed = App.pace();
     pit.insertBefore($('#fxCanvas'), App.arena.renderer.domElement.nextSibling); // chips rain above the 3D view, below the text
     bindThrowGesture(pit);
+    if (App.history[0]) App.arena.showFaces(App.history[0].d1, App.history[0].d2);
   } catch (e) {
     console.warn(e);
     App.arena = new FallbackArena(pit);
