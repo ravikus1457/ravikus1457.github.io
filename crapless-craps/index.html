@@ -650,10 +650,51 @@ const Rules = (() => {
 
   const WAYS = { 2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 7: 6, 8: 5, 9: 4, 10: 3, 11: 2, 12: 1 };
 
+  /**
+   * House edge of a bet as a fraction of the amount wagered per decision (0.0538 = 5.38%).
+   * Computed from the same pay tables the resolver uses, before $1 rounding. Buy bets assume
+   * the 5% commission is charged on wins only and that the bet is at least $20.
+   */
+  function houseEdge(key, settings) {
+    const s = { ...DEFAULT_SETTINGS, ...settings };
+    const { type, n } = parseKey(key);
+    const p = t => WAYS[t] / 36, p7 = p(7);
+    const beats7 = t => p(t) / (p(t) + p7);        // chance t rolls before a 7
+    const ev = (q, [a, b]) => q * a / b - (1 - q);   // expected win per unit staked
+    const allBefore7 = set => {                      // chance every number in the set rolls before a 7
+      let sum = 0;
+      for (let m = 0; m < 1 << set.length; m++) {
+        let pt = 0, bits = 0;
+        set.forEach((t, i) => { if (m >> i & 1) { pt += p(t); bits++; } });
+        sum += (bits % 2 ? -1 : 1) * p7 / (p7 + pt);
+      }
+      return sum;
+    };
+    const oneRoll = pays => { let e = 0; for (let t = 2; t <= 12; t++) e += p(t) * (pays[t] ? pays[t][0] / pays[t][1] : -1); return -e; };
+    switch (type) {
+      case 'pass': case 'come': case 'comeN': {
+        const win = p7 + POINT_NUMBERS.reduce((a, t) => a + p(t) * beats7(t), 0);
+        return 1 - 2 * win;
+      }
+      case 'odds': case 'codds': return 0;
+      case 'place': return -ev(beats7(n), PLACE_PAY[n]);
+      case 'buy': { const [a, b] = BUY_PAY[n]; return -ev(beats7(n), [a / b - BUY_COMMISSION, 1]); }
+      case 'hard': return -ev(1 / (WAYS[n] + WAYS[7]), HARD_PAY[n]);
+      case 'field': return oneRoll({ 2: [s.field2, 1], 3: [1, 1], 4: [1, 1], 9: [1, 1], 10: [1, 1], 11: [1, 1], 12: [s.field12, 1] });
+      case 'any7': return oneRoll({ 7: ANY7_PAY });
+      case 'anycraps': return oneRoll({ 2: ANYCRAPS_PAY, 3: ANYCRAPS_PAY, 12: ANYCRAPS_PAY });
+      case 'horn': return oneRoll(HORN_PAY);
+      case 'ce': return oneRoll({ 2: CE_PAY.craps, 3: CE_PAY.craps, 12: CE_PAY.craps, 11: CE_PAY[11] });
+      case 'prop': return oneRoll({ [n]: PROP_PAY[n] });
+      case 'low': case 'high': case 'all': return -ev(allBefore7(ATS_NEED[type]), ATS_PAY[type]);
+    }
+    return null;
+  }
+
   return {
     POINT_NUMBERS, HARD_NUMBERS, LOW, HIGH, CRAPS, ODDS_PAY, BUY_PAY, PLACE_PAY, HARD_PAY, PROP_PAY, ANY7_PAY, ANYCRAPS_PAY,
     HORN_PAY, CE_PAY, ATS_PAY, ATS_NEED, PLACE_UNIT, ODDS_UNIT, BUY_COMMISSION, BET_KEYS, DEFAULT_SETTINGS, WAYS, PHASES, TRANSITIONS,
-    Machine, parseKey, emptyBets, pay, buyCommission, resolveRoll, placementError, removalError, phaseAfter,
+    Machine, parseKey, emptyBets, pay, buyCommission, resolveRoll, placementError, removalError, phaseAfter, houseEdge,
   };
 })();
 if (typeof module !== 'undefined') module.exports = Rules;
@@ -806,6 +847,8 @@ const fmt = (c, sign = false) => {
   return (neg ? '−' : sign && c > 0 ? '+' : '') + '$' + d.toLocaleString('en-US') + (ct ? '.' + String(ct).padStart(2, '0') : '');
 };
 const fmt2 = c => (c < 0 ? '−' : '') + '$' + (Math.abs(Math.round(c)) / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+/** Compact money for small chip pills: $1,234.50 → $1.2K. Exact amounts stay in the hover hint. */
+const fmtShort = c => c >= 100000 ? '$' + (Math.floor(c / 10000) / 10).toLocaleString('en-US') + 'K' : fmt(c);
 const PIPS = { 1: [[0, 0]], 2: [[-1, -1], [1, 1]], 3: [[-1, -1], [0, 0], [1, 1]], 4: [[-1, -1], [1, -1], [-1, 1], [1, 1]], 5: [[-1, -1], [1, -1], [0, 0], [-1, 1], [1, 1]], 6: [[-1, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [1, 1]] };
 function miniDie(v, size = 17, fill = '#ece9e1', pip = '#14232a') {
   const p = PIPS[v].map(([x, y]) => `<circle cx="${8.5 + x * 4.3}" cy="${8.5 + y * 4.3}" r="1.7" fill="${pip}"/>`).join('');
@@ -1188,7 +1231,7 @@ function logoMarkup(x, y, h, rot = 0) {
 function buildLayout(portrait) {
   const Z = {}, A = {}, puckOn = {};
   const col = (n, x, y, w) => {
-    const hb = 54, hm = 126, hp = 54;
+    const hb = 62, hm = 126, hp = 62; // strips tall enough for a label line plus a chip stack
     Z['buy' + n] = { x, y, w, h: hb, kind: 'buy', n };
     Z['codds' + n] = { x, y: y + hb, w, h: hm, kind: 'num', n };
     Z['place' + n] = { x, y: y + hb + hm, w, h: hp, kind: 'place', n };
@@ -1265,9 +1308,9 @@ function stackMarkup(amount, lammer, r = 17) {
   const chips = []; let rem = amount;
   for (const d of DENOMS) while (rem >= d && chips.length < 40) { chips.push(d); rem -= d; }
   if (!chips.length) chips.push(100);
-  const step = r * .2, show = chips.slice(-6);
+  const step = r * .2, show = chips.slice(r < 15 ? -3 : -6); // compact stacks stay below their zone's label
   let s = show.map((d, i) => chipMarkup(d, 0, -i * step, r)).join('');
-  const label = fmt(amount), fz = r < 15 ? 10 : 12, ph = fz + 3, pw = Math.max(r * 2, label.length * fz * .56 + 10);
+  const label = r < 15 ? fmtShort(amount) : fmt(amount), fz = r < 15 ? 10 : 12, ph = fz + 3, pw = Math.max(r * 2, label.length * fz * .56 + 10);
   s += `<rect class="pill" x="${-pw / 2}" y="${r + 1}" width="${pw}" height="${ph}" rx="${ph / 2}"/><text class="pill-t" x="0" y="${r + 1 + ph * .78}" font-size="${fz}">${label}</text>`;
   if (lammer) {
     const lr = r * .5, ly = -r - (show.length - 1) * step + 2;
@@ -1509,10 +1552,12 @@ const App = {
 
   freshStats(bank = START_BANK) {
     return { rolls: 0, dist: Object.fromEntries([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => [n, 0])), pointsSet: 0, pointsMade: 0, sevenOuts: 0, naturals: 0,
-      handRolls: 0, longestHand: 0, biggestWin: 0, startBank: bank, trend: [bank] };
+      handRolls: 0, longestHand: 0, biggestWin: 0, startBank: bank, trend: [bank], rebuys: 0, bought: 0 };
   },
   onTable() { return Rules.BET_KEYS.reduce((s, k) => s + this.bets[k], 0); },
-  net() { return this.bankroll + this.onTable() - this.stats.startBank; },
+  net() { return this.bankroll + this.onTable() - this.stats.startBank - (this.stats.bought || 0); },
+  /** Out of chips: nothing left to bet and nothing on the table still working for the player */
+  busted() { return this.bankroll < 100 && this.onTable() === 0; },
   table() { return { bets: this.bets, point: this.point, hits: this.hits, settings: this.settings }; },
 
   describe(key, withAmount) {
@@ -1562,7 +1607,8 @@ const App = {
     if (amt <= 0) return say(`Odds are capped at ${this.settings.maxOdds}× the flat bet.`);
     if (type !== 'odds' && type !== 'codds') amt = Math.min(amt, MAX_BET - this.bets[key]);
     if (amt <= 0) return say(`The table maximum is ${fmt(MAX_BET)} per spot.`);
-    if (amt > this.bankroll) return say(this.bankroll <= 0 ? 'Your bankroll is empty. Start over from table settings.' : `You have ${fmt(this.bankroll)} left, not enough for that bet.`);
+    if (amt > this.bankroll) return say(this.busted() ? `You’re out of chips. Tap Rebuy for another ${fmt(START_BANK)}.`
+      : this.bankroll < 100 ? 'You’re out of chips until the bets on the table are decided.' : `You have ${fmt(this.bankroll)} left, not enough for that bet.`);
     this.bets[key] += amt; this.bankroll -= amt;
     this.undo.push({ key, amt });
     if (!quiet) { Sound.chip(); this._unitTip(key); this.refresh(); this.save(); }
@@ -1696,6 +1742,7 @@ const App = {
     this.refresh();
     if (next === 'SEVEN_OUT' || next === 'POINT_MADE') { await sleep(1000); this.fsm.to('IDLE_COME_OUT'); }
     this.refresh(); this.save();
+    if (this.busted()) toast(`You’re out of chips. Tap Rebuy for another ${fmt(START_BANK)}.`);
   },
 
   _record(res, won) {
@@ -1728,8 +1775,11 @@ const App = {
       POINT_ESTABLISHED: `Point is <b>${this.point}</b>`,
       RESOLVING_BETS: 'Paying the table', SEVEN_OUT: 'Seven out', POINT_MADE: 'Point made. Winner!',
     }[ph];
-    const rb = $('#btnRoll'); rb.disabled = !bettingOpen;
-    rb.querySelector('.l').textContent = this.fsm.rolling ? 'Dice live' : bettingOpen ? 'Roll dice' : 'Paying…';
+    const busted = bettingOpen && this.busted();
+    if (busted) $('#status').textContent = 'Out of chips';
+    const rb = $('#btnRoll'); rb.disabled = !bettingOpen; rb.classList.toggle('rebuy', busted);
+    rb.title = busted ? `Buy back in for ${fmt(START_BANK)} (Space)` : 'Roll dice (Space)';
+    rb.querySelector('.l').textContent = this.fsm.rolling ? 'Dice live' : busted ? 'Rebuy' : bettingOpen ? 'Roll dice' : 'Paying…';
     $('#btnUndo').disabled = !bettingOpen || !this.undo.length;
     $('#btnClear').disabled = !bettingOpen;
     $('#btnRepeat').disabled = !bettingOpen || !this.lastBets;
@@ -1738,7 +1788,7 @@ const App = {
     w.querySelector('b').textContent = this.settings.comeOutWorking ? 'working' : 'off';
     const bo = $('#btnBetsOff'); bo.setAttribute('aria-pressed', !!this.settings.betsOff);
     bo.querySelector('b').textContent = this.settings.betsOff ? 'off' : 'working';
-    $('#rollSub').textContent = this.fsm.rolling ? '' : this.point != null ? `Point ${this.point}` : 'Come out';
+    $('#rollSub').textContent = this.fsm.rolling ? '' : busted ? `${fmt(START_BANK)} more` : this.point != null ? `Point ${this.point}` : 'Come out';
     const mw = $('#mWin');
     mw.textContent = this.lastWin > 0 ? '+' + fmt2(this.lastWin) : '—';
     $('#mWinSub').textContent = this.lastWin > 0 ? `on the ${this.lastWinTotal}` : 'Waiting for a win';
@@ -1783,6 +1833,17 @@ const App = {
     this.addLog({ t: 'info', text: 'New session, $5,000 bankroll' });
     this.refresh(); this.save(); toast('New session. $5,000 on the rail.');
   },
+  /** Out of chips: buy back in without losing the session's stats and history */
+  rebuy() {
+    if (!this.fsm.bettingOpen || !this.busted()) return;
+    this.bankroll += START_BANK; this.stats.rebuys = (this.stats.rebuys || 0) + 1; this.stats.bought = (this.stats.bought || 0) + START_BANK;
+    this.stats.trend.push(this.bankroll);
+    this.addLog({ t: 'info', text: `Rebought ${fmt(START_BANK)}. Rebuy ${this.stats.rebuys} this session.` });
+    Sound.chip(); toast(`${fmt(START_BANK)} more on the rail. Good luck.`);
+    this.refresh(); this.save();
+  },
+  /** The big button and the Space bar: roll, or rebuy when the player is out of chips */
+  primary() { if (this.busted() && this.fsm.bettingOpen) this.rebuy(); else this.roll(); },
 };
 
 function makeMachine(initial) {
@@ -1875,6 +1936,7 @@ function openStats() {
   const net = App.net();
   const tiles = [['Rolls', n], ['Points set', s.pointsSet], ['Points made', s.pointsMade], ['Point hit rate', rate], ['Come-out 7s', s.naturals],
     ['Seven-outs', s.sevenOuts], ['Current hand', s.handRolls + ' rolls'], ['Longest hand', s.longestHand + ' rolls'], ['Biggest win', fmt(s.biggestWin)], ['Session', fmt(net, true)]];
+  if (s.rebuys) tiles.push(['Rebuys', `${s.rebuys} (${fmt(s.bought)})`]);
   // Distribution chart: observed bars vs theoretical n·ways/36
   const W = 640, H = 220, pl = 34, pb = 26, pt = 10, cw = (W - pl - 8) / 11;
   const exp = n2 => n * Rules.WAYS[n2] / 36;
@@ -1997,7 +2059,7 @@ async function loadLibs() {
   }
   $('#boot').remove();
 
-  $('#btnRoll').onclick = () => App.roll();
+  $('#btnRoll').onclick = () => App.primary();
   document.querySelectorAll('.chip, .act, .work').forEach(b => b.addEventListener('mousedown', e => e.preventDefault()));
   $('#btnUndo').onclick = () => App.undoLast();
   $('#btnClear').onclick = () => App.clearAll();
@@ -2015,7 +2077,7 @@ async function loadLibs() {
   document.addEventListener('keydown', e => {
     if (document.querySelector('dialog[open]')) return;
     if (e.target.closest && e.target.closest('input,select,textarea')) return;
-    if (e.code === 'Space' && !(e.target.closest && e.target.closest('button,.zone'))) { e.preventDefault(); App.roll(); }
+    if (e.code === 'Space' && !(e.target.closest && e.target.closest('button,.zone'))) { e.preventDefault(); App.primary(); }
     else if (/^Digit[1-7]$/.test(e.code)) selectChip(DENOMS.slice().reverse()[+e.code.slice(5) - 1]);
     else if (e.key === 'z' || e.key === 'Z') App.undoLast();
     else if (e.key === 'r' || e.key === 'R') App.repeat();
