@@ -420,7 +420,7 @@ kbd{font:700 11px var(--ui);border:1px solid var(--edge-2);border-bottom-width:2
   <div class="dlg-head"><h2 id="aboutTitle">About</h2><button class="icon-btn" data-close aria-label="Close"><svg class="i" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
   <div class="dlg-body prose">
     <p>Mezware Crapless Craps is a free practice table for crapless craps, also called never-ever craps. It uses play money only.</p>
-    <p>The dice are thrown with real-time physics and read from whichever face lands on top. Every bet pays by the odds printed on the layout, and the statistics panel compares your rolls with the expected distribution.</p>
+    <p>The dice are thrown with real-time physics and read from whichever face lands on top. Every bet pays by the odds printed on the layout (buy bets less their 5% commission), and the statistics panel compares your rolls with the expected distribution.</p>
     <p>Your bankroll, bets and history are saved in this browser, so you can pick up where you left off.</p>
     <p><a class="btn" href="https://buymeacoffee.com/mezware" target="_blank" rel="noopener">Support Mezware on Buy Me a Coffee</a></p>
   </div>
@@ -653,12 +653,16 @@ const Rules = (() => {
     }
     if (type === 'come' && point == null) return 'The come box opens once a point is set. On the come-out, bet the pass line.';
     if (type === 'comeN') return 'Come bets reach a number by traveling from the come box.';
+    if (type === 'buy' && s.breakage === 'dollar') {
+      const st = bets[key] + amount;
+      if (pay(st, BUY_PAY[n], 'dollar') - buyCommission(st, 'dollar') <= 0) return `A buy bet on ${n} needs at least $2. The $1 minimum commission would eat a smaller win.`;
+    }
     if (type === 'codds') {
       if (!bets['come' + n]) return `Come odds on ${n} need a come bet sitting on ${n}. Bet the come box first.`;
       if (bets['codds' + n] + amount > bets['come' + n] * s.maxOdds) return `Come odds are capped at ${s.maxOdds}× the come bet.`;
     }
     if ((type === 'low' || type === 'high' || type === 'all') && hits.length)
-      return 'Low, High and Roll ’em All open at the start of a hand, before any number has rolled.';
+      return 'Low rolls, High rolls and Roll ’em all open at the start of a hand, before any number has rolled.';
     return null;
   }
 
@@ -1386,7 +1390,7 @@ class Felt {
     const txt = (x, y, t, size, cls = 't-pay', anchor = 'middle') => `<text class="${cls}" x="${x}" y="${y}" font-size="${size}" style="text-anchor:${anchor}">${t}</text>`;
     switch (z.kind) {
       case 'buy':
-        return txt(z.x + 8, z.y + 21, 'Buy', 9.5 * fs, 't-sub', 'start') + txt(z.x + 8, z.y + 21 + 12 * fs, FOR_TXT(Rules.BUY_PAY[z.n]), 8 * fs, 't-pay', 'start');
+        return txt(z.x + 8, z.y + 21, 'Buy', 9.5 * fs, 't-sub', 'start') + txt(z.x + 8, z.y + 21 + 12 * fs, FOR_TXT(Rules.BUY_PAY[z.n]) + ' −5%', 8 * fs, 't-pay', 'start');
       case 'place':
         return txt(z.x + 8, z.y + 21, 'Place', 9.5 * fs, 't-sub', 'start') + txt(z.x + 8, z.y + 21 + 12 * fs, FOR_TXT(Rules.PLACE_PAY[z.n]), 8 * fs, 't-pay', 'start');
       case 'num': {
@@ -1753,7 +1757,7 @@ const App = {
       any7: 'Any 7. One roll. Pays 4 to 1.',
       anycraps: 'Any craps. One roll. 2, 3 or 12 pays 7 to 1.',
       horn: 'Horn. One roll, split across 2, 3, 11 and 12. Pays 27 to 4 on 2 or 12, and 3 to 1 on 3 or 11. Bet in $4 units.',
-      ce: 'C & E. One roll, split between any craps and 11. Pays 3 to 1 on 2, 3 or 12, and 7 to 1 on 11. Bet in $2 units.',
+      ce: 'C & E. One roll, split between any craps and 11. Pays 3 to 1 on 2, 3 or 12, and 7 to 1 on 11.',
       low: 'Low rolls. Roll 2, 3, 4, 5 and 6 before a 7 to win 30 to 1. Opens at the start of a hand.' + hitList,
       high: 'High rolls. Roll 8, 9, 10, 11 and 12 before a 7 to win 30 to 1. Opens at the start of a hand.' + hitList,
       all: 'Roll ’em all. Roll every number from 2 to 12 before a 7 to win 155 to 1. Opens at the start of a hand.' + hitList,
@@ -1787,7 +1791,7 @@ const App = {
     if (this.settings.breakage !== 'dollar') return;
     const { type, n } = Rules.parseKey(key);
     const tip = (id, msg) => { if (!this.tips[id]) { this.tips[id] = true; toast(msg); } };
-    const units = { place: [Rules.PLACE_UNIT[n], `the ${n}`], codds: [Rules.ODDS_UNIT[n], `odds on ${n}`], horn: [4, 'the horn'], ce: [2, 'C & E'] };
+    const units = { place: [Rules.PLACE_UNIT[n], `the ${n}`], codds: [Rules.ODDS_UNIT[n], `odds on ${n}`], horn: [4, 'the horn'] };
     if (type === 'odds' && this.point != null) units.odds = [Rules.ODDS_UNIT[this.point], `odds on ${this.point}`];
     const u = units[type];
     if (u && u[0] > 1 && this.bets[key] % (u[0] * 100) !== 0) tip(key + u[0], `Bet ${u[1]} in $${u[0]} units so the payout isn’t rounded down.`);
@@ -1800,14 +1804,16 @@ const App = {
     if (!this.bets[key]) { if (t.type === 'codds' && this.bets['come' + t.n]) toast(Rules.removalError('come' + t.n, this.table())); return; }
     const err = Rules.removalError(key, this.table()); if (err) return toast(err);
     this.bankroll += this.bets[key]; this.bets[key] = 0;
-    this.undo = this.undo.filter(u => u.key !== key);
+    this.undo = this.undo.map(u => u.batch ? { batch: u.batch.filter(b => b.key !== key) } : u).filter(u => u.batch ? u.batch.length : u.key !== key);
     Sound.tick(); this.refresh(); this.save();
   },
   undoLast() {
     if (!this.fsm.bettingOpen) return;
     const u = this.undo.pop(); if (!u) return toast('Nothing to undo since the last roll.');
-    if (Rules.removalError(u.key, this.table()) || this.bets[u.key] < u.amt) return;
-    this.bets[u.key] -= u.amt; this.bankroll += u.amt;
+    for (const b of u.batch || [u]) { // Across and Repeat undo as one action
+      if (Rules.removalError(b.key, this.table()) || this.bets[b.key] < b.amt) continue;
+      this.bets[b.key] -= b.amt; this.bankroll += b.amt;
+    }
     Sound.tick(); this.refresh(); this.save();
   },
   clearAll() {
@@ -1826,14 +1832,17 @@ const App = {
   repeat() {
     if (!this.fsm.bettingOpen) return;
     if (!this.lastBets) return toast('Nothing to repeat yet. Roll once first.');
-    let added = 0, skipped = 0;
+    let added = 0; const skipped = [], mark = this.undo.length;
     for (const k of Rules.BET_KEYS) {
       const need = this.lastBets[k] - this.bets[k];
       if (need <= 0 || Rules.parseKey(k).type === 'comeN') continue;
-      if (this.place(k, need, { quiet: true })) added += need; else skipped++;
+      if (this.place(k, need, { quiet: true })) added += need; else skipped.push(k);
     }
-    if (!added) return toast(skipped ? 'Those bets can’t go back up right now.' : 'Your last bets are already on the table.');
-    Sound.chip(); toast(`Repeated ${fmt(added)} in bets.` + (skipped ? ` ${skipped} couldn’t go back up.` : ''));
+    const batch = this.undo.splice(mark); if (batch.length) this.undo.push({ batch });
+    const waits = skipped.filter(k => ['odds', 'come', 'codds'].includes(Rules.parseKey(k).type)).map(betLabel);
+    const why = waits.length ? ` ${waits.join(', ')} ${waits.length > 1 ? 'wait' : 'waits'} for a point.` : skipped.length ? ` ${skipped.map(betLabel).join(', ')} couldn’t go back up.` : '';
+    if (!added) return toast(skipped.length ? 'Those bets can’t go back up right now.' + why : 'Your last bets are already on the table.');
+    Sound.chip(); toast(`Repeated ${fmt(added)} in bets.` + why);
     this.refresh(); this.save();
   },
   across() {
@@ -1844,8 +1853,9 @@ const App = {
     });
     const total = plan.reduce((s, [, a]) => s + a, 0);
     if (total > this.bankroll) return toast(`Placing across takes ${fmt(total)}. You have ${fmt(this.bankroll)}.`);
-    let placed = 0;
+    let placed = 0; const mark = this.undo.length;
     for (const [k, a] of plan) if (this.place(k, a, { quiet: true })) placed += a;
+    const batch = this.undo.splice(mark); if (batch.length) this.undo.push({ batch });
     Sound.chip();
     toast(`Placed ${fmt(placed)} across${this.point != null ? `, skipping the point` : ''}, in full payout units.`);
     this.refresh(); this.save();
@@ -1858,7 +1868,7 @@ const App = {
     if (this.point != null && this.bets.pass) targets.push(['odds', this.bets.pass, this.point]);
     for (const n of Rules.POINT_NUMBERS) if (this.bets['come' + n]) targets.push(['codds' + n, this.bets['come' + n], n]);
     if (!targets.length) return toast(this.point == null ? 'Odds open once a point is set.' : 'Odds need a pass line or come bet behind them.');
-    let added = 0, short = false;
+    let added = 0, short = false; const mark = this.undo.length;
     for (const [key, flat, n] of targets) {
       const unit = dollar ? Rules.ODDS_UNIT[n] * 100 : 100;
       const target = Math.floor(flat * this.settings.maxOdds / unit) * unit;
@@ -1867,6 +1877,7 @@ const App = {
       if (need > this.bankroll) { short = true; continue; }
       if (this.place(key, need, { quiet: true })) added += need;
     }
+    const batch = this.undo.splice(mark); if (batch.length) this.undo.push({ batch });
     if (!added) return toast(short ? `Not enough in the bankroll to fill the odds.` : `Your odds are already at ${this.settings.maxOdds}×.`);
     Sound.chip(); toast(`Odds to ${this.settings.maxOdds}×: +${fmt(added)}${short ? '. Not enough for the rest.' : ''}`);
     this.refresh(); this.save();
@@ -1938,10 +1949,11 @@ const App = {
     hideBanner();
     if (this.arena.speed !== undefined) this.arena.speed = this.pace();
     this.refresh();
+    const table = { ...this.table(), settings: { ...this.settings } }; // a setting changed while the dice are in the air can't apply to this roll
     const { d1, d2 } = await this.arena.throw(power, aim);
 
     this.fsm.to('RESOLVING_BETS');
-    const res = Rules.resolveRoll(this.table(), d1, d2);
+    const res = Rules.resolveRoll(table, d1, d2);
     this.bankroll += res.credit; this.bets = res.newBets; this.point = res.newPoint; this.hits = res.newHits;
     const won = res.ledger.reduce((s, l) => s + l.win, 0);
     const lost = res.ledger.reduce((s, l) => s + (l.outcome === 'lose' ? l.stake : 0), 0);
@@ -1957,6 +1969,7 @@ const App = {
       net: won - lost,
     });
 
+    this.save(true); // the result is final now; a reload during the payout animation must not undo it
     this.felt.showResolution(res);
     const level = celebrationLevel(res, won, lost, this.stats);
     let call = Stickman.call(res, { handRolls: this.stats.lastHand && res.event === 'SEVEN_OUT' ? this.stats.lastHand.rolls : this.stats.handRolls });
@@ -2079,8 +2092,8 @@ const App = {
   },
 
   /* ---------- persistence ---------- */
-  save() {
-    if (!this.fsm.bettingOpen) return;
+  save(force = false) {
+    if (!force && !this.fsm.bettingOpen) return; // mid-roll saves happen only right after a result is applied
     try {
       localStorage.setItem(STORE_KEY, JSON.stringify({ bankroll: this.bankroll, bets: this.bets, point: this.point, hits: this.hits, settings: this.settings,
         history: this.history, stats: this.stats, chip: this.chip, lastBets: this.lastBets, log: this.log.slice(0, 60), lastWin: this.lastWin, lastWinTotal: this.lastWinTotal,
@@ -2324,15 +2337,19 @@ function openSettings() {
   $('#dlgSettings').showModal();
 }
 function bindSettings() {
-  const upd = (fn) => e => { fn(e.target); App.save(); App.refresh(); };
+  const upd = (fn) => e => {
+    if (!App.fsm.bettingOpen) { toast('Change table settings between rolls.'); openSettings(); return; } // openSettings re-syncs the controls
+    fn(e.target); App.save(); App.refresh();
+  };
   $('#sField12').onchange = upd(t => App.settings.field12 = +t.value);
   $('#sWorking').onchange = upd(t => App.settings.comeOutWorking = t.checked);
   $('#sOdds').onchange = upd(t => {
     App.settings.maxOdds = +t.value;
-    const cap = App.bets.pass * App.settings.maxOdds;
-    if (App.bets.odds > cap) {
-      if (App.fsm.bettingOpen) { App.bankroll += App.bets.odds - cap; App.bets.odds = cap; toast('Odds trimmed to the new maximum.'); }
-    }
+    let back = 0;
+    const trim = (k, flat) => { const cap = flat * App.settings.maxOdds; if (App.bets[k] > cap) { back += App.bets[k] - cap; App.bets[k] = cap; } };
+    trim('odds', App.bets.pass);
+    for (const n of Rules.POINT_NUMBERS) trim('codds' + n, App.bets['come' + n]);
+    if (back) { App.bankroll += back; App.undo = App.undo.filter(u => u.batch || !/^(odds|codds\d+)$/.test(u.key)); toast(`Odds trimmed to the new ${App.settings.maxOdds}× maximum.`); }
   });
   $('#sBreak').onchange = upd(t => App.settings.breakage = t.value);
   $('#sSound').onchange = upd(t => setSound(t.checked));
