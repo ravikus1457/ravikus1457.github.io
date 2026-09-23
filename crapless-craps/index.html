@@ -63,6 +63,7 @@ svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-l
 .pit{position:relative;height:clamp(220px,34vh,400px);border-radius:18px;overflow:hidden;background:#07121a;border:1px solid var(--edge-2);box-shadow:0 20px 44px rgba(0,0,0,.5)}
 .pit canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
 .pit canvas:active{cursor:grabbing}
+#fxCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .pit-hint{position:absolute;top:12px;left:16px;color:var(--ink-soft);font-size:12px;letter-spacing:.06em;pointer-events:none;transition:opacity .4s}
 .pit-hint[hidden]{display:block;opacity:0}
 .banner{position:absolute;left:clamp(16px,3vw,32px);bottom:58px;transform:translateY(8px);text-align:left;pointer-events:none;opacity:0;transition:opacity .25s, transform .35s cubic-bezier(.2,.8,.2,1);color:var(--ink);text-shadow:0 2px 14px rgba(0,0,0,.8)}
@@ -71,6 +72,9 @@ svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-l
 .banner .call{font-weight:600;font-size:clamp(14px,1.8vw,17px);display:block;margin-top:6px;color:var(--ink)}
 .banner .delta{display:inline-block;margin-top:8px;font-weight:700;font-size:15px;padding:2px 11px;border-radius:99px;background:rgba(0,0,0,.45)}
 .banner.good .total{color:var(--gold)} .banner.bad .total{color:var(--lose)}
+.banner .delta.hand{margin-left:6px;color:var(--ink)} .banner .delta.hand b{color:var(--gold)}
+.banner .delta.hand.neg b{color:#ff9c8c}
+.banner .hot{display:inline-block;margin-top:8px;margin-left:6px;font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);padding:3px 9px;border:1px solid var(--gold-muted);border-radius:99px;background:rgba(242,190,69,.1)}
 .banner .delta.pos{color:var(--gold)} .banner .delta.neg{color:#ff9c8c}
 .fallback-note{position:absolute;inset:auto 12px 60px 12px;color:var(--ink-soft);font-size:13px;text-align:center}
 .fallback-dice{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:24px}
@@ -102,6 +106,17 @@ svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-l
 .rack{border-radius:20px;padding:14px;color:var(--ink);background:var(--panel);border:1px solid var(--edge-2);box-shadow:0 18px 36px rgba(0,0,0,.4);display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
 .hint{font-size:13px;color:var(--ink-soft);min-height:3.6em;margin:0}
 .hint b{color:var(--ink);font-weight:700}
+.hint.coach b,.rack-call.coach b{color:var(--cyan)}
+.hint .edge{color:var(--ink-dim);font-size:12px}
+.rack-call{display:none;align-items:center;gap:7px;margin:0;min-height:22px;font-size:13px;font-weight:600;color:var(--ink);line-height:1.25}
+.rack-call .mini-die{width:15px;height:15px}
+.rack-call .tot{font-weight:800;font-size:15px;color:var(--cyan);margin-right:2px}
+.rack-call .tot.good{color:var(--gold)} .rack-call .tot.bad{color:var(--lose)}
+.rack-call .delta{margin-left:auto;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rack-call .delta.pos{color:var(--gold)} .rack-call .delta.neg{color:#ff9c8c}
+.rack-call.coach{color:var(--ink-soft);font-weight:500}
+body.pit-off .rack-call.coach,.rack-call.coach{display:block}
+@media (min-width: 900px){ .rack-call.coach{display:none} }
 .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 12px;padding:10px 4px;border-radius:14px;background:var(--bg-2);border:1px solid var(--edge)}
 .chip{--c:#eee;--spot:#fff;--rim:#0004;width:44px;height:44px;flex:0 0 auto;border-radius:50%;border:0;cursor:pointer;position:relative;display:grid;place-items:center;
   font:800 12px var(--ui);letter-spacing:-.02em;color:var(--chip-ink,#fff);text-shadow:0 1px 1px rgba(0,0,0,.35);
@@ -117,7 +132,7 @@ svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-l
 .chip[data-v="10000"]{--c:#26282b;--spot:#e9e6df}
 .chip[data-v="50000"]{--c:#7a3fb0;--spot:#f4efe6}
 .chip[data-v="100000"]{--c:#d99a2b;--spot:#fff3d6;font-size:10px;letter-spacing:-.04em}
-.actions{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+.actions{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
 .act{display:flex;flex-direction:column;align-items:center;gap:4px;padding:9px 1px 7px;border-radius:10px;border:1px solid var(--edge-2);background:var(--bg-2);cursor:pointer;font:700 9px var(--ui);letter-spacing:.06em;text-transform:uppercase;color:var(--ink);transition:background .15s, border-color .15s}
 .act svg{width:17px;height:17px}
 .act:hover:not(:disabled){background:var(--panel-2)}
@@ -167,6 +182,9 @@ svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-l
   .rack{position:sticky;bottom:0;z-index:5;border-radius:18px 18px 0 0;margin:0 calc(-1 * clamp(8px,1.6vw,20px));padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));
     grid-template-columns:1fr auto;grid-template-areas:"hint hint" "chips chips" "actions roll" "quick roll";gap:8px 12px}
   .hint{grid-area:hint;min-height:0;font-size:12px}
+  .rack-call{grid-area:call}
+  body.pit-off .rack-call{display:flex}
+  .rack{grid-template-areas:"call call" "hint hint" "chips chips" "actions roll" "quick roll"}
   .chips{grid-area:chips;justify-content:space-between;flex-wrap:nowrap;gap:4px;padding:6px}
   .actions{grid-area:actions}
   .act{padding:6px 2px}
@@ -186,11 +204,13 @@ svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-l
   .money .sub{display:none}
   .money dt{font-size:8.5px;letter-spacing:.12em}
   .hint{display:none}
-  .rack{grid-template-areas:"chips chips" "actions roll" "quick roll"}
+  .rack{grid-template-areas:"call call" "chips chips" "actions roll" "quick roll"}
+  .rack-call{display:flex;font-size:12px}
   .work{padding:5px 8px;letter-spacing:.06em} .work b{font-size:12px}
   .act span{display:none}
 }
 @media (max-width: 420px){ .chip{width:38px;height:38px;font-size:10.5px} }
+@media (max-width: 379px){ .actions{grid-template-columns:repeat(3,minmax(0,1fr))} }
 
 /* ---------- felt SVG ---------- */
 .zone{cursor:pointer;outline:none}
@@ -219,6 +239,8 @@ svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-l
 .ats-t{fill:rgba(142,167,165,.22)}
 .ats-t.hit{fill:var(--gold)}
 .zone.is-point .bg{fill:rgba(242,190,69,.08);stroke:var(--gold-muted);stroke-width:2.6}
+.zone.coach .bg{stroke:var(--cyan);stroke-width:2.6;animation:coachPulse 1.6s ease-in-out infinite}
+@keyframes coachPulse{50%{fill:rgba(88,224,203,.16);stroke-width:3.4}}
 .zone.flash-win .bg{animation:flashWin 1.1s ease-out}
 .zone.flash-lose .bg{animation:flashLose .9s ease-out}
 .zone.flash-hit .bg{animation:flashHit .9s ease-out}
@@ -285,6 +307,19 @@ kbd{font:700 11px var(--ui);border:1px solid var(--edge-2);border-bottom-width:2
 @media (max-width: 520px){ .keys div{grid-template-columns:1fr;gap:0} .entry{grid-template-columns:1fr auto} .e-dice{grid-column:1} .e-body{grid-column:1/-1;grid-row:2} .e-net{grid-row:1;grid-column:2} }
 .toasts{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;flex-direction:column;gap:8px;align-items:center;z-index:50;pointer-events:none;width:min(92vw,440px)}
 .toast{background:rgba(10,22,32,.96);color:var(--ink);padding:10px 16px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.5);border:1px solid var(--edge-2);font-size:14px;animation:toastIn .25s ease-out;text-align:center}
+.toast.has-acts{pointer-events:auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 10px;border-color:var(--gold-muted)}
+.toast .acts{display:flex;gap:6px}
+.toast .acts button{font:700 11px var(--ui);letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:8px;border:1px solid var(--edge-2);background:var(--bg-2);color:var(--ink);cursor:pointer}
+.toast .acts button.gold{border-color:var(--gold-muted);color:var(--gold)}
+.toast .acts button:hover{background:var(--panel-2)}
+.bests{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 14px}
+.bars{display:grid;grid-template-columns:auto 1fr auto;gap:5px 10px;align-items:center;font-size:12px;margin:0 0 16px}
+.bars .lbl{color:var(--ink-soft);white-space:nowrap} .bars .lbl small{color:var(--ink-dim);margin-left:4px}
+.bars .track{height:8px;border-radius:4px;background:var(--bg-2);position:relative;border:1px solid var(--edge)}
+.bars .track i{position:absolute;top:0;bottom:0;border-radius:4px}
+.bars .track i.pos{background:var(--gold);left:50%} .bars .track i.neg{background:var(--coral);right:50%}
+.bars .track::after{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--edge-2)}
+.bars .val{font-weight:700;font-variant-numeric:tabular-nums;text-align:right} .bars .val.pos{color:var(--gold)} .bars .val.neg{color:#ff9f8f}
 .toast.out{opacity:0;transform:translateY(8px);transition:.3s}
 @keyframes toastIn{from{opacity:0;transform:translateY(8px)}}
 @media (max-width: 899px){ .toasts{bottom:calc(170px + env(safe-area-inset-bottom,0px))} }
@@ -323,6 +358,7 @@ kbd{font:700 11px var(--ui);border:1px solid var(--edge-2);border-bottom-width:2
   </header>
 
   <section class="pit" id="pit" aria-label="Dice pit">
+    <canvas id="fxCanvas" aria-hidden="true"></canvas>
     <div class="boot" id="boot">Setting the table…</div>
     <div class="pit-hint" id="pitHint">Swipe up on the felt to throw, or press Space</div>
     <div class="banner" id="banner" aria-live="polite"></div>
@@ -332,6 +368,7 @@ kbd{font:700 11px var(--ui);border:1px solid var(--edge-2);border-bottom-width:2
   <section class="table">
     <div class="felt-wrap"><div class="felt-head"><b>Crapless craps</b><span class="status" id="status" aria-live="polite">Come-out roll</span></div><svg id="felt" role="group" aria-label="Betting layout"></svg></div>
     <aside class="rack" aria-label="Chips and controls">
+      <p class="rack-call" id="rackCall" aria-live="polite"></p>
       <p class="hint" id="hint">Pick a chip, then tap a spot on the layout. Right-click or long-press a bet to take it down.</p>
       <div class="chips" id="chips" role="radiogroup" aria-label="Chip value"></div>
       <div class="actions">
@@ -340,6 +377,7 @@ kbd{font:700 11px var(--ui);border:1px solid var(--edge-2);border-bottom-width:2
         <button class="act" id="btnClear" title="Take down every bet that can come down"><svg class="i" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg><span>Clear</span></button>
         <button class="act" id="btnRepeat" title="Put last roll’s bets back up (R)"><svg class="i" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg><span>Repeat</span></button>
         <button class="act" id="btnAcross" title="Place every number except the point, in full payout units (A)"><svg class="i" viewBox="0 0 24 24"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg><span>Across</span></button>
+        <button class="act" id="btnMaxOdds" title="Fill pass and come odds to the maximum (O)"><svg class="i" viewBox="0 0 24 24"><path d="m17 11-5-5-5 5"/><path d="m17 18-5-5-5 5"/></svg><span>Max odds</span></button>
       </div>
       <button class="roll" id="btnRoll" title="Roll dice (Space)"><span class="l">Roll dice</span><span class="k" id="rollSub">Come out</span></button>
       <div class="quick"><button class="work" id="btnWorking" aria-pressed="false" title="Place, buy, hardway and come odds on the come-out roll">Come-out bets <b>off</b></button><button class="work" id="btnBetsOff" aria-pressed="false" title="Call place, buy, hardway and come odds off on every roll">Bets <b>working</b></button></div>
@@ -367,6 +405,7 @@ kbd{font:700 11px var(--ui);border:1px solid var(--edge-2);border-bottom-width:2
       <div><dt>Clear</dt><dd>Takes down every bet that’s allowed to come down.</dd></div>
       <div><dt>Repeat <kbd>R</kbd></dt><dd>Puts last roll’s bets back up.</dd></div>
       <div><dt>Across <kbd>A</kbd></dt><dd>Places every number except the point, sized to pay without rounding.</dd></div>
+      <div><dt>Max odds <kbd>O</kbd></dt><dd>Fills your pass line odds and every come bet’s odds to the table maximum. Odds are the only bet with no house edge.</dd></div>
       <div><dt>Come-out bets</dt><dd>Off by default. When working, place, buy, hardway and come odds win or lose on the come-out roll too.</dd></div>
       <div><dt>Bets off</dt><dd>Calls your place, buy, hardway and come odds off on every roll until you turn them back on. They stay on the table.</dd></div>
       <div><dt>Roll dice <kbd>Space</kbd></dt><dd>Or swipe up on the dice pit. A faster, longer swipe throws harder.</dd></div>
@@ -405,6 +444,12 @@ kbd{font:700 11px var(--ui);border:1px solid var(--edge-2);border-bottom-width:2
       <select id="sBreak"><option value="dollar">Round down to $1</option><option value="cent">Pay exact cents</option></select></div>
     <div class="setting"><div><label for="sSound">Sound effects</label><p>Dice, chips, puck and payouts.</p></div>
       <input type="checkbox" id="sSound"></div>
+    <div class="setting"><div><label for="sVoice">Stickman voice</label><p>Calls each roll out loud, the way the stickman does. Uses your device’s speech voice.</p></div>
+      <input type="checkbox" id="sVoice"></div>
+    <div class="setting"><div><label for="sSpeed">Dice speed</label><p>Fast plays the same throw at about twice the speed and shortens the pause between rolls.</p></div>
+      <select id="sSpeed"><option value="normal">Normal</option><option value="fast">Fast</option></select></div>
+    <div class="setting"><div><label>Beginner tips</label><p>Walks a new player through the first pass line bet, odds and a roll.</p></div>
+      <button class="btn" id="btnCoach">Show tips again</button></div>
     <div class="setting"><div><label>New session</label><p>Returns bets, resets stats and history, and restores a $5,000 bankroll.</p></div>
       <button class="btn danger" id="btnReset">Start over</button></div>
   </div>
@@ -934,7 +979,7 @@ class DiceArena {
   constructor(host, sound) {
     this.host = host; this.sound = sound;
     this.phys = DiceWorld(CANNON);
-    this.busy = false; this.pending = null; this.acc = 0; this.elapsed = 0;
+    this.busy = false; this.pending = null; this.acc = 0; this.elapsed = 0; this.speed = 1;
     this.dirty = true; this.pulse = 0; this.last = performance.now();
     const r = this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
     r.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -1153,8 +1198,9 @@ class DiceArena {
     requestAnimationFrame(this._loop);
     const dt = Math.min(0.05, (now - this.last) / 1000); this.last = now;
     if (this.busy) {
-      this.acc += dt; this.elapsed += dt;
-      while (this.acc >= this.phys.FIXED && this.busy) {
+      this.acc += dt * this.speed; this.elapsed += dt;
+      let steps = 0;
+      while (this.acc >= this.phys.FIXED && this.busy && steps++ < 30) {
         this.acc -= this.phys.FIXED;
         if (this.phys.stepFixed()) this._settled();
       }
@@ -1547,18 +1593,124 @@ const START_BANK = 500000;   // $5,000
 const MAX_BET = 1000000;     // $10,000 per spot
 const CALLS = { 2: 'Aces', 3: 'Ace-deuce', 11: 'Yo-leven', 12: 'Boxcars', 5: 'Five', 9: 'Nine', 7: 'Seven' };
 
+/* ==========================================================================
+   STICKMAN — the patter on the banner, and an optional spoken call
+   ========================================================================== */
+const Stickman = (() => {
+  const pick = a => a[Math.floor(Math.random() * a.length)];
+  const NUM = {
+    2: ['Aces! Two', 'Two, snake eyes', 'Aces, two'],
+    3: ['Three, ace-deuce', 'Ace-deuce, three', 'Three, ace caught a deuce'],
+    4: { hard: ['Four, hard four', 'Hard four, two and two'], easy: ['Four, easy four', 'Four the easy way, three-one'] },
+    5: ['Five, no field five', 'Fever five', 'Five, five, no field five'],
+    6: { hard: ['Six, the hard way', 'Hard six, three-three'], easy: ['Six, easy six', 'Six the easy way'] },
+    8: { hard: ['Eight, hard eight', 'Hard eight, four-four', 'Eighter from Decatur, the hard way'], easy: ['Eight, easy eight', 'Eight the easy way'] },
+    9: ['Nine, center field nine', 'Nina from Pasadena', 'Nine, nine, center field'],
+    10: { hard: ['Ten, hard ten', 'Hard ten, five-five'], easy: ['Ten, easy ten', 'Ten the easy way'] },
+    11: ['Yo-leven!', 'Yo! Eleven', 'Yo-leven, eleven'],
+    12: ['Boxcars! Twelve', 'Twelve, midnight', 'Boxcars, twelve'],
+  };
+  const number = res => { const v = NUM[res.total]; return Array.isArray(v) ? pick(v) : pick(res.hard ? v.hard : v.easy); };
+  /** The colourful call for the banner and the voice; the log keeps the plain callFor() text */
+  function call(res, ctx = {}) {
+    const t = res.total;
+    if (res.event === 'NATURAL') return pick(['Seven! Front line winner', 'Winner seven, pay the line', 'Seven, winner on the come-out']);
+    if (res.event === 'SEVEN_OUT') return ctx.handRolls >= 15 ? `Seven out, line away. ${ctx.handRolls} rolls, what a hand` : pick(['Seven out, line away', 'Seven out. Take the line', 'Out seven, line away']);
+    if (res.event === 'POINT_SET') return `${number(res)}. ${t} is the point` + ([2, 3, 11, 12].includes(t) ? ', no craps here' : '');
+    if (res.event === 'POINT_MADE') return res.hard && Rules.HARD_NUMBERS.includes(t) ? `Hard ${t}! Winner, pay the line and the hardway` : pick([`Winner! ${t} came back, pay the line`, `${t}! Winner, winner, pay the line`, `Winner ${t}, front line winner`]);
+    return number(res);
+  }
+  let voiceOn = false, voice = null;
+  function pickVoice() {
+    try {
+      const vs = speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang));
+      voice = vs.find(v => /Google US English|Samantha|Daniel|Alex/i.test(v.name)) || vs.find(v => /^en-US/i.test(v.lang)) || vs[0] || null;
+    } catch (e) { voice = null; }
+  }
+  const supported = () => typeof window !== 'undefined' && 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+  if (supported()) { pickVoice(); try { speechSynthesis.addEventListener('voiceschanged', pickVoice); } catch (e) {} }
+  function say(text) {
+    if (!voiceOn || !supported() || Sound.muted) return;
+    try {
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text.replace(/[!.]+$/, ''));
+      if (voice) u.voice = voice;
+      u.rate = 1.08; u.pitch = 0.92; u.volume = 0.9;
+      speechSynthesis.speak(u);
+    } catch (e) { /* no speech on this device */ }
+  }
+  return { call, say, supported, get on() { return voiceOn; }, set on(v) { voiceOn = !!v; if (!v && supported()) try { speechSynthesis.cancel(); } catch (e) {} } };
+})();
+
+/* ==========================================================================
+   FX — chips rain over the dice pit on the big moments
+   ========================================================================== */
+const Fx = (() => {
+  const COLORS = ['#f2be45', '#f8ce5b', '#58e0cb', '#c8322f', '#2d63b0', '#2a8a57', '#7a3fb0', '#eeece6'];
+  let cv, g, parts = [], raf = 0, last = 0;
+  const reduced = () => window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function ensure() {
+    if (!cv) { cv = document.getElementById('fxCanvas'); if (!cv) return false; g = cv.getContext('2d'); }
+    const w = cv.clientWidth, h = cv.clientHeight, dpr = Math.min(2, window.devicePixelRatio || 1);
+    if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return w > 0 && h > 0;
+  }
+  function burst(n) {
+    if (reduced() || !ensure()) return;
+    const w = cv.clientWidth, h = cv.clientHeight;
+    for (let i = 0; i < n; i++) {
+      const fromLeft = Math.random() < .5;
+      parts.push({
+        x: fromLeft ? -10 : w + 10, y: h * (0.35 + Math.random() * .45),
+        vx: (fromLeft ? 1 : -1) * (220 + Math.random() * 260), vy: -(380 + Math.random() * 320),
+        r: 7 + Math.random() * 6, rot: Math.random() * Math.PI, vr: (Math.random() - .5) * 12,
+        c: COLORS[Math.floor(Math.random() * COLORS.length)], life: 0, ttl: 1.9 + Math.random() * .6, squash: Math.random() * Math.PI,
+      });
+    }
+    if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); }
+  }
+  function chip(p) {
+    const k = Math.abs(Math.cos(p.squash));           // a chip tumbling edge-on reads as an ellipse
+    g.save(); g.translate(p.x, p.y); g.rotate(p.rot); g.scale(1, Math.max(.18, k));
+    g.beginPath(); g.arc(0, 0, p.r, 0, Math.PI * 2); g.fillStyle = p.c; g.fill();
+    g.lineWidth = p.r * .28; g.strokeStyle = 'rgba(255,255,255,.75)'; g.setLineDash([p.r * .5, p.r * .5]);
+    g.beginPath(); g.arc(0, 0, p.r * .74, 0, Math.PI * 2); g.stroke();
+    g.setLineDash([]); g.lineWidth = 1; g.strokeStyle = 'rgba(0,0,0,.35)'; g.beginPath(); g.arc(0, 0, p.r, 0, Math.PI * 2); g.stroke();
+    g.restore();
+  }
+  function frame(now) {
+    const dt = Math.min(.05, (now - last) / 1000); last = now;
+    const w = cv.clientWidth, h = cv.clientHeight;
+    g.clearRect(0, 0, w, h);
+    parts = parts.filter(p => p.life < p.ttl && p.y < h + 30);
+    for (const p of parts) {
+      p.life += dt; p.vy += 900 * dt; p.vx *= (1 - 1.2 * dt);
+      p.x += p.vx * dt; p.y += p.vy * dt; p.rot += p.vr * dt; p.squash += 6 * dt;
+      g.globalAlpha = Math.min(1, (p.ttl - p.life) * 1.6);
+      chip(p);
+    }
+    g.globalAlpha = 1;
+    if (parts.length) raf = requestAnimationFrame(frame); else { raf = 0; g.clearRect(0, 0, w, h); }
+  }
+  return { burst, small: () => burst(26), big: () => { burst(46); setTimeout(() => burst(40), 260); } };
+})();
+
 const App = {
   fsm: null, arena: null, felt: null,
   bankroll: START_BANK, bets: Rules.emptyBets(), point: null, hits: [],
   settings: { ...Rules.DEFAULT_SETTINGS, sound: true },
   chip: 500, eraseMode: false, undo: [], history: [], tips: {}, lastBets: null,
-  log: [], lastWin: 0, lastWinTotal: null,
-  stats: null,
+  log: [], lastWin: 0, lastWinTotal: null, lastRoll: null,
+  stats: null, coach: { done: false, stage: 0 }, bests: { longestHand: 0, biggestWin: 0, bestSession: 0, bestHand: 0 },
 
   freshStats(bank = START_BANK) {
     return { rolls: 0, dist: Object.fromEntries([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => [n, 0])), pointsSet: 0, pointsMade: 0, sevenOuts: 0, naturals: 0,
-      handRolls: 0, longestHand: 0, biggestWin: 0, startBank: bank, trend: [bank], rebuys: 0, bought: 0 };
+      handRolls: 0, longestHand: 0, biggestWin: 0, startBank: bank, trend: [bank], rebuys: 0, bought: 0,
+      handPoints: 0, handStart: bank, lastHand: null, hands: 0, byBet: {} };
   },
+  /** Speed factor for the physics and the pauses between rolls */
+  pace() { return this.settings.speed === 'fast' ? 2.2 : 1; },
   onTable() { return Rules.BET_KEYS.reduce((s, k) => s + this.bets[k], 0); },
   net() { return this.bankroll + this.onTable() - this.stats.startBank - (this.stats.bought || 0); },
   /** Out of chips: nothing left to bet and nothing on the table still working for the player */
@@ -1697,6 +1849,63 @@ const App = {
     toast(`Placed ${fmt(placed)} across${this.point != null ? `, skipping the point` : ''}, in full payout units.`);
     this.refresh(); this.save();
   },
+  /** Fill pass odds and every come bet's odds to the table maximum, in full payout units */
+  maxOdds() {
+    if (!this.fsm.bettingOpen) return toast('Bets are locked while the dice are live.');
+    const dollar = this.settings.breakage === 'dollar';
+    const targets = [];
+    if (this.point != null && this.bets.pass) targets.push(['odds', this.bets.pass, this.point]);
+    for (const n of Rules.POINT_NUMBERS) if (this.bets['come' + n]) targets.push(['codds' + n, this.bets['come' + n], n]);
+    if (!targets.length) return toast(this.point == null ? 'Odds open once a point is set.' : 'Odds need a pass line or come bet behind them.');
+    let added = 0, short = false;
+    for (const [key, flat, n] of targets) {
+      const unit = dollar ? Rules.ODDS_UNIT[n] * 100 : 100;
+      const target = Math.floor(flat * this.settings.maxOdds / unit) * unit;
+      const need = target - this.bets[key];
+      if (need <= 0) continue;
+      if (need > this.bankroll) { short = true; continue; }
+      if (this.place(key, need, { quiet: true })) added += need;
+    }
+    if (!added) return toast(short ? `Not enough in the bankroll to fill the odds.` : `Your odds are already at ${this.settings.maxOdds}×.`);
+    Sound.chip(); toast(`Odds to ${this.settings.maxOdds}×: +${fmt(added)}${short ? '. Not enough for the rest.' : ''}`);
+    this.refresh(); this.save();
+  },
+  /** Press a place, buy or hardway bet by its last win, rounded down to a full payout unit */
+  press(key, win) {
+    if (!this.fsm.bettingOpen || !this.bets[key]) return;
+    const { type, n } = Rules.parseKey(key);
+    const unit = this.settings.breakage === 'dollar' && type !== 'hard' ? Rules.PLACE_UNIT[n] * 100 : 100;
+    const amt = Math.floor(win / unit) * unit;
+    if (amt <= 0) return toast(`A ${fmt(win)} win is under one ${fmt(unit)} unit, so it stays in the rail.`);
+    if (!this.place(key, amt, { quiet: true })) return toast(`Couldn’t press ${betLabel(key)}.`);
+    Sound.chip(); this.addLog({ t: 'info', text: `Pressed ${betLabel(key)} to ${fmt(this.bets[key])}.` });
+    toast(`${betLabel(key)} pressed to ${fmt(this.bets[key])}.`); this.refresh(); this.save();
+  },
+  /** Offer Press / Take down on place, buy and hardway bets that just won and are still up */
+  offerPress(res) {
+    if (!this.fsm.bettingOpen) return;
+    const wins = res.ledger.filter(l => l.outcome === 'win' && !l.down && ['place', 'buy', 'hard'].includes(Rules.parseKey(l.key).type) && this.bets[l.key] > 0);
+    for (const l of wins.slice(0, 2)) {
+      const key = l.key;
+      toast(`${betLabel(key)} won ${fmt(l.win)}.`, { ms: 7000, actions: [
+        { label: 'Press it', gold: true, fn: () => this.press(key, l.win) },
+        { label: 'Take it down', fn: () => this.remove(key) },
+      ] });
+    }
+  },
+  /** Beginner coach: which zone to tap next and why, or null when the player is on their own */
+  coachStep() {
+    const c = this.coach;
+    if (c.done || !this.fsm || !this.fsm.bettingOpen) return null;
+    if (this.point == null && !this.bets.pass) {
+      if (this.stats.rolls > 6 && c.stage === 0) { c.done = true; return null; } // an old hand needs no coaching
+      return { zone: 'pass', text: 'New here? <b>Start on the Pass Line.</b> A 7 wins right away; any other number becomes your point.' };
+    }
+    if (this.point == null) return { zone: null, text: '<b>Roll the dice.</b> Whatever comes up is your point, unless it’s a 7, which pays you now.' };
+    if (this.bets.pass && !this.bets.odds) { c.stage = Math.max(c.stage, 1); return { zone: 'odds', text: `Your point is <b>${this.point}</b>. <b>Back it with odds</b>: Pass Line Odds pay true odds with no house edge.` }; }
+    if (this.bets.pass && this.bets.odds && c.stage < 3) { c.stage = 2; return { zone: null, text: `<b>Now roll.</b> Hit the ${this.point} before a 7 and both bets pay. Come is a second pass line; Place 6 and 8 are the next best bets.` }; }
+    return null;
+  },
   toggleWorking() {
     if (!this.fsm.bettingOpen) return toast('Change this between rolls.');
     const on = this.settings.comeOutWorking = !this.settings.comeOutWorking;
@@ -1723,8 +1932,10 @@ const App = {
     const comeOut = this.point == null;
     this.fsm.to(comeOut ? 'ROLLING_COME_OUT' : 'ROLLING_POINT');
     this.undo = []; this.lastBets = { ...this.bets };
+    if (this.stats.handRolls === 0) { this.stats.handStart = this.bankroll + this.onTable(); this.stats.handPoints = 0; }
     $('#pitHint').hidden = true;
     hideBanner();
+    if (this.arena.speed !== undefined) this.arena.speed = this.pace();
     this.refresh();
     const { d1, d2 } = await this.arena.throw(power, aim);
 
@@ -1746,19 +1957,29 @@ const App = {
     });
 
     this.felt.showResolution(res);
+    const level = celebrationLevel(res, won, lost, this.stats);
+    let call = Stickman.call(res, { handRolls: this.stats.lastHand && res.event === 'SEVEN_OUT' ? this.stats.lastHand.rolls : this.stats.handRolls });
+    const headline = headlineFor(res); if (headline) call += `. ${headline}`;
+    this.lastRoll = { res, delta: won - lost, call, level };
     this.refresh();
     if (res.point !== res.newPoint) setTimeout(() => Sound.puck(), 120);
-    if (won > 0) Sound.win(won >= 5000 || res.event === 'POINT_MADE');
+    if (level >= 2) { Sound.win(true); if (level >= 3) setTimeout(() => Sound.win(true), 380); }
+    else if (won > 0) Sound.win(res.event === 'POINT_MADE');
     else if (res.event === 'SEVEN_OUT') Sound.lose();
-    showBanner(res, won - lost);
+    if (level === 2) Fx.small(); else if (level >= 3) Fx.big();
+    showBanner(res, won - lost, { call, level, hand: res.event === 'SEVEN_OUT' ? this.stats.lastHand : null, hot: res.event !== 'SEVEN_OUT' && this.stats.handRolls >= 10 ? this.stats.handRolls : 0 });
+    Stickman.say(call + (level >= 2 && won > 0 ? `. Pays ${fmt(won)}` : ''));
+    if (res.event !== 'SEVEN_OUT' && [10, 20, 30, 40, 50].includes(this.stats.handRolls)) toast(`Shooter’s hot: ${this.stats.handRolls} rolls and counting.`);
 
-    await sleep(520);
+    const pace = this.pace();
+    await sleep(520 / pace);
     const next = Rules.phaseAfter(res.event);
     this.fsm.to(next);
     this.refresh();
-    if (next === 'SEVEN_OUT' || next === 'POINT_MADE') { await sleep(1000); this.fsm.to('IDLE_COME_OUT'); }
+    if (next === 'SEVEN_OUT' || next === 'POINT_MADE') { await sleep(1000 / pace); this.fsm.to('IDLE_COME_OUT'); }
     this.refresh(); this.save();
     if (this.busted()) toast(`You’re out of chips. Tap Rebuy for another ${fmt(START_BANK)}.`);
+    else this.offerPress(res);
   },
 
   _record(res, won) {
@@ -1767,9 +1988,27 @@ const App = {
     if (res.event === 'NATURAL') s.naturals++;
     if (res.event === 'POINT_SET') s.pointsSet++;
     if (res.event === 'POINT_MADE') s.pointsMade++;
-    if (res.event === 'SEVEN_OUT') { s.sevenOuts++; s.longestHand = Math.max(s.longestHand, s.handRolls); s.handRolls = 0; }
+    if (res.event === 'POINT_MADE') s.handPoints = (s.handPoints || 0) + 1;
+    if (res.event === 'SEVEN_OUT') {
+      s.sevenOuts++; s.hands = (s.hands || 0) + 1;
+      const net = this.bankroll + this.onTable() - (s.handStart ?? s.startBank);
+      s.lastHand = { rolls: s.handRolls, points: s.handPoints || 0, net };
+      this.bests.bestHand = Math.max(this.bests.bestHand || 0, net);
+      this.addLog({ t: 'info', text: `Hand over: ${s.handRolls} roll${s.handRolls === 1 ? '' : 's'}, ${s.handPoints || 0} point${s.handPoints === 1 ? '' : 's'} made, ${fmt(net, true)}.` });
+      s.longestHand = Math.max(s.longestHand, s.handRolls); s.handRolls = 0; s.handPoints = 0;
+      if (this.coach.stage > 0) this.coach.done = true;
+    }
+    if (res.event === 'POINT_MADE' && this.coach.stage > 0) this.coach.done = true;
     s.longestHand = Math.max(s.longestHand, s.handRolls);
     s.biggestWin = Math.max(s.biggestWin, won);
+    // wins and losses by kind of bet, for the statistics panel
+    for (const l of res.ledger) {
+      if (l.outcome !== 'win' && l.outcome !== 'lose') continue;
+      const gname = betGroup(l.key), g = s.byBet[gname] || (s.byBet[gname] = { net: 0, n: 0 });
+      g.n++; g.net += l.outcome === 'win' ? l.win : -l.stake;
+    }
+    const b = this.bests;
+    b.longestHand = Math.max(b.longestHand || 0, s.longestHand); b.biggestWin = Math.max(b.biggestWin || 0, won); b.bestSession = Math.max(b.bestSession || 0, this.net());
     s.trend.push(this.bankroll + this.onTable()); if (s.trend.length > 600) s.trend.splice(1, s.trend.length - 600);
     const tone = res.event === 'SEVEN_OUT' ? 'out' : (res.event === 'NATURAL' || res.event === 'POINT_MADE') ? 'win' : res.event === 'POINT_SET' ? 'point' : '';
     this.history.unshift({ d1: res.d1, d2: res.d2, total: res.total, tone, event: res.event });
@@ -1788,8 +2027,8 @@ const App = {
     $('#status').innerHTML = {
       IDLE_COME_OUT: 'Come-out roll. Place your bets.',
       ROLLING_COME_OUT: 'Dice are live', ROLLING_POINT: 'Dice are live',
-      POINT_ESTABLISHED: `Point is <b>${this.point}</b>`,
-      RESOLVING_BETS: 'Paying the table', SEVEN_OUT: 'Seven out', POINT_MADE: 'Point made. Winner!',
+      POINT_ESTABLISHED: `Point is <b>${this.point}</b>` + (this.stats.handRolls > 1 ? ` · ${this.stats.handRolls} rolls this hand` : '') + (this.stats.handRolls >= 10 ? ' · <b>hot hand</b>' : ''),
+      RESOLVING_BETS: 'Paying the table', SEVEN_OUT: 'Seven out', POINT_MADE: this.bets.pass ? 'Point made. Winner!' : 'Point made',
     }[ph];
     const busted = bettingOpen && this.busted();
     if (busted) $('#status').textContent = 'Out of chips';
@@ -1800,6 +2039,10 @@ const App = {
     $('#btnClear').disabled = !bettingOpen;
     $('#btnRepeat').disabled = !bettingOpen || !this.lastBets;
     $('#btnAcross').disabled = !bettingOpen;
+    const oddsOpen = this.point != null && (this.bets.pass > 0 || Rules.POINT_NUMBERS.some(n => this.bets['come' + n] > 0));
+    $('#btnMaxOdds').disabled = !bettingOpen || !oddsOpen;
+    this.renderCoach();
+    this.renderRackLine();
     const w = $('#btnWorking'); w.setAttribute('aria-pressed', this.settings.comeOutWorking);
     w.querySelector('b').textContent = this.settings.comeOutWorking ? 'working' : 'off';
     const bo = $('#btnBetsOff'); bo.setAttribute('aria-pressed', !!this.settings.betsOff);
@@ -1811,13 +2054,36 @@ const App = {
     $('#mLast').textContent = this.history[0] ? this.history[0].total : '—';
     renderHistory(this.history);
   },
+  renderCoach() {
+    const step = this.coachStep();
+    this._coachText = step ? step.text : null;
+    document.querySelectorAll('.zone.coach').forEach(z => z.classList.remove('coach'));
+    if (step && step.zone) { const z = document.querySelector(`.zone[data-key="${step.zone}"]`); if (z) z.classList.add('coach'); }
+    if (!this.eraseMode && !this._hovering) { const h = $('#hint'); h.innerHTML = this.hintDefault(); h.classList.toggle('coach', !!step); }
+  },
+  /** The hint line's resting text: the coach's tip while it is active, otherwise the how-to line */
+  hintDefault() { return this._coachText || defaultHint; },
+  /** One line in the rack for phones, where the pit and its banner scroll out of view */
+  renderRackLine() {
+    const el = $('#rackCall'); if (!el) return;
+    if (this._coachText) { el.className = 'rack-call coach'; el.innerHTML = this._coachText; return; }
+    el.className = 'rack-call';
+    const lr = this.lastRoll;
+    if (this.fsm.rolling) { el.innerHTML = 'Dice are live…'; return; }
+    if (!lr) { el.innerHTML = this.point != null ? `Point is <b class="tot good">${this.point}</b>` : 'Come-out roll. Place your bets.'; return; }
+    const { res, delta, call } = lr;
+    const good = res.event === 'NATURAL' || res.event === 'POINT_MADE' || lr.level >= 2, bad = res.event === 'SEVEN_OUT';
+    el.innerHTML = `${miniDie(res.d1, 15)}${miniDie(res.d2, 15)}<span class="tot ${good ? 'good' : bad ? 'bad' : ''}">${res.total}</span><span>${call}</span>` +
+      (delta ? `<span class="delta ${delta > 0 ? 'pos' : 'neg'}">${fmt(delta, true)}</span>` : '');
+  },
 
   /* ---------- persistence ---------- */
   save() {
     if (!this.fsm.bettingOpen) return;
     try {
       localStorage.setItem(STORE_KEY, JSON.stringify({ bankroll: this.bankroll, bets: this.bets, point: this.point, hits: this.hits, settings: this.settings,
-        history: this.history, stats: this.stats, chip: this.chip, lastBets: this.lastBets, log: this.log.slice(0, 60), lastWin: this.lastWin, lastWinTotal: this.lastWinTotal }));
+        history: this.history, stats: this.stats, chip: this.chip, lastBets: this.lastBets, log: this.log.slice(0, 60), lastWin: this.lastWin, lastWinTotal: this.lastWinTotal,
+        coach: this.coach, bests: this.bests }));
     } catch (e) { /* storage unavailable: session stays in memory */ }
   },
   load() {
@@ -1839,12 +2105,16 @@ const App = {
       this.log = Array.isArray(d.log) ? d.log.filter(e => e && (e.t === 'info' || e.t === 'roll')).slice(0, 60) : [];
       this.lastWin = Math.max(0, Math.round(+d.lastWin || 0)); this.lastWinTotal = d.lastWinTotal || null;
       if (DENOMS.includes(d.chip)) this.chip = d.chip;
+      if (d.coach && typeof d.coach === 'object') this.coach = { done: !!d.coach.done, stage: +d.coach.stage || 0 };
+      else if (this.stats.rolls > 6) this.coach.done = true; // an existing player from before the coach existed
+      if (d.bests && typeof d.bests === 'object') for (const k of Object.keys(this.bests)) this.bests[k] = Math.max(0, Math.round(+d.bests[k] || 0));
+      if (!this.stats.byBet || typeof this.stats.byBet !== 'object') this.stats.byBet = {};
     } catch (e) { /* ignore corrupt save */ }
   },
   resetSession() {
     if (!this.fsm.bettingOpen) return toast('Wait for the dice to settle first.');
     this.bankroll = START_BANK; this.bets = Rules.emptyBets(); this.point = null; this.hits = []; this.history = []; this.undo = []; this.lastBets = null;
-    this.stats = this.freshStats(); this.lastWin = 0; this.lastWinTotal = null; this.log = [];
+    this.stats = this.freshStats(); this.lastWin = 0; this.lastWinTotal = null; this.lastRoll = null; this.log = [];
     if (this.fsm.phase !== 'IDLE_COME_OUT') this.fsm = makeMachine('IDLE_COME_OUT');
     this.addLog({ t: 'info', text: 'New session, $5,000 bankroll' });
     this.refresh(); this.save(); toast('New session. $5,000 on the rail.');
@@ -1869,12 +2139,54 @@ function makeMachine(initial) {
 }
 
 /* ---------- UI helpers ---------- */
-function toast(msg) {
+function toast(msg, { ms = 2800, actions = null } = {}) {
   const box = $('#toasts');
   const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg;
+  const close = () => { t.classList.add('out'); setTimeout(() => t.remove(), 320); };
+  if (actions && actions.length) {
+    t.classList.add('has-acts');
+    const acts = document.createElement('span'); acts.className = 'acts';
+    for (const a of actions) {
+      const b = document.createElement('button'); b.type = 'button'; b.textContent = a.label; if (a.gold) b.classList.add('gold');
+      b.addEventListener('click', () => { close(); a.fn(); });
+      acts.appendChild(b);
+    }
+    t.appendChild(acts);
+  }
   box.appendChild(t);
   while (box.children.length > 3) box.firstChild.remove();
-  setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 320); }, 2800);
+  setTimeout(close, ms);
+}
+/** How loudly to celebrate a roll: 0 quiet, 1 a win, 2 a real hit, 3 the stuff friends talk about */
+function celebrationLevel(res, won, lost, stats) {
+  const wins = res.ledger.filter(l => l.outcome === 'win');
+  const types = new Set(wins.map(l => Rules.parseKey(l.key).type));
+  const staked = wins.reduce((s, l) => s + l.stake, 0);
+  if (types.has('all') || types.has('low') || types.has('high')) return 3;
+  if (res.event === 'POINT_MADE' && stats.handRolls >= 20) return 3;
+  if (won >= 50000) return 3;
+  if (['hard', 'prop', 'horn', 'ce', 'anycraps', 'any7'].some(t => types.has(t))) return 2;
+  if ((res.event === 'POINT_MADE' || res.event === 'NATURAL') && won > 0) return 2;
+  if (won >= 10000 || (staked && won >= 6 * staked)) return 2;
+  return won > lost ? 1 : 0;
+}
+/** Name the headline win on a roll, e.g. "Low rolls hits! 30 to 1" — the bets friends talk about */
+function headlineFor(res) {
+  const R = Rules, t = res.total, order = ['all', 'low', 'high', 'hard', 'prop', 'horn', 'ce', 'anycraps', 'any7'];
+  const ratio = key => { const { type, n } = R.parseKey(key); return { hard: R.HARD_PAY[n], prop: R.PROP_PAY[n], horn: R.HORN_PAY[t], ce: R.CRAPS.includes(t) ? R.CE_PAY.craps : R.CE_PAY[11], anycraps: R.ANYCRAPS_PAY, any7: R.ANY7_PAY, low: R.ATS_PAY.low, high: R.ATS_PAY.high, all: R.ATS_PAY.all }[type]; };
+  const wins = res.ledger.filter(l => l.outcome === 'win' && l.win > 0 && order.includes(R.parseKey(l.key).type))
+    .sort((a, b) => order.indexOf(R.parseKey(a.key).type) - order.indexOf(R.parseKey(b.key).type));
+  if (!wins.length) return '';
+  const l = wins[0], type = R.parseKey(l.key).type;
+  if (type === 'hard' && res.event === 'POINT_MADE') return ''; // the stickman already calls the hardway on a point made
+  const r = ratio(l.key);
+  return `${betLabel(l.key)} hits! ${r ? PAY_TXT(r) : ''}`.trim();
+}
+/** Group a bet key for the by-bet statistics */
+function betGroup(key) {
+  const { type } = Rules.parseKey(key);
+  return { pass: 'Pass line', odds: 'Pass odds', come: 'Come', comeN: 'Come', codds: 'Come odds', place: 'Place', buy: 'Buy', hard: 'Hardways', field: 'Field',
+    prop: 'Props', horn: 'Horn & C&E', ce: 'Horn & C&E', any7: 'Any 7 & craps', anycraps: 'Any 7 & craps', low: 'Low / High / All', high: 'Low / High / All', all: 'Low / High / All' }[type] || type;
 }
 let bannerTimer = null;
 function callFor(res) {
@@ -1888,13 +2200,15 @@ function callFor(res) {
   else call = CALLS[t] || `${t}`;
   return call;
 }
-function showBanner(res, delta) {
-  const b = $('#banner'), t = res.total, call = callFor(res);
-  const good = res.event === 'NATURAL' || res.event === 'POINT_MADE', bad = res.event === 'SEVEN_OUT';
+function showBanner(res, delta, { call = callFor(res), level = 0, hand = null, hot = 0 } = {}) {
+  const b = $('#banner'), t = res.total;
+  const good = res.event === 'NATURAL' || res.event === 'POINT_MADE' || level >= 2, bad = res.event === 'SEVEN_OUT';
   b.className = 'banner' + (good ? ' good' : bad ? ' bad' : '');
-  b.innerHTML = `<span class="total">${t}</span><span class="call">${call}</span>${delta ? `<span class="delta ${delta > 0 ? 'pos' : 'neg'}">${fmt(delta, true)}</span>` : ''}`;
+  const handPill = hand && hand.rolls > 1 ? `<span class="delta hand ${hand.net < 0 ? 'neg' : ''}">Hand: ${hand.rolls} rolls · <b>${fmt(hand.net, true)}</b></span>` : '';
+  const hotPill = hot >= 10 ? `<span class="hot">Hot hand · ${hot} rolls</span>` : '';
+  b.innerHTML = `<span class="total">${t}</span><span class="call">${call}</span>${delta ? `<span class="delta ${delta > 0 ? 'pos' : 'neg'}">${fmt(delta, true)}</span>` : ''}${handPill}${hotPill}`;
   requestAnimationFrame(() => b.classList.add('show'));
-  clearTimeout(bannerTimer); bannerTimer = setTimeout(hideBanner, 3200);
+  clearTimeout(bannerTimer); bannerTimer = setTimeout(hideBanner, hand ? 4600 : 3200);
 }
 function hideBanner() { $('#banner').classList.remove('show'); }
 
@@ -1953,6 +2267,11 @@ function openStats() {
   const tiles = [['Rolls', n], ['Points set', s.pointsSet], ['Points made', s.pointsMade], ['Point hit rate', rate], ['Come-out 7s', s.naturals],
     ['Seven-outs', s.sevenOuts], ['Current hand', s.handRolls + ' rolls'], ['Longest hand', s.longestHand + ' rolls'], ['Biggest win', fmt(s.biggestWin)], ['Session', fmt(net, true)]];
   if (s.rebuys) tiles.push(['Rebuys', `${s.rebuys} (${fmt(s.bought)})`]);
+  const b = App.bests, bestTiles = [['Longest hand', b.longestHand + ' rolls'], ['Biggest win', fmt(b.biggestWin)], ['Best hand', fmt(b.bestHand, true)], ['Best session', fmt(b.bestSession, true)]];
+  // Won and lost by kind of bet: a bar to each side of zero
+  const groups = Object.entries(s.byBet || {}).sort((a, c) => c[1].net - a[1].net);
+  const maxAbs = Math.max(100, ...groups.map(([, g]) => Math.abs(g.net)));
+  const bars2 = groups.map(([name, g]) => `<span class="lbl">${name}<small>${g.n} decision${g.n === 1 ? '' : 's'}</small></span><span class="track"><i class="${g.net >= 0 ? 'pos' : 'neg'}" style="width:${(Math.abs(g.net) / maxAbs * 50).toFixed(1)}%"></i></span><span class="val ${g.net > 0 ? 'pos' : g.net < 0 ? 'neg' : ''}">${fmt(g.net, true)}</span>`).join('');
   // Distribution chart: observed bars vs theoretical n·ways/36
   const W = 640, H = 220, pl = 34, pb = 26, pt = 10, cw = (W - pl - 8) / 11;
   const exp = n2 => n * Rules.WAYS[n2] / 36;
@@ -1979,11 +2298,19 @@ function openStats() {
     ${n ? '' : '<p class="hint">Roll the dice to start filling the chart.</p>'}
     <svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Roll distribution">${grid}${bars}<path d="${path}" fill="none" stroke="#58e0cb" stroke-width="2"/>${dots}</svg>
     <div class="legend"><span><i style="background:#f2be45"></i>Rolls observed</span><span><i style="background:#58e0cb"></i>Expected from 36 combinations</span></div>
+    ${groups.length ? `<p class="chart-title">Won and lost by bet</p><div class="bars">${bars2}</div>` : ''}
     <p class="chart-title">Bankroll plus chips on the table</p>
     <svg class="chart" viewBox="0 0 ${TW} ${TH}" role="img" aria-label="Bankroll over time">${base}<path d="${tpath}" fill="none" stroke="#58e0cb" stroke-width="2.2" stroke-linejoin="round"/>
       <text x="${TW - 8}" y="${TH - 2}" text-anchor="end">${fmt(tr[tr.length - 1])} now, ${fmt(s.startBank)} start</text></svg>
-    <p style="margin-top:14px"><button class="btn" id="btnResetStats">Reset statistics</button></p>`;
+    <p class="chart-title" style="margin-top:14px">Personal bests <span style="font-weight:500;letter-spacing:0;text-transform:none">(kept across sessions)</span></p>
+    <dl class="tiles">${bestTiles.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
+    <p class="bests"><button class="btn" id="btnShare">Copy session summary</button><button class="btn" id="btnResetStats">Reset statistics</button></p>`;
   $('#btnResetStats').onclick = () => { App.stats = App.freshStats(App.bankroll + App.onTable()); App.save(); App.refresh(); openStats(); };
+  $('#btnShare').onclick = async () => {
+    const text = `Crapless Craps by Mezware: ${n} rolls, session ${fmt(net, true)}, longest hand ${s.longestHand} rolls, biggest win ${fmt(s.biggestWin)}. Personal best hand ${b.longestHand} rolls.`;
+    try { await navigator.clipboard.writeText(text); toast('Summary copied.'); }
+    catch (e) { toast(text, { ms: 8000 }); }
+  };
   const d = $('#dlgStats'); if (!d.open) d.showModal();
 }
 
@@ -1991,6 +2318,8 @@ function openSettings() {
   const s = App.settings;
   $('#sField12').value = s.field12; $('#sWorking').checked = s.comeOutWorking; $('#sOdds').value = s.maxOdds;
   $('#sBreak').value = s.breakage; $('#sSound').checked = !Sound.muted;
+  $('#sVoice').checked = !!s.voice; $('#sVoice').disabled = !Stickman.supported();
+  $('#sSpeed').value = s.speed === 'fast' ? 'fast' : 'normal';
   $('#dlgSettings').showModal();
 }
 function bindSettings() {
@@ -2006,6 +2335,9 @@ function bindSettings() {
   });
   $('#sBreak').onchange = upd(t => App.settings.breakage = t.value);
   $('#sSound').onchange = upd(t => setSound(t.checked));
+  $('#sVoice').onchange = upd(t => { App.settings.voice = t.checked; Stickman.on = t.checked; if (t.checked) { Sound.unlock(); Stickman.say('Stickman’s on. Shooter, the dice are yours.'); } });
+  $('#sSpeed').onchange = upd(t => { App.settings.speed = t.value; if (App.arena) App.arena.speed = App.pace(); });
+  $('#btnCoach').onclick = () => { App.coach = { done: false, stage: 0 }; App.save(); App.refresh(); $('#dlgSettings').close(); toast('Tips are back on. Start with the Pass Line.'); };
   $('#btnReset').onclick = () => { App.resetSession(); $('#dlgSettings').close(); };
   document.querySelectorAll('dialog').forEach(d => {
     d.addEventListener('click', e => { if (e.target === d || e.target.closest('[data-close]')) d.close(); });
@@ -2050,11 +2382,15 @@ async function loadLibs() {
   App.fsm = makeMachine(App.point != null ? 'POINT_ESTABLISHED' : 'IDLE_COME_OUT');
   document.body.dataset.phase = App.fsm.phase;
   setSound(App.settings.sound !== false);
+  Stickman.on = !!App.settings.voice;
   buildChips(); bindSettings();
+  if (window.matchMedia && matchMedia('(pointer: coarse)').matches) $('#pitHint').textContent = 'Swipe up on the dice to throw, or tap Roll dice';
+  if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => document.body.classList.toggle('pit-off', !e.isIntersecting), { threshold: .2 }).observe($('#pit'));
+  else document.body.classList.add('pit-off');
   App.felt = new Felt($('#felt'), {
     tap: k => App.tap(k), remove: k => App.remove(k),
     describe: (k, s) => App.describe(k, s),
-    hover: k => { if (!App.eraseMode) $('#hint').innerHTML = k ? App.describe(k, false) : defaultHint; },
+    hover: k => { App._hovering = !!k; if (!App.eraseMode) { const h = $('#hint'); h.innerHTML = k ? App.describe(k, false) : App.hintDefault(); h.classList.toggle('coach', !k && !!App._coachText); } },
   });
   App.felt.state = { bets: App.bets, point: App.point, hits: App.hits, settings: App.settings, bettingOpen: true };
   App.felt._fit();
@@ -2067,6 +2403,8 @@ async function loadLibs() {
   try {
     if (!window.THREE || !window.CANNON || !webgl) throw new Error('3D unavailable');
     App.arena = new DiceArena(pit, Sound);
+    App.arena.speed = App.pace();
+    pit.insertBefore($('#fxCanvas'), App.arena.renderer.domElement.nextSibling); // chips rain above the 3D view, below the text
     bindThrowGesture(App.arena.renderer.domElement);
   } catch (e) {
     console.warn(e);
@@ -2082,6 +2420,7 @@ async function loadLibs() {
   $('#btnErase').onclick = () => setErase(!App.eraseMode);
   $('#btnRepeat').onclick = () => App.repeat();
   $('#btnAcross').onclick = () => App.across();
+  $('#btnMaxOdds').onclick = () => App.maxOdds();
   $('#btnWorking').onclick = () => App.toggleWorking();
   $('#btnBetsOff').onclick = () => App.toggleBetsOff();
   $('#btnHelp').onclick = () => $('#dlgHelp').showModal();
@@ -2098,6 +2437,7 @@ async function loadLibs() {
     else if (e.key === 'z' || e.key === 'Z') App.undoLast();
     else if (e.key === 'r' || e.key === 'R') App.repeat();
     else if (e.key === 'a' || e.key === 'A') App.across();
+    else if (e.key === 'o' || e.key === 'O') App.maxOdds();
     else if (e.key === 'Escape' && App.eraseMode) setErase(false);
   });
   window.App = App; // exposed for debugging from the console
