@@ -318,7 +318,7 @@ kbd{font:700 11px var(--ui);border:1px solid var(--edge-2);border-bottom-width:2
 @media (max-width: 520px){ .keys div{grid-template-columns:1fr;gap:0} .entry{grid-template-columns:1fr auto} .e-dice{grid-column:1} .e-body{grid-column:1/-1;grid-row:2} .e-net{grid-row:1;grid-column:2} }
 .toasts{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;flex-direction:column;gap:8px;align-items:center;z-index:50;pointer-events:none;width:min(92vw,440px)}
 .toast{background:rgba(10,22,32,.96);color:var(--ink);padding:10px 16px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.5);border:1px solid var(--edge-2);font-size:14px;animation:toastIn .25s ease-out;text-align:center}
-.toast.has-acts{pointer-events:auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 10px;border-color:var(--gold-muted)}
+.toast.has-acts{pointer-events:auto;font-size:13px;padding:8px 12px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 10px;border-color:var(--gold-muted)}
 .toast .acts{display:flex;gap:6px}
 .toast .acts button{font:700 11px var(--ui);letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:8px;border:1px solid var(--edge-2);background:var(--bg-2);color:var(--ink);cursor:pointer}
 .toast .acts button.gold{border-color:var(--gold-muted);color:var(--gold)}
@@ -1935,7 +1935,7 @@ const App = {
   offerPress(res) {
     if (!this.fsm.bettingOpen) return;
     const wins = res.ledger.filter(l => l.outcome === 'win' && !l.down && ['place', 'buy', 'hard'].includes(Rules.parseKey(l.key).type) && this.bets[l.key] > 0);
-    for (const l of wins.slice(0, 2)) {
+    for (const l of wins.slice(0, innerWidth <= 520 ? 1 : 2)) { // one offer at a time on a phone
       const key = l.key;
       toast(`${betLabel(key)} won ${fmt(l.win)}.`, { ms: 7000, actions: [
         { label: 'Press it', gold: true, fn: () => this.press(key, l.win) },
@@ -2027,7 +2027,6 @@ const App = {
     if (level === 2) Fx.small(); else if (level >= 3) Fx.big();
     showBanner(res, won - lost, { call, level, hand: res.event === 'SEVEN_OUT' ? this.stats.lastHand : null, hot: res.event !== 'SEVEN_OUT' && this.stats.handRolls >= 10 ? this.stats.handRolls : 0 });
     Stickman.say(call + (level >= 2 && won > 0 ? `. Pays ${fmt(won)}` : ''));
-    if (res.event !== 'SEVEN_OUT' && [10, 20, 30, 40, 50].includes(this.stats.handRolls)) toast(`Shooter’s hot: ${this.stats.handRolls} rolls and counting.`);
 
     const pace = this.pace();
     await sleep(520 / pace);
@@ -2247,7 +2246,7 @@ function toast(msg, { ms = 2800, actions = null } = {}) {
     t.appendChild(acts);
   }
   box.appendChild(t);
-  while (box.children.length > 3) box.firstChild.remove();
+  while (box.children.length > (innerWidth <= 520 ? 2 : 3)) box.firstChild.remove();
   setTimeout(close, ms);
 }
 /** How loudly to celebrate a roll: 0 quiet, 1 a win, 2 a real hit, 3 the stuff friends talk about */
