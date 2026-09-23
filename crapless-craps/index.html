@@ -416,7 +416,7 @@ kbd{font:700 11px var(--ui);border:1px solid var(--edge-2);border-bottom-width:2
       <div><dt>Repeat <kbd>R</kbd></dt><dd>Puts last roll’s bets back up.</dd></div>
       <div><dt>Across <kbd>A</kbd></dt><dd>Places each number except the point at about your chip’s value, rounded to a size that pays without rounding. Off on the come-out roll unless Come-out bets are working.</dd></div>
       <div><dt>Max odds <kbd>O</kbd></dt><dd>Fills your pass line odds and every come bet’s odds to the table maximum. Odds are the only bet with no house edge.</dd></div>
-      <div><dt>Come-out bets</dt><dd>Off by default. When working, place, buy, hardway and come odds win or lose on the come-out roll too.</dd></div>
+      <div><dt>Come-out bets</dt><dd>Off by default. When working, place, buy, hardway and come odds win or lose on the come-out roll too. Table settings can keep just the come odds working, the way a player calls “odds working”.</dd></div>
       <div><dt>Bets off</dt><dd>Calls your place, buy, hardway and come odds off on every roll until you turn them back on. They stay on the table.</dd></div>
       <div><dt>Roll dice <kbd>Space</kbd></dt><dd>Or swipe or drag up in the dice pit. A faster swipe throws harder.</dd></div>
       <div><dt>Chips <kbd>1</kbd>–<kbd>7</kbd></dt><dd>Select $1 through $1,000.</dd></div>
@@ -449,6 +449,8 @@ kbd{font:700 11px var(--ui);border:1px solid var(--edge-2);border-bottom-width:2
       <select id="sField12"><option value="2">Double (2 to 1)</option><option value="3">Triple (3 to 1)</option></select></div>
     <div class="setting"><div><label for="sWorking">Place, buy, hardway and come odds work on the come-out</label><p>Off is the house default. These bets stay up but don’t win or lose on the come-out; if a come bet is decided then, its odds are returned.</p></div>
       <input type="checkbox" id="sWorking"></div>
+    <div class="setting"><div><label for="sComeOdds">Come odds work on the come-out</label><p>The “odds working” call: your come odds stay live on the come-out roll even while place bets are off.</p></div>
+      <input type="checkbox" id="sComeOdds"></div>
     <div class="setting"><div><label for="sOdds">Maximum odds</label><p>Caps pass line odds and come odds as a multiple of the flat bet. Odds pay true odds, with no house edge.</p></div>
       <select id="sOdds"><option value="3">3×</option><option value="5">5×</option><option value="10">10×</option><option value="20">20×</option><option value="100">100×</option></select></div>
     <div class="setting"><div><label for="sBreak">Payout rounding</label><p>Casinos pay whole dollars and keep the change. Bet in full units so nothing is rounded off.</p></div>
@@ -516,6 +518,7 @@ const Rules = (() => {
     field2: 2,             // field pays 2:1 on 2
     field12: 2,            // field pays 2:1 on 12, as on the Mezware table (option: 3)
     comeOutWorking: false, // place, buy, hardway and come odds are OFF on the come-out by default
+    comeOddsWorking: false, // "odds working": come odds alone stay on for the come-out roll
     maxOdds: 5,            // max pass/come odds as a multiple of the flat bet
     breakage: 'dollar',    // 'dollar' = winnings round down to $1; 'cent' = exact
     betsOff: false,        // player has called place, buy, hardway and come odds OFF for every roll
@@ -569,7 +572,8 @@ const Rules = (() => {
     else if (seven) { event = 'SEVEN_OUT'; newPoint = null; }
     else event = 'NO_DECISION';
 
-    const working = !s.betsOff && (!comeOut || s.comeOutWorking); // place, buy, hardways, come odds
+    const working = !s.betsOff && (!comeOut || s.comeOutWorking); // place, buy, hardways
+    const oddsWorking = !s.betsOff && (!comeOut || s.comeOutWorking || s.comeOddsWorking); // come odds
 
     // ---- Pass line + odds ----------------------------------------------------
     if (bets.pass > 0) {
@@ -587,10 +591,10 @@ const Rules = (() => {
       const c = 'come' + n, o = 'codds' + n;
       if (total === n) {
         if (bets[c] > 0) winAt(c, PASS_PAY, true);
-        if (bets[o] > 0) { if (working) winAt(o, ODDS_PAY[n], true); else giveBack(o); }
+        if (bets[o] > 0) { if (oddsWorking) winAt(o, ODDS_PAY[n], true); else giveBack(o); }
       } else if (seven) {
         if (bets[c] > 0) lose(c);
-        if (bets[o] > 0) { if (working) lose(o); else giveBack(o); }
+        if (bets[o] > 0) { if (oddsWorking) lose(o); else giveBack(o); }
       }
     }
 
@@ -1530,7 +1534,7 @@ class Felt {
       let el = this.stacks[key];
       if (!amt || !a) { if (el) { el.remove(); delete this.stacks[key]; } continue; }
       const t = Rules.parseKey(key).type;
-      const lammer = offOnComeOut && ['place', 'buy', 'hard', 'codds'].includes(t);
+      const lammer = offOnComeOut && (['place', 'buy', 'hard'].includes(t) || (t === 'codds' && !(point == null && settings.comeOddsWorking && !settings.betsOff)));
       const sig = amt + '|' + lammer;
       if (el && el.dataset.sig === sig) continue;
       const grew = !el || +el.dataset.amt < amt;
@@ -2367,7 +2371,7 @@ function openStats() {
 
 function openSettings() {
   const s = App.settings;
-  $('#sField12').value = s.field12; $('#sWorking').checked = s.comeOutWorking; $('#sOdds').value = s.maxOdds;
+  $('#sField12').value = s.field12; $('#sWorking').checked = s.comeOutWorking; $('#sComeOdds').checked = !!s.comeOddsWorking; $('#sOdds').value = s.maxOdds;
   $('#sBreak').value = s.breakage; $('#sSound').checked = !Sound.muted;
   $('#sVoice').checked = !!s.voice; $('#sVoice').disabled = !Stickman.supported();
   $('#sSpeed').value = s.speed === 'fast' ? 'fast' : 'normal';
@@ -2380,6 +2384,7 @@ function bindSettings() {
   };
   $('#sField12').onchange = upd(t => App.settings.field12 = +t.value);
   $('#sWorking').onchange = upd(t => App.settings.comeOutWorking = t.checked);
+  $('#sComeOdds').onchange = upd(t => App.settings.comeOddsWorking = t.checked);
   $('#sOdds').onchange = upd(t => {
     App.settings.maxOdds = +t.value;
     let back = 0;
