@@ -257,23 +257,15 @@
         <b>cloudflared</b> opens outbound tunnels to Cloudflare, and Cloudflare terminates TLS and routes each hostname
         to its tunnel. Operators reach the box over Tailscale; the LAN resolves through Pi-hole → Unbound with DNSSEC.
         The AWS labs attach to the same Pi over a WireGuard site-to-site tunnel.</p>
-      <div class="diagram">
-        <div class="node node-pi">
-          <span class="node-ico">🍓</span>
-          <b>Raspberry Pi 5</b>
-          <small>loopback-only services · systemd · nftables · Pi-hole + Unbound</small>
-        </div>
-        <div class="link">
-          <span class="link-label">cloudflared (outbound) · WireGuard · Tailscale</span>
-          <div class="wire"><span class="packet"></span></div>
-          <small>no inbound ports · TLS at the edge · keys rotated</small>
-        </div>
-        <div class="node node-aws">
-          <span class="node-ico">☁</span>
-          <b>Cloudflare edge · AWS VPC</b>
-          <small>Pages + Tunnels · security groups · least-privilege</small>
-        </div>
-      </div>
+      <figure class="artwork">
+        <img src="assets/pi-to-cloud.jpg" srcset="assets/pi-to-cloud-sm.jpg 672w, assets/pi-to-cloud.jpg 1344w" sizes="(max-width: 760px) 100vw, 1120px"
+             width="1344" height="752" alt="A Raspberry Pi 5 on a dark desk with amber and blue light beams rising from it to a glowing wireframe cloud" loading="lazy" />
+        <figcaption>
+          <span><i class="dot"></i>Pi fleet: loopback-only services, systemd, nftables, Pi-hole + Unbound</span>
+          <span><i class="dot" style="background:var(--blue);box-shadow:0 0 10px rgba(88,166,255,.6)"></i>cloudflared outbound tunnels · WireGuard to AWS · Tailscale for the operator</span>
+          <span><i class="dot" style="background:var(--amber);box-shadow:0 0 10px rgba(245,165,36,.6)"></i>Cloudflare edge + AWS VPC: TLS at the edge, security groups, least privilege</span>
+        </figcaption>
+      </figure>
     </section>
 
     <!-- EXPERIENCE -->
