@@ -13,7 +13,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%23070b16%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%276%27 fill=%27%23ff9900%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%2711%27 fill=%27none%27 stroke=%27%2322d3ee%27 stroke-width=%272%27/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"Person","name":"Ravi Kumar","jobTitle":"Cloud & Network Engineer",
@@ -46,35 +46,44 @@
   </header>
 
   <main>
-    <!-- HERO -->
+    <!-- HERO: statement left, the live topology of what I run on the right -->
     <section class="hero">
       <div class="hero-inner">
-        <p class="status"><span class="pulse"></span> CLOUD &amp; NETWORK ENGINEERING · OPEN TO WORK</p>
-        <h1>RAVI&nbsp;KUMAR</h1>
-        <p class="role">Cloud &amp; Network Engineer</p>
-        <div class="terminal" id="term">
-          <div class="term-bar"><span></span><span></span><span></span><em>ravi@cloud-net: ~</em></div>
-          <pre class="term-body"><code id="typed"></code><span class="caret">▋</span></pre>
+        <div>
+          <p class="status"><span class="pulse"></span> CLOUD &amp; NETWORK ENGINEERING · OPEN TO WORK</p>
+          <h1>Ravi Kumar builds<br>networks that <span>heal themselves.</span></h1>
+          <p class="role"><b>Cloud &amp; Network Engineer</b> · AWS in Terraform, Linux under systemd, DNS and VPNs I run for real.
+            Everything on this page is measured on the machine it describes.</p>
+          <div class="cert-chips">
+            <span class="chip">CompTIA Security+</span>
+            <span class="chip">Network+</span>
+            <span class="chip">Linux Essentials</span>
+            <span class="chip">A+</span>
+            <span class="chip">ITIL 4</span>
+            <span class="chip chip-edu">B.S. Cloud &amp; Network Eng (AWS) · WGU</span>
+          </div>
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="#production">See what I run →</a>
+            <a class="btn btn-ghost" href="#labs">AWS + network labs</a>
+          </div>
+          <ul class="stats">
+            <li><b data-count="229">229</b><span>scheduled jobs in the fleet</span></li>
+            <li><b data-count="11">11</b><span>AWS + networking labs</span></li>
+            <li><b data-count="3">3</b><span>sites through Cloudflare Tunnel</span></li>
+            <li><b data-count="6">6</b><span>certifications</span></li>
+          </ul>
+          <p class="loc">Pittsburg, CA · San Francisco Bay Area · remote</p>
         </div>
-        <div class="cert-chips">
-          <span class="chip">CompTIA Security+</span>
-          <span class="chip">Network+</span>
-          <span class="chip">Linux Essentials</span>
-          <span class="chip">A+</span>
-          <span class="chip">ITIL 4</span>
-          <span class="chip chip-edu">B.S. Cloud &amp; Network Eng (AWS) · WGU</span>
+        <div class="topo" aria-label="Animated map of the systems described on this page">
+          <div class="topo-bar"><span></span><span></span><span></span><em>topology — live packets, real nodes</em></div>
+          <canvas id="topo" width="640" height="590"></canvas>
+          <div class="topo-legend">
+            <span><i style="background:var(--green)"></i>Pi fleet</span>
+            <span><i style="background:var(--blue)"></i>Cloudflare edge · tunnels</span>
+            <span><i style="background:var(--amber)"></i>AWS lab</span>
+            <span><i style="background:#c9d4e6"></i>county network · operator</span>
+          </div>
         </div>
-        <div class="hero-cta">
-          <a class="btn btn-primary" href="#production">See what I run →</a>
-          <a class="btn btn-ghost" href="#labs">AWS + network labs</a>
-        </div>
-        <ul class="stats">
-          <li><b data-count="229">229</b><span>scheduled jobs in my production fleet</span></li>
-          <li><b data-count="10">10</b><span>AWS + networking labs</span></li>
-          <li><b data-count="3">3</b><span>public sites via Cloudflare Tunnel</span></li>
-          <li><b data-count="6">6</b><span>certifications</span></li>
-        </ul>
-        <p class="loc">📍 Pittsburg, CA · San Francisco Bay Area · Remote</p>
       </div>
     </section>
 
@@ -99,6 +108,17 @@
         take payments, and watch each other. Zero inbound ports: every public endpoint rides an outbound-only
         Cloudflare Tunnel. When a unit fails, it pages my phone; a self-heal loop restarts it with rate limits
         and a watchdog checks the healers.</p>
+      <div class="board" aria-label="Fleet status, measured on the box">
+        <div class="board-head"><span>system</span><span>what it does</span><span>measured</span></div>
+        <div class="row"><div class="k"><i class="dot"></i>systemd user manager</div><div class="v">229 timers, 402 service units; oneshot + timer, never cron</div><div class="n">229 / 402</div></div>
+        <div class="row"><div class="k"><i class="dot"></i>failure paging</div><div class="v">OnFailure=alert@%n on every unit → phone, exact-repeat suppressed</div><div class="n">every unit</div></div>
+        <div class="row"><div class="k"><i class="dot"></i>self-heal + watchdog</div><div class="v">10-min healer with restart limits; daily watchdog checks the healers</div><div class="n">10 min / 24 h</div></div>
+        <div class="row"><div class="k"><i class="dot"></i>edge</div><div class="v">outbound-only Cloudflare Tunnels; origins on loopback; zero inbound ports</div><div class="n">3 tunnels</div></div>
+        <div class="row"><div class="k"><i class="dot"></i>DNS</div><div class="v">Pi-hole → Unbound recursive resolver with DNSSEC for the LAN</div><div class="n">:53 → :5335</div></div>
+        <div class="row"><div class="k"><i class="dot"></i>operator access</div><div class="v">SSH over Tailscale only; WireGuard site-to-site to the AWS lab VPC</div><div class="n">3 nodes</div></div>
+        <div class="row"><div class="k"><i class="dot"></i>backups</div><div class="v">nightly, encrypted, two destinations, restore drill</div><div class="n">nightly</div></div>
+        <div class="board-foot">read from <code>systemctl --user list-timers --all</code>, <code>systemctl is-active</code> and <code>tailscale status</code> on 2026-10-01 · patterns and postmortems: <a href="https://github.com/ravikus1457/fleet-ops" target="_blank" rel="noopener" style="color:var(--blue)">github.com/ravikus1457/fleet-ops</a></div>
+      </div>
       <div class="cards">
         <article class="card">
           <h3><span class="ico">⚙</span> Fleet operations (SRE habits)</h3>
@@ -117,7 +137,7 @@
           </ul>
         </article>
         <article class="card">
-          <h3><span class="ico">💳</span> PaperReel — a paid product</h3>
+          <h3><span class="ico">$</span> PaperReel — a paid product</h3>
           <p class="card-p">Video abstracts for research papers. Stripe Checkout → signed webhook → systemd pipeline
             (extract → script → render) → signed download links. Landing on Cloudflare Pages, API through a Tunnel,
             hard per-service spend caps, fault tests that can fail.</p>
@@ -127,7 +147,7 @@
           <a class="lab-link" href="https://paperreel.pages.dev" target="_blank" rel="noopener">paperreel.pages.dev ↗</a>
         </article>
         <article class="card">
-          <h3><span class="ico">📸</span> Wedding platform — shipped</h3>
+          <h3><span class="ico">rsvp</span> Wedding platform — shipped</h3>
           <p class="card-p">Full-stack event site for a four-day wedding, hundreds of guests: RSVP with email fan-out,
             QR guest-camera uploads, private album with on-demand renditions, address revealed only after RSVP.
             Served from the Pi through a Tunnel; loopback-only origin, per-IP rate limits, EXIF scrubbing.</p>
@@ -137,7 +157,6 @@
           <a class="lab-link" href="https://raviandaachal.com" target="_blank" rel="noopener">raviandaachal.com ↗</a>
         </article>
       </div>
-      <p class="labs-foot muted small">All numbers are read live from the box (<code>systemctl --user list-timers --all</code>, <code>systemctl is-active</code>) on the day this page was last updated: 2026-09-30.</p>
     </section>
 
     <!-- LABS (auto-generated from labs.json) -->
@@ -147,6 +166,20 @@
         <b>init → validate → apply → exercise against the live API → destroy</b>, always destroying even when a step
         fails, and writes a Markdown evidence report. Guardrails: a budget alarm, tag-based orphan sweep, and a
         <code>nuke</code> for anything left behind. Labs are sized to cost well under a dollar per run.</p>
+      <div class="run" aria-label="Lab 06 pipeline run, 2026-10-01">
+        <div class="run-bar">
+          <span class="stage ok">lint ✓</span><span class="stage ok">validate ✓</span><span class="stage ok">build + push (OIDC) ✓</span>
+          <span class="stage ok">plan ✓</span><span class="stage ok">approval ✓</span><span class="stage ok">apply ✓</span><span class="stage ok">smoke ✓</span>
+          <em>lab 06 · GitHub Actions run 36888842277 · 2026-10-01</em>
+        </div>
+<pre><span class="c">$ bash ./exercise.sh evidence</span>
+<span class="ok">PASS</span>: ALB /healthz returned 200 {"status":"ok"}
+<span class="ok">PASS</span>: 2 healthy targets (desired 2)
+<span class="ok">PASS</span>: service runningCount == desiredCount (2)
+<span class="ok">PASS</span>: every running task runs the ECR digest for tag bf99413a… (sha256:486cd195…)
+<span class="ok">PASS</span>: /version reports the deployed tag (bf99413a…)
+<span class="c">$ gh workflow run lab06-destroy.yml   # 34 resources destroyed · survivors by owning services: 0 · ~1.5 h up ≈ $0.15</span></pre>
+      </div>
       <div class="labs-grid" id="labs-grid"><p class="muted">Loading labs…</p></div>
 
       <h3 class="subhead"><span class="prompt">⇄</span> Networking labs</h3>
@@ -300,14 +333,14 @@
       <h2><span class="prompt">$</span> ls certifications/ education/</h2>
       <div class="cards">
         <article class="card">
-          <h3>🎓 Education</h3>
+          <h3><span class="ico">edu</span> Education</h3>
           <ul class="plain">
             <li><b>B.S. Cloud &amp; Network Engineering (AWS track)</b> — Western Governors University <span class="muted">(in progress; 78 of ~120 units earned)</span></li>
             <li>IT Support Certificate — Year Up / Diablo Valley College <span class="muted">(2024)</span></li>
           </ul>
         </article>
         <article class="card">
-          <h3>📜 Certifications</h3>
+          <h3><span class="ico">cert</span> Certifications</h3>
           <ul class="plain">
             <li>ITIL 4 Foundation <span class="muted">(2026)</span></li>
             <li>CompTIA Security+</li>
@@ -318,7 +351,7 @@
           </ul>
         </article>
         <article class="card">
-          <h3>🎯 In progress</h3>
+          <h3><span class="ico">next</span> In progress</h3>
           <ul class="plain">
             <li>AWS Certified Solutions Architect – Associate</li>
             <li>AWS Certified Cloud Practitioner</li>
