@@ -14,9 +14,9 @@ document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click
     {t:'$ whoami', c:'cmd'},
     {t:'ravi kumar — cloud & network engineer', c:'out'},
     {t:'$ cat focus.txt', c:'cmd'},
-    {t:'AWS VPC · EC2 · IAM · Site-to-Site VPN · TCP/IP · Linux · PowerShell', c:'out'},
-    {t:'$ ./labs --status', c:'cmd'},
-    {t:'5 live AWS Terraform labs — apply → verify → auto-destroy ✔', c:'ok'},
+    {t:'AWS · Terraform · Linux/systemd · DNS · VPN · Cloudflare · Python/Bash/PowerShell', c:'out'},
+    {t:'$ systemctl --user list-timers --all | wc -l', c:'cmd'},
+    {t:'229 scheduled jobs · self-healing · pages my phone on failure ✔', c:'ok'},
   ];
   let li = 0, ci = 0, buf = '';
   function tick(){

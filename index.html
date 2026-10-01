@@ -4,14 +4,23 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ravi Kumar — Cloud &amp; Network Engineer</title>
-  <meta name="description" content="Ravi Kumar — Cloud &amp; Network Engineer. AWS VPC, EC2, VPN architecture, TCP/IP, Linux, PowerShell automation. Live, self-tearing-down AWS Terraform labs." />
+  <meta name="description" content="Ravi Kumar — Cloud & Network Engineer in the SF Bay Area. AWS + Terraform labs with an apply→verify→destroy runner, a production Linux fleet of 200+ scheduled services behind Cloudflare Tunnels, Pi-hole/Unbound DNS, WireGuard and Tailscale. Open to Cloud Engineer roles." />
   <meta property="og:title" content="Ravi Kumar — Cloud &amp; Network Engineer" />
-  <meta property="og:description" content="Cloud + network engineering, proven with live AWS labs." />
+  <meta property="og:description" content="Cloud + network engineering, proven with Terraform labs and a production Linux fleet I run myself." />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ravikus1457.github.io/" />
+  <link rel="canonical" href="https://ravikus1457.github.io/" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%23070b16%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%276%27 fill=%27%23ff9900%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%2711%27 fill=%27none%27 stroke=%27%2322d3ee%27 stroke-width=%272%27/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Person","name":"Ravi Kumar","jobTitle":"Cloud & Network Engineer",
+   "url":"https://ravikus1457.github.io/","sameAs":["https://github.com/ravikus1457","https://www.linkedin.com/in/ravik1457"],
+   "address":{"@type":"PostalAddress","addressLocality":"Pittsburg","addressRegion":"CA","addressCountry":"US"},
+   "knowsAbout":["AWS","Terraform","Linux","Networking","DNS","VPN","Cloudflare","systemd","Python","PowerShell"]}
+  </script>
 </head>
 <body>
   <div class="bg-grid" aria-hidden="true"></div>
@@ -24,10 +33,10 @@
     </a>
     <nav class="nav-links" aria-label="Primary">
       <a href="#whoami">whoami</a>
-      <a href="#skills">skills</a>
+      <a href="#production">production</a>
       <a href="#labs">labs</a>
-      <a href="#architecture">architecture</a>
-      <a href="#shipped">shipped</a>
+      <a href="#skills">skills</a>
+      <a href="#market">market</a>
       <a href="#experience">experience</a>
       <a href="#certs">certs</a>
       <a href="#contact">contact</a>
@@ -40,7 +49,7 @@
     <!-- HERO -->
     <section class="hero">
       <div class="hero-inner">
-        <p class="status"><span class="pulse"></span> CLOUD &amp; NETWORK OPS · OPEN TO WORK</p>
+        <p class="status"><span class="pulse"></span> CLOUD &amp; NETWORK ENGINEERING · OPEN TO WORK</p>
         <h1>RAVI&nbsp;KUMAR</h1>
         <p class="role">Cloud &amp; Network Engineer</p>
         <div class="terminal" id="term">
@@ -52,17 +61,18 @@
           <span class="chip">Network+</span>
           <span class="chip">Linux Essentials</span>
           <span class="chip">A+</span>
-          <span class="chip chip-edu">B.S. Cloud &amp; Network Eng · WGU</span>
+          <span class="chip">ITIL 4</span>
+          <span class="chip chip-edu">B.S. Cloud &amp; Network Eng (AWS) · WGU</span>
         </div>
         <div class="hero-cta">
-          <a class="btn btn-primary" href="#labs">View live AWS labs →</a>
-          <a class="btn btn-ghost" href="#contact">Get in touch</a>
+          <a class="btn btn-primary" href="#production">See what I run →</a>
+          <a class="btn btn-ghost" href="#labs">AWS + network labs</a>
         </div>
         <ul class="stats">
-          <li><b data-count="5">5</b><span>live AWS labs</span></li>
-          <li><b data-count="4">4</b><span>infra roles</span></li>
-          <li><b>$0</b><span>idle lab cost</span></li>
-          <li><b data-count="5">5</b><span>CompTIA certs</span></li>
+          <li><b data-count="229">229</b><span>scheduled jobs in my production fleet</span></li>
+          <li><b data-count="10">10</b><span>AWS + networking labs</span></li>
+          <li><b data-count="3">3</b><span>public sites via Cloudflare Tunnel</span></li>
+          <li><b data-count="6">6</b><span>certifications</span></li>
         </ul>
         <p class="loc">📍 Pittsburg, CA · San Francisco Bay Area · Remote</p>
       </div>
@@ -71,10 +81,90 @@
     <!-- WHOAMI -->
     <section id="whoami" class="section reveal">
       <h2><span class="prompt">$</span> whoami</h2>
-      <p class="lede">Cloud and Network Engineering professional who designs, configures, and supports
-        enterprise network infrastructure and cloud-connected environments. Hands-on with core
-        networking (TCP/IP, DNS, DHCP), Site-to-Site VPN, AWS infrastructure, Linux administration,
-        and PowerShell automation — and I prove it with real labs that run on live AWS, not slideware.</p>
+      <p class="lede">Network and systems engineer moving into cloud engineering. By day I support a county public-works
+        network: DNS, DHCP, Active Directory, Palo Alto GlobalProtect VPN, Cisco switching in the IDFs, and Microsoft
+        Intune device management. On my own time I run a <a href="#production">production Linux fleet</a> that
+        serves real users and real payments, and I build <a href="#labs">AWS infrastructure in Terraform</a> with a
+        runner that proves each lab works and tears it down. I like systems that explain themselves: everything I run
+        logs, alerts, and heals.</p>
+      <p class="lede"><b>Looking for:</b> Cloud Engineer I / Associate, Cloud Infrastructure Engineer, Cloud Support Engineer,
+        or a Network Engineer role with a cloud track. AWS first; comfortable learning Azure/GCP.</p>
+    </section>
+
+    <!-- PRODUCTION: WHAT I RUN -->
+    <section id="production" class="section reveal">
+      <h2><span class="prompt">$</span> systemctl --user list-timers <span class="muted"># what I run in production</span></h2>
+      <p class="lede">Not a tutorial. A Raspberry&nbsp;Pi&nbsp;5 I operate as a small production environment:
+        <b>229 scheduled jobs</b> and <b>400+ systemd services</b> that source leads, apply to jobs, publish sites,
+        take payments, and watch each other. Zero inbound ports: every public endpoint rides an outbound-only
+        Cloudflare Tunnel. When a unit fails, it pages my phone; a self-heal loop restarts it with rate limits
+        and a watchdog checks the healers.</p>
+      <div class="cards">
+        <article class="card">
+          <h3><span class="ico">⚙</span> Fleet operations (SRE habits)</h3>
+          <ul class="tags">
+            <li>systemd units + timers</li><li>OnFailure → Telegram paging</li><li>Self-heal with backoff</li>
+            <li>Watchdog of the watchdogs</li><li>Persistent journald</li><li>Nightly backups, verified restores</li>
+            <li>Memory guards (earlyoom, cgroup caps)</li><li>Runbooks for every unit</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3><span class="ico">⇄</span> Network edge</h3>
+          <ul class="tags">
+            <li>Cloudflare Tunnel ×3 (no open ports)</li><li>Cloudflare Pages</li><li>Pi-hole + Unbound (DNSSEC) LAN DNS</li>
+            <li>Tailscale mesh (Pi · laptop · phone)</li><li>WireGuard site-to-site</li><li>nftables default-deny</li>
+            <li>LAN watch: new-device alerts</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3><span class="ico">💳</span> PaperReel — a paid product</h3>
+          <p class="card-p">Video abstracts for research papers. Stripe Checkout → signed webhook → systemd pipeline
+            (extract → script → render) → signed download links. Landing on Cloudflare Pages, API through a Tunnel,
+            hard per-service spend caps, fault tests that can fail.</p>
+          <ul class="tags">
+            <li>Stripe webhooks</li><li>Cloudflare Pages + Tunnel</li><li>Python</li><li>ffmpeg</li><li>Cost caps in code</li>
+          </ul>
+          <a class="lab-link" href="https://paperreel.pages.dev" target="_blank" rel="noopener">paperreel.pages.dev ↗</a>
+        </article>
+        <article class="card">
+          <h3><span class="ico">📸</span> Wedding platform — shipped</h3>
+          <p class="card-p">Full-stack event site for a four-day wedding, hundreds of guests: RSVP with email fan-out,
+            QR guest-camera uploads, private album with on-demand renditions, address revealed only after RSVP.
+            Served from the Pi through a Tunnel; loopback-only origin, per-IP rate limits, EXIF scrubbing.</p>
+          <ul class="tags">
+            <li>Python HTTP service</li><li>Cloudflare Tunnel</li><li>HEIC→JPEG</li><li>Byte-range streaming</li>
+          </ul>
+          <a class="lab-link" href="https://raviandaachal.com" target="_blank" rel="noopener">raviandaachal.com ↗</a>
+        </article>
+      </div>
+      <p class="labs-foot muted small">All numbers are read live from the box (<code>systemctl --user list-timers --all</code>, <code>systemctl is-active</code>) on the day this page was last updated: 2026-09-30.</p>
+    </section>
+
+    <!-- LABS (auto-generated from labs.json) -->
+    <section id="labs" class="section reveal">
+      <h2><span class="prompt">$</span> terraform apply <span class="muted"># AWS labs, with a runner</span></h2>
+      <p class="lede">AWS infrastructure defined in Terraform. <code>scripts/run-lab.sh</code> runs each lab end to end:
+        <b>init → validate → apply → exercise against the live API → destroy</b>, always destroying even when a step
+        fails, and writes a Markdown evidence report. Guardrails: a budget alarm, tag-based orphan sweep, and a
+        <code>nuke</code> for anything left behind. Labs are sized to cost well under a dollar per run.</p>
+      <div class="labs-grid" id="labs-grid"><p class="muted">Loading labs…</p></div>
+
+      <h3 class="subhead"><span class="prompt">⇄</span> Networking labs</h3>
+      <p class="lede">Linux + Raspberry Pi + AWS networking labs — each a study-grade write-up with topology, key steps,
+        and an honest "be ready to explain" list.</p>
+      <div class="labs-grid" id="net-labs-grid"></div>
+
+      <h3 class="subhead"><span class="prompt">▶</span> Building next <span class="muted">(from the market scan below)</span></h3>
+      <ul class="plain next-labs">
+        <li><b>06 · CI/CD with GitHub Actions</b> — plan/apply pipeline for the labs with OIDC to AWS (no long-lived keys), container build → ECS deploy.</li>
+        <li><b>07 · Serverless API</b> — Lambda + API Gateway + DynamoDB, deployed by Terraform, with CloudWatch alarms and a cost ceiling.</li>
+        <li><b>08 · Security baseline</b> — CloudTrail, GuardDuty, KMS, SCP-style guardrails; the evidence is the findings report.</li>
+        <li><b>09 · Python + boto3 operations toolkit</b> — the fleet's self-heal/alert patterns ported to AWS (orphan sweeps, cost reports, alarm fan-out).</li>
+      </ul>
+
+      <p class="labs-foot">
+        <a class="btn btn-ghost" id="labs-repo-link" href="https://github.com/ravikus1457/aws-labs" target="_blank" rel="noopener">★ Full labs repo on GitHub ↗</a>
+      </p>
     </section>
 
     <!-- SKILLS -->
@@ -82,122 +172,72 @@
       <h2><span class="prompt">$</span> skills <span class="muted">--list</span></h2>
       <div class="cards">
         <article class="card">
-          <h3><span class="ico">☁</span> Cloud &amp; Infrastructure</h3>
+          <h3><span class="ico">☁</span> AWS &amp; Infrastructure as Code</h3>
           <ul class="tags">
-            <li>AWS VPC</li><li>EC2</li><li>Security Groups</li><li>IAM</li><li>ALB / ASG</li>
-            <li>ECS Fargate</li><li>VPN Architecture</li><li>Active Directory</li><li>Azure AD</li>
+            <li>VPC</li><li>EC2</li><li>IAM</li><li>S3</li><li>ALB / Auto Scaling</li><li>ECS Fargate</li>
+            <li>CloudWatch + SNS</li><li>Terraform</li><li>Bash runners</li><li>Cloudflare Pages / Tunnel</li>
           </ul>
         </article>
         <article class="card">
           <h3><span class="ico">⇄</span> Networking &amp; Security</h3>
           <ul class="tags">
-            <li>TCP/IP</li><li>DNS</li><li>DHCP</li><li>LAN/WAN</li><li>Firewalls / ACLs</li>
-            <li>WireGuard</li><li>Site-to-Site VPN</li><li>Network Security &amp; Compliance</li>
+            <li>TCP/IP</li><li>DNS (Pi-hole, Unbound, BIND, dnsmasq)</li><li>DHCP</li><li>VLANs / 802.1Q</li>
+            <li>Cisco switching (IDF)</li><li>Palo Alto GlobalProtect</li><li>WireGuard</li><li>Tailscale</li>
+            <li>nftables / iptables / SGs</li><li>tcpdump / Wireshark</li>
           </ul>
         </article>
         <article class="card">
           <h3><span class="ico">⌘</span> Systems &amp; Automation</h3>
           <ul class="tags">
-            <li>Linux (Ubuntu/CLI)</li><li>PowerShell</li><li>Terraform</li><li>Bash</li>
-            <li>Systems Validation</li><li>MDM Tools</li><li>macOS / Windows</li>
+            <li>Linux (Debian/Ubuntu)</li><li>systemd</li><li>Python</li><li>Bash</li><li>PowerShell</li>
+            <li>Git / GitHub</li><li>Active Directory</li><li>Microsoft Intune</li><li>macOS / Windows</li>
           </ul>
         </article>
         <article class="card">
-          <h3><span class="ico">◎</span> Operations &amp; Diagnostics</h3>
+          <h3><span class="ico">◎</span> Operations</h3>
           <ul class="tags">
-            <li>Log Analysis</li><li>Root Cause Analysis</li><li>Remote Diagnostics</li>
-            <li>Technical Documentation</li><li>Incident Triage</li>
+            <li>Monitoring &amp; alerting</li><li>Incident triage</li><li>Root cause analysis</li><li>Runbooks</li>
+            <li>ITIL 4</li><li>Backups &amp; restores</li><li>Cost control</li><li>Fault injection testing</li>
           </ul>
         </article>
       </div>
     </section>
 
-    <!-- LABS (auto-generated from labs.json) -->
-    <section id="labs" class="section reveal">
-      <h2><span class="prompt">$</span> terraform apply <span class="muted"># live AWS labs</span></h2>
-      <p class="lede">Real AWS infrastructure defined in Terraform. A runner provisions each lab,
-        exercises it against the live AWS API to prove it works, captures evidence, and
-        <b>tears it down automatically</b> — so idle cost stays at ~$0. Code + evidence on GitHub.</p>
-      <div class="labs-grid" id="labs-grid"><p class="muted">Loading labs…</p></div>
-
-      <h3 class="subhead"><span class="prompt">⇄</span> Networking labs</h3>
-      <p class="lede">Linux + Raspberry Pi + AWS networking labs — each a study-grade writeup
-        with topology, key steps, and an honest "be ready to explain" list.</p>
-      <div class="labs-grid" id="net-labs-grid"></div>
-
-      <p class="labs-foot">
-        <a class="btn btn-ghost" id="labs-repo-link" href="https://github.com/ravikus1457/aws-labs" target="_blank" rel="noopener">★ Full labs repo on GitHub ↗</a>
-      </p>
-    </section>
-
     <!-- MARKET DEMAND (auto-updated by the portfolio-improver agent) -->
     <section id="market" class="section reveal">
-      <h2><span class="prompt">$</span> ./market-scan <span class="muted"># in-demand skills, auto-updated</span></h2>
-      <p class="lede">Live demand signal from <b id="market-jobs">—</b> job postings my apply-agent is tracking,
-        blended with current AWS/networking hiring trends. An agent on my Pi regenerates this on a
-        schedule, so it keeps current — and flags new labs worth building.</p>
+      <h2><span class="prompt">$</span> ./market-scan <span class="muted"># what cloud postings ask for, auto-updated</span></h2>
+      <p class="lede">A demand signal from <b id="market-jobs">—</b> job postings my own job-search agent has collected,
+        blended with current AWS and networking hiring trends. An agent on my Pi regenerates this weekly and turns
+        uncovered skills into the "building next" list above.</p>
       <div class="cards">
-        <article class="card"><h3><span class="ico">☁</span> AWS — most in demand</h3><div id="market-aws" class="bars"></div></article>
-        <article class="card"><h3><span class="ico">⇄</span> Networking — most in demand</h3><div id="market-net" class="bars"></div></article>
+        <article class="card"><h3><span class="ico">☁</span> AWS — most mentioned</h3><div id="market-aws" class="bars"></div></article>
+        <article class="card"><h3><span class="ico">⇄</span> Networking — most mentioned</h3><div id="market-net" class="bars"></div></article>
       </div>
     </section>
 
     <!-- ARCHITECTURE -->
     <section id="architecture" class="section reveal">
-      <h2><span class="prompt">$</span> cat architecture/hybrid-vpn.md</h2>
-      <p class="lede">Signature project — a hybrid network connecting a Raspberry&nbsp;Pi&nbsp;5 home lab
-        to an AWS VPC over an encrypted Site-to-Site WireGuard tunnel, with least-privilege security
-        groups and firewall ACLs.</p>
+      <h2><span class="prompt">$</span> cat architecture/edge.md</h2>
+      <p class="lede">How the fleet reaches the internet without exposing it: services bind to loopback on the Pi,
+        <b>cloudflared</b> opens outbound tunnels to Cloudflare, and Cloudflare terminates TLS and routes each hostname
+        to its tunnel. Operators reach the box over Tailscale; the LAN resolves through Pi-hole → Unbound with DNSSEC.
+        The AWS labs attach to the same Pi over a WireGuard site-to-site tunnel.</p>
       <div class="diagram">
         <div class="node node-pi">
           <span class="node-ico">🍓</span>
           <b>Raspberry Pi 5</b>
-          <small>Home lab · Linux · WireGuard peer</small>
+          <small>loopback-only services · systemd · nftables · Pi-hole + Unbound</small>
         </div>
         <div class="link">
-          <span class="link-label">WireGuard S2S VPN</span>
+          <span class="link-label">cloudflared (outbound) · WireGuard · Tailscale</span>
           <div class="wire"><span class="packet"></span></div>
-          <small>encrypted tunnel · routing tables · crypto keys</small>
+          <small>no inbound ports · TLS at the edge · keys rotated</small>
         </div>
         <div class="node node-aws">
           <span class="node-ico">☁</span>
-          <b>AWS VPC</b>
-          <small>Security Groups · subnets · least-privilege ACLs</small>
+          <b>Cloudflare edge · AWS VPC</b>
+          <small>Pages + Tunnels · security groups · least-privilege</small>
         </div>
-      </div>
-    </section>
-
-
-    <!-- SHIPPED: WEDDING PLATFORM -->
-    <section id="shipped" class="section reveal">
-      <h2><span class="prompt">$</span> cat projects/wedding-platform.md <span class="muted"># shipped &amp; in production</span></h2>
-      <p class="lede">A full-stack event platform I designed, built, and operate for a real
-        four-day wedding — <a href="https://raviandaachal.com" target="_blank" rel="noopener"><b>raviandaachal.com</b></a>,
-        serving hundreds of guests from a Raspberry&nbsp;Pi&nbsp;5 through an outbound-only
-        Cloudflare Tunnel (zero open ports, origin IP never exposed). Now productized as a
-        service at <a href="https://symbioai.dev/weddings" target="_blank" rel="noopener">symbioai.dev/weddings</a>.</p>
-      <div class="cards">
-        <article class="card">
-          <h3><span class="ico">⚙</span> Backend &amp; Infra</h3>
-          <ul class="tags">
-            <li>Python stdlib HTTP server</li><li>Cloudflare Tunnel</li><li>systemd hardening</li>
-            <li>Reboot-survivable units</li><li>Failure alerting</li><li>HTTP byte-range streaming</li>
-          </ul>
-        </article>
-        <article class="card">
-          <h3><span class="ico">🔒</span> Security &amp; Privacy</h3>
-          <ul class="tags">
-            <li>Loopback-only origin</li><li>Key-gated private endpoints</li><li>Per-IP rate limiting</li>
-            <li>Path-traversal defense</li><li>Address reveal only after RSVP</li><li>EXIF/GPS scrubbing</li>
-          </ul>
-        </article>
-        <article class="card">
-          <h3><span class="ico">📸</span> Product Features</h3>
-          <ul class="tags">
-            <li>Native RSVP + email fan-out</li><li>QR guest-camera uploads</li><li>Private media album</li>
-            <li>On-demand image renditions</li><li>HEIC→JPEG conversion</li><li>Multi-event scheduling</li>
-          </ul>
-        </article>
       </div>
     </section>
 
@@ -206,42 +246,49 @@
       <h2><span class="prompt">$</span> history <span class="muted"># experience</span></h2>
       <ol class="timeline">
         <li>
-          <div class="tl-head"><b>Information Systems Technician</b><span class="when">Nov 2025 – Present</span></div>
+          <div class="tl-head"><b>Information Systems Technician I</b><span class="when">Mar 2026 – Present</span></div>
           <div class="tl-org">Contra Costa County — Dept. of Public Works · Martinez, CA</div>
           <ul>
-            <li>Troubleshoot complex connectivity issues — DNS, DHCP, Active Directory auth, and VPN routing across distributed county environments.</li>
-            <li>PowerShell automation to manage, audit, and update Active Directory; led an iPhone deployment for 125 employees.</li>
-            <li>Root-cause analysis from system logs; configuration updates, patches, and optimizations to keep environments stable.</li>
+            <li>Diagnose DNS, DHCP, Active Directory authentication, and VPN routing failures across a distributed county environment; fix, patch, and document.</li>
+            <li>Set up and configured Palo Alto GlobalProtect VPN access for county staff; troubleshoot GlobalProtect connectivity and routing.</li>
+            <li>Maintain physical and logical connectivity in IDF closets: patch and validate ports on Cisco routers and switches.</li>
+            <li>Manage county devices daily through Microsoft Intune (enrollment, profiles, compliance, remote actions); automate Active Directory audits and updates with PowerShell.</li>
+            <li>Led an end-to-end iPhone deployment for 125 employees: backups, scheduling, rollout, training, issue resolution.</li>
           </ul>
-          <div class="tl-tags"><span>DNS</span><span>DHCP</span><span>Active Directory</span><span>PowerShell</span><span>VPN</span></div>
+          <div class="tl-tags"><span>GlobalProtect</span><span>Cisco</span><span>Intune</span><span>Active Directory</span><span>PowerShell</span><span>DNS/DHCP</span></div>
         </li>
         <li>
-          <div class="tl-head"><b>Junior Infrastructure Support Engineer</b><span class="when">Oct 2025 – Nov 2025</span></div>
+          <div class="tl-head"><b>Information Systems Specialist I</b><span class="when">Nov 2025 – Mar 2026</span></div>
+          <div class="tl-org">Contra Costa County — IT Department · Martinez, CA</div>
+          <ul>
+            <li>County-wide systems support: account administration, endpoint configuration, and DNS/DHCP/AD connectivity resolution for staff in person, by phone, and remotely. Promoted to Technician I.</li>
+          </ul>
+          <div class="tl-tags"><span>Account admin</span><span>Endpoints</span><span>Networking</span></div>
+        </li>
+        <li>
+          <div class="tl-head"><b>Junior Infrastructure Support Engineer (Contract)</b><span class="when">Oct 2025 – Nov 2025</span></div>
           <div class="tl-org">Meta · Menlo Park, CA</div>
           <ul>
-            <li>Supported cloud-connected network infrastructure in a high-availability production environment — diagnosing routing, DNS, VPN, and authentication issues.</li>
-            <li>Partnered with cloud and platform engineering teams to resolve escalated, high-impact infrastructure and connectivity problems.</li>
-            <li>Administered enterprise Linux endpoints and validated network/system configurations using automation and MDM tooling.</li>
+            <li>Diagnosed routing, DNS, VPN, authentication, and endpoint-performance issues in a high-availability production environment, partnering with engineering teams on escalations.</li>
+            <li>Supported enterprise Linux, macOS, and Windows endpoints through MDM-driven configuration and validation.</li>
           </ul>
-          <div class="tl-tags"><span>Cloud Networking</span><span>VPN</span><span>DNS</span><span>Linux</span><span>Automation</span></div>
+          <div class="tl-tags"><span>Production support</span><span>VPN</span><span>DNS</span><span>Linux</span><span>MDM</span></div>
         </li>
         <li>
           <div class="tl-head"><b>Cloud Operator</b><span class="when">Apr 2024 – Jun 2025</span></div>
           <div class="tl-org">Bay Alarm · Concord, CA</div>
           <ul>
-            <li>Monitored and managed cloud-connected enterprise devices for connectivity health and uptime.</li>
-            <li>Configured network devices and resolved remote connectivity issues via cloud management consoles.</li>
+            <li>Monitored cloud-connected enterprise devices for connectivity health and uptime; configured network devices and validated installations through cloud management consoles.</li>
           </ul>
-          <div class="tl-tags"><span>Cloud Monitoring</span><span>Networking</span></div>
+          <div class="tl-tags"><span>Cloud monitoring</span><span>Device config</span></div>
         </li>
         <li>
-          <div class="tl-head"><b>IT and Network Operations Analyst</b><span class="when">Feb 2023 – Jan 2024</span></div>
+          <div class="tl-head"><b>IT &amp; Network Operations Analyst</b><span class="when">Feb 2023 – Jan 2024</span></div>
           <div class="tl-org">Apple Inc. · Elk Grove, CA</div>
           <ul>
-            <li>Operated and troubleshot networking, authentication, and connectivity across large-scale networked environments — TCP/IP, DNS, and DHCP issues at scale.</li>
-            <li>Resolved network access, VPN, and MDM profile issues, documenting repeatable workflows for faster resolution.</li>
+            <li>Troubleshot TCP/IP, DNS, DHCP, VPN, authentication, and MDM-profile issues across large-scale enterprise environments; documented repeatable resolution workflows.</li>
           </ul>
-          <div class="tl-tags"><span>TCP/IP</span><span>DNS</span><span>DHCP</span><span>VPN</span><span>Network Ops</span></div>
+          <div class="tl-tags"><span>TCP/IP</span><span>DNS</span><span>DHCP</span><span>VPN</span><span>MDM</span></div>
         </li>
       </ol>
     </section>
@@ -253,13 +300,14 @@
         <article class="card">
           <h3>🎓 Education</h3>
           <ul class="plain">
-            <li><b>B.S. Cloud &amp; Network Engineering</b> — Western Governors University <span class="muted">(in progress)</span></li>
-            <li>IT Support Certificate — YearUp / Diablo Valley College <span class="muted">(2024)</span></li>
+            <li><b>B.S. Cloud &amp; Network Engineering (AWS track)</b> — Western Governors University <span class="muted">(in progress; 78 of ~120 units earned)</span></li>
+            <li>IT Support Certificate — Year Up / Diablo Valley College <span class="muted">(2024)</span></li>
           </ul>
         </article>
         <article class="card">
           <h3>📜 Certifications</h3>
           <ul class="plain">
+            <li>ITIL 4 Foundation <span class="muted">(2026)</span></li>
             <li>CompTIA Security+</li>
             <li>CompTIA Network+</li>
             <li>CompTIA Linux Essentials</li>
@@ -268,14 +316,12 @@
           </ul>
         </article>
         <article class="card">
-          <h3>🎯 Working toward</h3>
+          <h3>🎯 In progress</h3>
           <ul class="plain">
-            <li>AWS Certified Cloud Practitioner</li>
             <li>AWS Certified Solutions Architect – Associate</li>
-            <li>AWS Certified CloudOps Engineer – Associate</li>
-            <li>ITIL 4 Foundation</li>
+            <li>AWS Certified Cloud Practitioner</li>
           </ul>
-          <p class="muted" style="font-size:.78rem;margin:.7rem 0 0">In progress · actively studying</p>
+          <p class="muted" style="font-size:.78rem;margin:.7rem 0 0">Projects first; the exams follow the labs.</p>
         </article>
       </div>
     </section>
@@ -290,13 +336,13 @@
         <a href="https://github.com/ravikus1457" target="_blank" rel="noopener" class="contact-item"><span>⌥</span> github.com/ravikus1457</a>
         <a href="assets/Ravi_Kumar_Resume.pdf" target="_blank" rel="noopener" class="contact-item"><span>⬇</span> Download résumé</a>
       </div>
-      <p class="cta-line">Open to <b>Cloud Network Engineer</b>, <b>AWS Cloud Engineer</b>, and <b>Network/Infrastructure Engineer</b> roles.</p>
+      <p class="cta-line">Open to <b>Cloud Engineer I / Associate</b>, <b>Cloud Infrastructure Engineer</b>, <b>Cloud Support Engineer</b>, and <b>Network Engineer</b> roles · Bay Area or remote.</p>
     </section>
   </main>
 
   <footer class="foot">
     <span>© <span id="year"></span> Ravi Kumar</span>
-    <span class="muted">Built with HTML/CSS/JS · hosted on GitHub Pages · labs auto-synced from <a href="https://github.com/ravikus1457/aws-labs" target="_blank" rel="noopener">aws-labs</a></span>
+    <span class="muted">HTML/CSS/JS on GitHub Pages · labs synced from <a href="https://github.com/ravikus1457/aws-labs" target="_blank" rel="noopener">aws-labs</a> · market scan regenerated weekly by an agent on the Pi</span>
   </footer>
 
   <script src="script.js"></script>

@@ -86,13 +86,23 @@ BASELINE = {
 }
 
 
+import re
+
+
+def _kw_re(keywords):
+    """Whole-word match (2026-09-30 fix): plain substring matching counted 'rds' inside 'records'/'awards'/'boards',
+    'acl' inside 'oracle', 'ssm' inside 'assembly', 'asg' inside 'message' -- RDS showed as the #1 AWS skill at 100 %."""
+    return re.compile(r"(?<![a-z0-9])(?:" + "|".join(re.escape(k.strip()) for k in keywords) + r")(?![a-z0-9])")
+
+
 def mine(jobs):
     """Blended demand score per skill: market baseline + live local signal."""
     counts = Counter()
     local = {}
     corpus = [job_text(j) for j in jobs]
     for display, keywords, cat in SKILLS:
-        c = sum(1 for text in corpus if any(k in text for k in keywords))
+        rx = _kw_re(keywords)
+        c = sum(1 for text in corpus if rx.search(text))
         local[display] = c
         score = BASELINE.get(display, 3) + c * 3   # local postings weigh heavily
         counts[(display, cat)] = score
@@ -109,7 +119,7 @@ def covered_skills():
     except Exception:
         return set()
     blob = json.dumps(d).lower()
-    return {display for (display, kws, cat) in SKILLS if any(k in blob for k in kws)}
+    return {display for (display, kws, cat) in SKILLS if _kw_re(kws).search(blob)}
 
 
 def main():

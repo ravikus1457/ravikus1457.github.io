@@ -190,8 +190,17 @@ h1,h2,h3{line-height:1.15;margin:0}
 .foot a{color:var(--cyan)}
 
 /* reveal */
-.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
-.reveal.in{opacity:1;transform:none}
+/* 2026-09-30: sections were parked at opacity:0 until an IntersectionObserver fired, so a full-page capture, a reader
+   with JS off, or a crawler saw a blank page below the hero. Content is always visible; only a small slide remains. */
+.reveal{transform:translateY(14px);transition:transform .5s ease}
+.reveal.in{transform:none}
+.card-p{color:var(--muted);font-size:.9rem;margin:0 0 .8rem}
+.card .lab-link{display:inline-block;margin-top:.8rem;font-family:var(--mono);font-size:.8rem}
+.small{font-size:.78rem}
+.next-labs{margin-top:.6rem}
+.next-labs li{color:var(--muted);font-size:.95rem}
+.lede a{color:var(--cyan);text-decoration:underline;text-decoration-color:rgba(34,211,238,.4)}
+code{font-family:var(--mono);font-size:.9em;color:var(--orange2)}
 
 /* animations */
 @keyframes blink{50%{opacity:0}}
