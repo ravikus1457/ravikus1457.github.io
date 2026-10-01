@@ -1,7 +1,7 @@
 {
-  "generated_from": ".labs-src",
+  "generated_from": "/home/rk1457/aws-devops-labs",
   "repo": "https://github.com/ravikus1457/aws-labs",
-  "count": 10,
+  "count": 11,
   "labs": [
     {
       "id": "01",
@@ -82,6 +82,24 @@
         "dashboards"
       ],
       "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/labs/05-cloudwatch-monitoring",
+      "has_evidence": false
+    },
+    {
+      "id": "06",
+      "category": "cloud",
+      "title": "ECS Fargate CI/CD (flagship)",
+      "slug": "06-ecs-fargate-cicd",
+      "demonstrates": "Private Fargate service behind an ALB, ECR, GitHub OIDC deploy role, CloudWatch alarms to SNS, AWS Budget, GitHub Actions pipeline with manual approval, scheduled destroy",
+      "meta": "~$0.11/hr while up; destroyed nightly by CI",
+      "tags": [
+        "Private Fargate service behind an ALB",
+        "ECR",
+        "GitHub OIDC deploy role",
+        "CloudWatch alarms to SNS",
+        "AWS Budget",
+        "GitHub Actions pipeline with manual approval"
+      ],
+      "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/labs/06-ecs-fargate-cicd",
       "has_evidence": false
     }
   ],
