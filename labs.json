@@ -1,7 +1,7 @@
 {
-  "generated_from": "/tmp/claude-1000/-home-rk1457/b0e3272b-5994-4420-8e21-6fcfe352953f/scratchpad/labs-head",
+  "generated_from": ".labs-src",
   "repo": "https://github.com/ravikus1457/aws-labs",
-  "count": 11,
+  "count": 12,
   "labs": [
     {
       "id": "01",
@@ -101,6 +101,24 @@
       ],
       "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/labs/06-ecs-fargate-cicd",
       "has_evidence": true
+    },
+    {
+      "id": "07",
+      "category": "cloud",
+      "title": "EKS + observability",
+      "slug": "07-eks-observability",
+      "demonstrates": "EKS cluster, managed node group, IRSA, Helm chart, HPA + PDB, Prometheus + Grafana, PrometheusRule alerts, NLB Service, control-plane logs, OIDC pipeline with manual approval, fault-injected smoke test, scheduled destroy",
+      "meta": "~$0.22/hr while up (control plane $0.10); meant to live ~1 hr; destroyed nightly by CI",
+      "tags": [
+        "EKS cluster",
+        "managed node group",
+        "IRSA",
+        "Helm chart",
+        "HPA + PDB",
+        "Prometheus + Grafana"
+      ],
+      "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/labs/07-eks-observability",
+      "has_evidence": false
     }
   ],
   "networking": [
