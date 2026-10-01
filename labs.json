@@ -1,5 +1,5 @@
 {
-  "generated_from": ".labs-src",
+  "generated_from": "/home/rk1457/aws-devops-labs",
   "repo": "https://github.com/ravikus1457/aws-labs",
   "count": 11,
   "labs": [
@@ -19,7 +19,7 @@
         "security groups"
       ],
       "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/labs/01-vpc-networking",
-      "has_evidence": false
+      "has_evidence": true
     },
     {
       "id": "02",
@@ -51,7 +51,7 @@
         "S3 private buckets"
       ],
       "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/labs/03-iam-s3-least-privilege",
-      "has_evidence": false
+      "has_evidence": true
     },
     {
       "id": "04",
@@ -82,7 +82,7 @@
         "dashboards"
       ],
       "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/labs/05-cloudwatch-monitoring",
-      "has_evidence": false
+      "has_evidence": true
     },
     {
       "id": "06",
