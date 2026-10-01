@@ -1,5 +1,5 @@
 {
-  "generated_from": ".labs-src",
+  "generated_from": "/home/rk1457/aws-devops-labs",
   "repo": "https://github.com/ravikus1457/aws-labs",
   "count": 11,
   "labs": [
@@ -100,7 +100,7 @@
         "GitHub Actions pipeline with manual approval"
       ],
       "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/labs/06-ecs-fargate-cicd",
-      "has_evidence": false
+      "has_evidence": true
     }
   ],
   "networking": [
