@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Production — what Ravi Kumar runs</title>
+  <meta name="description" content="The Raspberry Pi 5 fleet Ravi Kumar operates as a small production environment: 229 systemd timers, zero inbound ports behind Cloudflare Tunnels, Pi-hole/Unbound DNS, self-heal and watchdog loops, and two shipped products." />
+  <meta property="og:title" content="Production — what Ravi Kumar runs" />
+  <meta property="og:description" content="229 timers, zero inbound ports, paging on failure, two shipped products. Measured on the box." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ravikus1457.github.io/production.html" />
+  <meta property="og:image" content="https://ravikus1457.github.io/assets/pi-to-cloud.jpg" />
+  <link rel="canonical" href="https://ravikus1457.github.io/production.html" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%23070b16%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%276%27 fill=%27%23ff9900%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%2711%27 fill=%27none%27 stroke=%27%2322d3ee%27 stroke-width=%272%27/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="production">
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
+  <header class="nav" id="top">
+    <a class="brand" href="index.html" aria-label="Home">
+      <span class="brand-dot"></span>
+      <span class="brand-text"><b>ravi</b><span class="brand-at">@</span>cloud-net<span class="brand-cursor">_</span></span>
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="index.html">home</a>
+      <a href="production.html" aria-current="page">production</a>
+      <a href="labs.html">labs</a>
+      <a href="experience.html">experience</a>
+      <a href="contact.html">contact</a>
+    </nav>
+    <a class="btn btn-ghost nav-resume" href="assets/Ravi_Kumar_Resume.pdf" target="_blank" rel="noopener">resume.pdf ↗</a>
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">≡</button>
+  </header>
+  <main>
+    <section class="page-head">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">~</a><span>/</span><span aria-current="page">production</span></nav>
+      <h1><span class="prompt">$</span> systemctl --user list-timers <span class="muted"># what I run in production</span></h1>
+      <p class="lede">Not a tutorial. A Raspberry&nbsp;Pi&nbsp;5 I operate as a small production environment:
+        <b>229 scheduled jobs</b> and <b>400+ systemd services</b> that source leads, apply to jobs, publish sites,
+        take payments, and watch each other. Zero inbound ports: every public endpoint rides an outbound-only
+        Cloudflare Tunnel. When a unit fails, it pages my phone; a self-heal loop restarts it with rate limits
+        and a watchdog checks the healers.</p>
+      <nav class="subnav" aria-label="On this page">
+        <a href="#board">status board</a><a href="#practices">practices</a><a href="#edge">edge architecture</a><a href="#products">products</a>
+      </nav>
+    </section>
+
+    <section id="board" class="section reveal">
+      <h2><span class="prompt">$</span> fleet-status <span class="muted"># measured on the box</span></h2>
+      <div class="board" aria-label="Fleet status, measured on the box">
+        <div class="board-head"><span>system</span><span>what it does</span><span>measured</span></div>
+        <div class="row"><div class="k"><i class="dot"></i>systemd user manager</div><div class="v">229 timers, 402 service units; oneshot + timer, never cron</div><div class="n">229 / 402</div></div>
+        <div class="row"><div class="k"><i class="dot"></i>failure paging</div><div class="v">OnFailure=alert@%n on every unit → phone, exact-repeat suppressed</div><div class="n">every unit</div></div>
+        <div class="row"><div class="k"><i class="dot"></i>self-heal + watchdog</div><div class="v">10-min healer with restart limits; daily watchdog checks the healers</div><div class="n">10 min / 24 h</div></div>
+        <div class="row"><div class="k"><i class="dot"></i>edge</div><div class="v">outbound-only Cloudflare Tunnels; origins on loopback; zero inbound ports</div><div class="n">3 tunnels</div></div>
+        <div class="row"><div class="k"><i class="dot"></i>DNS</div><div class="v">Pi-hole → Unbound recursive resolver with DNSSEC for the LAN</div><div class="n">:53 → :5335</div></div>
+        <div class="row"><div class="k"><i class="dot"></i>operator access</div><div class="v">SSH over Tailscale only; WireGuard site-to-site to the AWS lab VPC</div><div class="n">3 nodes</div></div>
+        <div class="row"><div class="k"><i class="dot"></i>backups</div><div class="v">nightly, encrypted, two destinations, restore drill</div><div class="n">nightly</div></div>
+        <div class="board-foot">read from <code>systemctl --user list-timers --all</code>, <code>systemctl is-active</code> and <code>tailscale status</code> on 2026-10-01 · patterns and postmortems: <a href="https://github.com/ravikus1457/fleet-ops" target="_blank" rel="noopener" style="color:var(--blue)">github.com/ravikus1457/fleet-ops</a></div>
+      </div>
+    </section>
+
+    <section id="practices" class="section reveal">
+      <h2><span class="prompt">$</span> cat practices.md</h2>
+      <div class="cards">
+        <article class="card">
+          <h3><span class="ico">⚙</span> Fleet operations (SRE habits)</h3>
+          <ul class="tags">
+            <li>systemd units + timers</li><li>OnFailure → Telegram paging</li><li>Self-heal with backoff</li>
+            <li>Watchdog of the watchdogs</li><li>Persistent journald</li><li>Nightly backups, verified restores</li>
+            <li>Memory guards (earlyoom, cgroup caps)</li><li>Runbooks for every unit</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3><span class="ico">⇄</span> Network edge</h3>
+          <ul class="tags">
+            <li>Cloudflare Tunnel ×3 (no open ports)</li><li>Cloudflare Pages</li><li>Pi-hole + Unbound (DNSSEC) LAN DNS</li>
+            <li>Tailscale mesh (Pi · laptop · phone)</li><li>WireGuard site-to-site</li><li>nftables default-deny</li>
+            <li>LAN watch: new-device alerts</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3><span class="ico">✓</span> How I know it works</h3>
+          <p class="card-p">Every detector is fault-tested: inject the exact failure it exists to catch, watch it go red,
+            restore. Monitors read the thing itself (a heartbeat, a version stamp), never a proxy for it. A check that has
+            never failed is a check that has never been tested.</p>
+          <ul class="tags"><li>Fault injection</li><li>Heartbeats over proxies</li><li>Postmortems</li></ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="edge" class="section reveal">
+      <h2><span class="prompt">$</span> cat architecture/edge.md</h2>
+      <p class="lede">How the fleet reaches the internet without exposing it: services bind to loopback on the Pi,
+        <b>cloudflared</b> opens outbound tunnels to Cloudflare, and Cloudflare terminates TLS and routes each hostname
+        to its tunnel. Operators reach the box over Tailscale; the LAN resolves through Pi-hole → Unbound with DNSSEC.
+        The AWS labs attach to the same Pi over a WireGuard site-to-site tunnel.</p>
+      <figure class="artwork">
+        <img src="assets/pi-to-cloud.jpg" srcset="assets/pi-to-cloud-sm.jpg 672w, assets/pi-to-cloud.jpg 1344w" sizes="(max-width: 760px) 100vw, 1120px"
+             width="1344" height="752" alt="A Raspberry Pi 5 on a dark desk with amber and blue light beams rising from it to a glowing wireframe cloud" loading="lazy" />
+        <figcaption>
+          <span><i class="dot"></i>Pi fleet: loopback-only services, systemd, nftables, Pi-hole + Unbound</span>
+          <span><i class="dot" style="background:var(--blue);box-shadow:0 0 10px rgba(88,166,255,.6)"></i>cloudflared outbound tunnels · WireGuard to AWS · Tailscale for the operator</span>
+          <span><i class="dot" style="background:var(--amber);box-shadow:0 0 10px rgba(245,165,36,.6)"></i>Cloudflare edge + AWS VPC: TLS at the edge, security groups, least privilege</span>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section id="products" class="section reveal">
+      <h2><span class="prompt">$</span> ls products/ <span class="muted"># shipped, taking real traffic</span></h2>
+      <div class="cards">
+        <article class="card">
+          <h3><span class="ico">$</span> PaperReel — a paid product</h3>
+          <p class="card-p">Video abstracts for research papers. Stripe Checkout → signed webhook → systemd pipeline
+            (extract → script → render) → signed download links. Landing on Cloudflare Pages, API through a Tunnel,
+            hard per-service spend caps, fault tests that can fail.</p>
+          <ul class="tags">
+            <li>Stripe webhooks</li><li>Cloudflare Pages + Tunnel</li><li>Python</li><li>ffmpeg</li><li>Cost caps in code</li>
+          </ul>
+          <a class="lab-link" href="https://paperreel.pages.dev" target="_blank" rel="noopener">paperreel.pages.dev ↗</a>
+        </article>
+        <article class="card">
+          <h3><span class="ico">rsvp</span> Wedding platform — shipped</h3>
+          <p class="card-p">Full-stack event site for a four-day wedding, hundreds of guests: RSVP with email fan-out,
+            QR guest-camera uploads, private album with on-demand renditions, address revealed only after RSVP.
+            Served from the Pi through a Tunnel; loopback-only origin, per-IP rate limits, EXIF scrubbing.</p>
+          <ul class="tags">
+            <li>Python HTTP service</li><li>Cloudflare Tunnel</li><li>HEIC→JPEG</li><li>Byte-range streaming</li>
+          </ul>
+          <a class="lab-link" href="https://raviandaachal.com" target="_blank" rel="noopener">raviandaachal.com ↗</a>
+        </article>
+      </div>
+      <p class="pager"><a href="labs.html">next: the AWS labs →</a></p>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="foot-grid">
+      <div>
+        <span class="foot-brand"><b>ravi</b>@cloud-net</span>
+        <p>Cloud &amp; Network Engineer · Pittsburg, CA · SF Bay Area · remote</p>
+        <p>© <span id="year"></span> Ravi Kumar</p>
+      </div>
+      <nav aria-label="Pages">
+        <span class="foot-h">pages</span>
+        <a href="index.html">home</a>
+        <a href="production.html">production</a>
+        <a href="labs.html">labs</a>
+        <a href="experience.html">experience</a>
+        <a href="contact.html">contact</a>
+      </nav>
+      <nav aria-label="Elsewhere">
+        <span class="foot-h">elsewhere</span>
+        <a href="https://github.com/ravikus1457" target="_blank" rel="noopener">github.com/ravikus1457</a>
+        <a href="https://www.linkedin.com/in/ravik1457" target="_blank" rel="noopener">linkedin.com/in/ravik1457</a>
+        <a href="https://github.com/ravikus1457/aws-labs" target="_blank" rel="noopener">aws-labs (Terraform)</a>
+        <a href="https://github.com/ravikus1457/fleet-ops" target="_blank" rel="noopener">fleet-ops (patterns + postmortems)</a>
+        <a href="https://github.com/ravikus1457/aws-ops-toolkit" target="_blank" rel="noopener">aws-ops-toolkit (boto3, tested)</a>
+        <a href="assets/Ravi_Kumar_Resume.pdf" target="_blank" rel="noopener">résumé (PDF)</a>
+      </nav>
+    </div>
+    <p class="foot-note">Hand-written HTML/CSS/JS on GitHub Pages. The labs page reads <code>labs.json</code>, synced daily from the aws-labs repo; the market scan is regenerated weekly by an agent on the Pi.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

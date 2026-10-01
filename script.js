@@ -1,27 +1,45 @@
-// year
-document.getElementById('year').textContent = new Date().getFullYear();
+// Shared by every page. Each block checks for the elements it needs, so a page only runs what it has.
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+
+// footer year
+const yearEl = document.getElementById('year');
+if (yearEl) yearEl.textContent = new Date().getFullYear();
 
 // mobile nav
-const nav = document.querySelector('.nav');
-document.querySelector('.nav-toggle')?.addEventListener('click', () => nav.classList.toggle('open'));
-document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
+const nav = $('.nav');
+const toggle = $('.nav-toggle');
+toggle?.addEventListener('click', () => {
+  const open = nav.classList.toggle('open');
+  toggle.setAttribute('aria-expanded', String(open));
+});
+$$('.nav-links a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
+
+// current page in the nav (the HTML already sets aria-current; this covers the "/" and "/index" spellings)
+(function markCurrent(){
+  const here = (location.pathname.split('/').pop() || 'index.html').replace(/\.html$/, '') || 'index';
+  $$('.nav-links a').forEach(a => {
+    const target = a.getAttribute('href').replace(/\.html$/, '');
+    if (target === here) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+  });
+})();
 
 // gentle slide-in; content is always visible (never parked at opacity 0)
 const io = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
 }, {threshold:0.08});
-document.querySelectorAll('.reveal').forEach(s => io.observe(s));
+$$('.reveal').forEach(s => io.observe(s));
 
-// count-up stats
+// count-up stats (home)
 function countUp(el){
   const target = +el.dataset.count; if (!target) return;
   let n = 0; const step = Math.max(1, Math.round(target/30));
   const id = setInterval(() => { n += step; if (n >= target){ n = target; clearInterval(id); } el.textContent = n; }, 30);
 }
 const statIO = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting){ countUp(e.target); statIO.unobserve(e.target); } }), {threshold:1});
-document.querySelectorAll('.stats b[data-count]').forEach(b => statIO.observe(b));
+$$('.stats b[data-count]').forEach(b => statIO.observe(b));
 
-// ── topology: the real nodes on this page, with packets moving along the real paths ──
+// ── topology (home): the real nodes on this site, with packets moving along the real paths ──
 (function topology(){
   const cv = document.getElementById('topo'); if (!cv) return;
   const ctx = cv.getContext('2d');
@@ -81,7 +99,9 @@ document.querySelectorAll('.stats b[data-count]').forEach(b => statIO.observe(b)
   else requestAnimationFrame(frame);
 })();
 
-// render labs from labs.json (auto-updating source of truth)
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+// labs.json is the source of truth for the labs page (grids) and the home page (the lab count stat)
 function renderLabs(labs, gridId, metaIcon){
   const grid = document.getElementById(gridId);
   if (!grid) return;
@@ -98,23 +118,24 @@ function renderLabs(labs, gridId, metaIcon){
       </div>
     </article>`).join('');
 }
-fetch('labs.json', {cache:'no-cache'})
-  .then(r => r.ok ? r.json() : Promise.reject(r.status))
-  .then(data => {
-    renderLabs(data.labs, 'labs-grid', '▲');
-    renderLabs(data.networking, 'net-labs-grid', '⚙');
-    if (data.repo){ const link = document.getElementById('labs-repo-link'); if (link) link.href = data.repo; }
-    const n = (data.labs?.length||0) + (data.networking?.length||0);
-    const stat = document.querySelector('.stats b[data-count="11"]'); if (stat && n){ stat.dataset.count = n; stat.textContent = n; }
-  })
-  .catch(() => {
-    document.getElementById('labs-grid').innerHTML =
-      '<p class="muted">Labs load from <code>labs.json</code> — view the full repo on GitHub.</p>';
-  });
+const labStat = $('.stats b[data-count="11"]');
+if (document.getElementById('labs-grid') || labStat){
+  fetch('labs.json', {cache:'no-cache'})
+    .then(r => r.ok ? r.json() : Promise.reject(r.status))
+    .then(data => {
+      renderLabs(data.labs, 'labs-grid', '▲');
+      renderLabs(data.networking, 'net-labs-grid', '⚙');
+      if (data.repo){ const link = document.getElementById('labs-repo-link'); if (link) link.href = data.repo; }
+      const n = (data.labs?.length||0) + (data.networking?.length||0);
+      if (labStat && n){ labStat.dataset.count = n; labStat.textContent = n; }
+    })
+    .catch(() => {
+      const grid = document.getElementById('labs-grid');
+      if (grid) grid.innerHTML = '<p class="muted">Labs load from <code>labs.json</code> — view the full repo on GitHub.</p>';
+    });
+}
 
-function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-
-// in-demand skills, regenerated by the portfolio-improver agent
+// in-demand skills (labs page), regenerated by the portfolio-improver agent
 function renderBars(items, gridId){
   const el = document.getElementById(gridId);
   if (!el || !items) return;
@@ -124,11 +145,13 @@ function renderBars(items, gridId){
       <div class="bar-track"><div class="bar-fill" style="width:${Math.max(6, it.pct)}%"></div></div>
     </div>`).join('');
 }
-fetch('market.json', {cache:'no-cache'})
-  .then(r => r.ok ? r.json() : Promise.reject())
-  .then(m => {
-    const j = document.getElementById('market-jobs'); if (j) j.textContent = (m.sampled_jobs ?? '—').toLocaleString?.() ?? m.sampled_jobs;
-    renderBars(m.aws, 'market-aws');
-    renderBars(m.networking, 'market-net');
-  })
-  .catch(() => { const s = document.getElementById('market'); if (s) s.style.display = 'none'; });
+if (document.getElementById('market-aws')){
+  fetch('market.json', {cache:'no-cache'})
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(m => {
+      const j = document.getElementById('market-jobs'); if (j) j.textContent = (m.sampled_jobs ?? '—').toLocaleString?.() ?? m.sampled_jobs;
+      renderBars(m.aws, 'market-aws');
+      renderBars(m.networking, 'market-net');
+    })
+    .catch(() => { const s = document.getElementById('market'); if (s) s.style.display = 'none'; });
+}

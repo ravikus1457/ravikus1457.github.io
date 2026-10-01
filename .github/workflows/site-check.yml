@@ -1,0 +1,16 @@
+name: Site structure check
+
+# Guards the multi-page site: shared header/footer identical on every page, every
+# internal link, asset and #anchor resolves, canonical/og per page, sitemap complete.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/check_site.py

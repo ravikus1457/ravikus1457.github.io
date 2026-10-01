@@ -1,5 +1,5 @@
 {
-  "generated_from": "/home/rk1457/aws-devops-labs",
+  "generated_from": "/tmp/claude-1000/-home-rk1457/b0e3272b-5994-4420-8e21-6fcfe352953f/scratchpad/labs-head",
   "repo": "https://github.com/ravikus1457/aws-labs",
   "count": 11,
   "labs": [
@@ -35,7 +35,7 @@
         "ASG"
       ],
       "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/labs/02-ec2-alb-asg",
-      "has_evidence": false
+      "has_evidence": true
     },
     {
       "id": "03",
@@ -66,7 +66,7 @@
         "CloudWatch logs"
       ],
       "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/labs/04-ecs-fargate",
-      "has_evidence": false
+      "has_evidence": true
     },
     {
       "id": "05",
