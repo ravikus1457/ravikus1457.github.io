@@ -1,7 +1,7 @@
 {
-  "generated_from": ".labs-src",
+  "generated_from": "/home/rk1457/aws-devops-labs",
   "repo": "https://github.com/ravikus1457/aws-labs",
-  "count": 12,
+  "count": 14,
   "labs": [
     {
       "id": "01",
@@ -119,6 +119,42 @@
       ],
       "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/labs/07-eks-observability",
       "has_evidence": true
+    },
+    {
+      "id": "08",
+      "category": "cloud",
+      "title": "Self-healing chaos",
+      "slug": "08-self-healing-chaos",
+      "demonstrates": "AWS FIS experiments (instance terminate, CPU stress, optional latency), CloudWatch Synthetics canary, EventBridge + SSM Automation auto-remediation, measured detect/recover times (MTTR), OIDC pipeline with manual approval, scheduled destroy",
+      "meta": "~$0.66/run (~$0.16 infra + FIS action-minutes); destroyed after each run and nightly",
+      "tags": [
+        "AWS FIS experiments (instance terminate",
+        "CPU stress",
+        "optional latency)",
+        "CloudWatch Synthetics canary",
+        "EventBridge + SSM Automation auto-remediation",
+        "measured detect/recover times (MTTR)"
+      ],
+      "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/labs/08-self-healing-chaos",
+      "has_evidence": false
+    },
+    {
+      "id": "09",
+      "category": "cloud",
+      "title": "Serverless event pipeline",
+      "slug": "09-serverless-event-pipeline",
+      "demonstrates": "API Gateway (throttle + daily quota), Lambda, SQS + DLQ with redrive, Step Functions Express, DynamoDB, X-Ray tracing, 2,000-order load test with measured cost, OIDC pipeline with manual approval, scheduled destroy",
+      "meta": "~$0.03/run (pay-per-request); destroyed nightly",
+      "tags": [
+        "API Gateway (throttle + daily quota)",
+        "Lambda",
+        "SQS + DLQ with redrive",
+        "Step Functions Express",
+        "DynamoDB",
+        "X-Ray tracing"
+      ],
+      "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/labs/09-serverless-event-pipeline",
+      "has_evidence": false
     }
   ],
   "networking": [
