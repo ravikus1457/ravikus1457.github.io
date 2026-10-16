@@ -136,7 +136,7 @@
         "measured detect/recover times (MTTR)"
       ],
       "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/labs/08-self-healing-chaos",
-      "has_evidence": false
+      "has_evidence": true
     },
     {
       "id": "09",
@@ -154,7 +154,7 @@
         "X-Ray tracing"
       ],
       "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/labs/09-serverless-event-pipeline",
-      "has_evidence": false
+      "has_evidence": true
     }
   ],
   "networking": [
