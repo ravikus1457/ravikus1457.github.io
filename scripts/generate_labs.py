@@ -53,7 +53,9 @@ def parse_readme_table(readme: Path):
 def main():
     labs = parse_readme_table(LABS_REPO / "README.md")
     cloud = [l for l in labs if l["category"] == "cloud"]
-    net = [l for l in labs if l["category"] == "networking"]
+    # 2026-10-16: runnable labs with committed CI evidence first (N6-N8: measured failover, network-as-code),
+    # then the study write-ups. A hiring manager scanning the list sees proof before prose.
+    net = sorted([l for l in labs if l["category"] == "networking"], key=lambda l: (not l["has_evidence"], l["id"]))
     payload = {
         "generated_from": str(LABS_REPO),
         "repo": f"https://github.com/{GH_USER}/{GH_REPO}",

@@ -1,7 +1,7 @@
 {
-  "generated_from": ".labs-src",
+  "generated_from": "/home/rk1457/aws-devops-labs",
   "repo": "https://github.com/ravikus1457/aws-labs",
-  "count": 14,
+  "count": 17,
   "labs": [
     {
       "id": "01",
@@ -158,6 +158,57 @@
     }
   ],
   "networking": [
+    {
+      "id": "N6",
+      "category": "networking",
+      "title": "BGP multihoming with BFD",
+      "slug": "net-06-bgp-multihoming-bfd",
+      "demonstrates": "Dual-homed eBGP edge: prefix filters (no transit, bogons dropped), local-pref outbound, AS-path prepend inbound, BFD; ISP-A broken 3 ways under 10 ms probes \u2192 measured outage (ms) with BFD vs hold timer, reroute times, failback",
+      "meta": "containerlab, FRRouting, Python, GitHub Actions",
+      "tags": [
+        "Dual-homed eBGP edge: prefix filters (no transit",
+        "bogons dropped)",
+        "local-pref outbound",
+        "AS-path prepend inbound",
+        "BFD; ISP-A broken 3 ways under 10 ms probes \u2192 measured outage (ms) with BFD vs hold timer",
+        "reroute times"
+      ],
+      "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/networking/net-06-bgp-multihoming-bfd",
+      "has_evidence": true
+    },
+    {
+      "id": "N7",
+      "category": "networking",
+      "title": "OSPF campus + VRRP gateway pair",
+      "slug": "net-07-ospf-campus-vrrp",
+      "demonstrates": "OSPF areas 0/1 with summarisation, ECMP, 802.1Q access VLANs, VRRPv3 gateway pair with tracked preemption; active core killed under traffic \u2192 measured gateway gap, VRRP takeover, OSPF reconvergence, safe preemption",
+      "meta": "containerlab, FRRouting, keepalived, Python, GitHub Actions",
+      "tags": [
+        "OSPF areas 0/1 with summarisation",
+        "ECMP",
+        "802.1Q access VLANs",
+        "VRRPv3 gateway pair with tracked preemption; active core killed under traffic \u2192 measured gateway gap",
+        "VRRP takeover",
+        "OSPF reconvergence"
+      ],
+      "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/networking/net-07-ospf-campus-vrrp",
+      "has_evidence": true
+    },
+    {
+      "id": "N8",
+      "category": "networking",
+      "title": "Network as code (GitOps for the network)",
+      "slug": "net-08-network-as-code",
+      "demonstrates": "YAML source of truth \u2192 validated (overlaps, duplicate IPs, ACL intent) \u2192 Jinja2-rendered FRR configs \u2192 containerlab deploy in CI \u2192 BGP/OSPF/route + reachability/deny tests \u2192 drift detect & heal; overlapping-subnet PR rejected pre-deploy",
+      "meta": "Python, Jinja2, FRRouting, containerlab, GitHub Actions",
+      "tags": [
+        "YAML source of truth \u2192 validated (overlaps",
+        "duplicate IPs",
+        "ACL intent) \u2192 Jinja2-rendered FRR configs \u2192 containerlab deploy in CI \u2192 BGP/OSPF/route + reachability/deny tests \u2192 drift detect & heal; overlapping-subnet PR rejected pre-deploy"
+      ],
+      "repo_url": "https://github.com/ravikus1457/aws-labs/tree/main/networking/net-08-network-as-code",
+      "has_evidence": true
+    },
     {
       "id": "N1",
       "category": "networking",
